@@ -136,12 +136,7 @@
         public void Visit(Print print)
         {
             Indent();
-            if (print.Exp.Type != null) {
-                _sb.Append(print.Exp.Type.Equals(Type.Bool) ? "print_bool" : "print_int");
-            } else {
-                _sb.Append("print");
-            }
-            _sb.Append('(');
+            _sb.Append("print(");
             print.Exp.Accept(this);
             _sb.Append(")\n");
         }

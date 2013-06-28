@@ -45,5 +45,17 @@
             AddLine("print((5-5) <= (4-3))");
             Execute(new[] {"False", "True", "True", "False", "True", "True"});
         }
+
+        [Test]
+        public void NumberComparison2()
+        {
+            AddLine("i = 1");
+            AddLine("j = 1");
+            AddLine("print(i < j)");
+            AddLine("print(i <= j)");
+            AddLine("i = 0");
+            AddLine("print(i <= j)");
+            Execute(new[] {"False", "True", "True"});
+        }
     }
 }

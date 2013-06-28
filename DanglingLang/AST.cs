@@ -235,7 +235,7 @@
             _name = name;
         }
 
-        internal LlvmVar Var { get; set; }
+        internal Variable Var { get; set; }
 
         public string Name
         {
@@ -330,7 +330,7 @@
 
     class Prog : TreeNode
     {
-        internal readonly List<LlvmVar> Vars = new List<LlvmVar>();
+        internal readonly List<Variable> Vars = new List<Variable>();
         // Initialized by TypecheckVisitor (and used by GenerateLlvmVisitor)
 
         readonly List<Stmt> _statements;
@@ -371,7 +371,7 @@
         }
     }
 
-    class Assignment : Stmt
+    sealed class Assignment : Stmt
     {
         readonly Exp _exp;
         readonly string _varName;
@@ -382,7 +382,7 @@
             _exp = exp;
         }
 
-        internal LlvmVar Var { get; set; }
+        internal Variable Var { get; set; }
 
         public string VarName
         {

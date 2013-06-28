@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using Thrower;
 
     [Serializable]
     public sealed class TypeCheckingException : Exception
@@ -26,73 +27,54 @@
         public string LlvmType { get; private set; }
     }
 
-    class LlvmVar
+    sealed class Variable
     {
-        readonly string _name;
-        readonly string _originalName;
-        readonly Type _type;
+        internal readonly string Name;
+        internal readonly Type Type;
 
-        public LlvmVar(string name, string originalName, Type type)
+        public Variable(string name, Type type)
         {
-            _type = type;
-            _name = name;
-            _originalName = originalName;
-        }
-
-        public Type Type
-        {
-            get { return _type; }
-        }
-
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        public string OriginalName
-        {
-            get { return _originalName; }
+            Name = name;
+            Type = type;
         }
     }
 
     interface IStaticEnv
     {
-        LlvmVar GetLlvmVar(string name);
-        bool TryGetLlvmVar(string name, out LlvmVar t);
-        void SetLlvmVar(string name, LlvmVar v);
+        Variable GetVariable(string name);
+        bool TryGetVariable(string name, out Variable t);
+        void SetVariable(string name, Variable v);
     }
 
     sealed class StaticEnv : IStaticEnv
     {
-        readonly Dictionary<string, LlvmVar> _locals = new Dictionary<string, LlvmVar>();
+        readonly Dictionary<string, Variable> _locals = new Dictionary<string, Variable>();
         readonly IStaticEnv _parent;
 
         public StaticEnv(IStaticEnv parent)
         {
-            if (parent == null) {
-                throw new ArgumentNullException("parent");
-            }
+            Raise<ArgumentNullException>.IfIsNull(parent);
             _parent = parent;
         }
 
-        public LlvmVar GetLlvmVar(string name)
+        public Variable GetVariable(string name)
         {
-            LlvmVar v;
+            Variable v;
             if (_locals.TryGetValue(name, out v)) {
                 return v;
             }
-            return _parent.GetLlvmVar(name);
+            return _parent.GetVariable(name);
         }
 
-        public bool TryGetLlvmVar(string name, out LlvmVar t)
+        public bool TryGetVariable(string name, out Variable t)
         {
             if (_locals.TryGetValue(name, out t)) {
                 return true;
             }
-            return _parent.TryGetLlvmVar(name, out t);
+            return _parent.TryGetVariable(name, out t);
         }
 
-        public void SetLlvmVar(string name, LlvmVar v)
+        public void SetVariable(string name, Variable v)
         {
             Debug.Assert(!_locals.ContainsKey(name));
             _locals[name] = v;
@@ -101,18 +83,18 @@
 
     sealed class OutmostStaticEnv : IStaticEnv
     {
-        public LlvmVar GetLlvmVar(string name)
+        public Variable GetVariable(string name)
         {
             throw new TypeCheckingException(string.Format("Undefined variable {0}", name));
         }
 
-        public bool TryGetLlvmVar(string name, out LlvmVar t)
+        public bool TryGetVariable(string name, out Variable t)
         {
             t = null;
             return false;
         }
 
-        public void SetLlvmVar(string name, LlvmVar v)
+        public void SetVariable(string name, Variable v)
         {
             throw new TypeCheckingException("Internal compiler error");
         }
@@ -212,7 +194,7 @@
 
         public void Visit(Id id)
         {
-            var v = _staticEnv.GetLlvmVar(id.Name);
+            var v = _staticEnv.GetVariable(id.Name);
             id.Var = v;
             id.Type = _result = v.Type;
         }
@@ -231,17 +213,17 @@
         {
             asg.Exp.Accept(this);
             var varName = asg.VarName;
-            LlvmVar llvmVar;
-            if (_staticEnv.TryGetLlvmVar(varName, out llvmVar)) {
-                if (!llvmVar.Type.Equals(_result)) {
+            Variable variable;
+            if (_staticEnv.TryGetVariable(varName, out variable)) {
+                if (!variable.Type.Equals(_result)) {
                     throw new TypeCheckingException(string.Format(
                         "Cannot re-assign {0} with a value of different type", varName));
                 }
             } else {
-                llvmVar = CreateVar(varName);
-                _staticEnv.SetLlvmVar(varName, llvmVar);
+                variable = CreateVar(varName);
+                _staticEnv.SetVariable(varName, variable);
             }
-            asg.Var = llvmVar;
+            asg.Var = variable;
         }
 
         public void Visit(If ifs)
@@ -254,7 +236,7 @@
         public void Visit(While whiles)
         {
             whiles.Guard.Accept(this);
-            MustBeBool("The if guard");
+            MustBeBool("The while guard");
             whiles.Body.Accept(this);
         }
 
@@ -324,11 +306,11 @@
             binaryOp.Type = _result = Type.Bool;
         }
 
-        LlvmVar CreateVar(string varName)
+        Variable CreateVar(string varName)
         {
-            var sameName = _prog.Vars.Count(v => v.OriginalName == varName);
+            var sameName = _prog.Vars.Count(v => v.Name == varName);
             var llvmName = sameName == 0 ? string.Format("%{0}", varName) : string.Format("%{0}.{1}", varName, sameName);
-            var llvmVar = new LlvmVar(llvmName, varName, _result);
+            var llvmVar = new Variable(varName, _result);
             _prog.Vars.Add(llvmVar);
             return llvmVar;
         }

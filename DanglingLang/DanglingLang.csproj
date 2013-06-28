@@ -37,6 +37,9 @@
   <PropertyGroup>
     <StartupObject>DanglingLang.Launcher</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>MisterDangling.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Cecil">
       <HintPath>..\packages\Mono.Cecil.0.9.5.4\lib\net40\Mono.Cecil.dll</HintPath>
@@ -88,6 +91,7 @@
     <Content Include="GardenPoints\gplex.exe" />
     <Content Include="GardenPoints\Gppg.exe" />
     <Content Include="GardenPoints\QUT.ShiftReduceParser.dll" />
+    <Content Include="MisterDangling.ico" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -186,8 +186,8 @@
         public void Visit(Prog prog)
         {
             foreach (var @var in prog.Vars) {
-                var varDef = new VariableDefinition(@var.OriginalName, _intType);
-                _varDefs.Add(@var.OriginalName, varDef);
+                var varDef = new VariableDefinition(@var.Name, _intType);
+                _varDefs.Add(@var.Name, varDef);
                 _body.Variables.Add(varDef);
             }
             foreach (var stmt in prog.Statements) {
