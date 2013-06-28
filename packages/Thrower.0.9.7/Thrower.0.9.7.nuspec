@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Thrower</id>
+    <version>0.9.7</version>
+    <title>Thrower</title>
+    <authors>Alessio Parma &lt;alessio.parma@gmail.com&gt;</authors>
+    <owners>Alessio Parma &lt;alessio.parma@gmail.com&gt;</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://code.google.com/p/des-sharp/#Thrower</projectUrl>
+    <iconUrl>http://web.tiscali.it/doktorp/thrower/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Fully managed library providing convenience methods to perform argument checks. It offers methods whose compilation can be enabled with the "USETHROWER" directive, and they can of course be disabled by undefining that directive. Therefore, it allows to write code whose integrity checks can be easily removed (for performance reasons, for example).</description>
+    <summary>Fully managed library providing convenience methods to perform argument checks.</summary>
+    <releaseNotes>* Made library portable: now it should work with Silverlight, Windows Phone, Windows 8.
+      * .NET Framework 4.0 is now required in order to have the library portable.</releaseNotes>
+    <copyright>Copyright (c) 2013 Alessio Parma &lt;alessio.parma@gmail.com&gt;</copyright>
+    <language>en-US</language>
+    <tags>preconditions check integrity parameters arguments conditional compilation</tags>
+  </metadata>
+</package>
