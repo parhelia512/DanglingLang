@@ -79,12 +79,28 @@
 
         public void Visit(And and)
         {
-            Visit(and, OpCodes.And);
+            // "And" operator must be short circuited.
+            and.Left.Accept(this);
+            var br = Instruction.Create(OpCodes.Ldc_I4_0);
+            _instructions.Add(Instruction.Create(OpCodes.Brfalse, br));
+            and.Right.Accept(this);
+            var end = Instruction.Create(OpCodes.Nop);
+            _instructions.Add(Instruction.Create(OpCodes.Br, end));
+            _instructions.Add(br);
+            _instructions.Add(end);
         }
 
         public void Visit(Or or)
-        {
-            Visit(or, OpCodes.Or);
+        {     
+            // "Or" operator must be short circuited.
+            or.Left.Accept(this);
+            var br = Instruction.Create(OpCodes.Ldc_I4_1);
+            _instructions.Add(Instruction.Create(OpCodes.Brtrue, br));
+            or.Right.Accept(this);
+            var end = Instruction.Create(OpCodes.Nop);
+            _instructions.Add(Instruction.Create(OpCodes.Br, end));
+            _instructions.Add(br);
+            _instructions.Add(end);
         }
 
         public void Visit(Not not)
