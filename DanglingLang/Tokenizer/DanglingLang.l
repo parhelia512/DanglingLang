@@ -5,6 +5,7 @@
 [ \t]					/* empty */
 [iI][fF]				{ return (int)Tokens.IF; }
 [mM][aA][xX]			{ return (int)Tokens.MAX; }
+[mM][iI][nN]			{ return (int)Tokens.MIN; }
 [pP][rR][iI][nN][tT]	{ return (int)Tokens.PRINT; }
 [tT][rR][uU][eE]		{ return (int)Tokens.TRUE; }
 [fF][aA][lL][sS][eE]	{ return (int)Tokens.FALSE; }

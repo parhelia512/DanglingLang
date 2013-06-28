@@ -53,6 +53,7 @@ exp: NUM  { $$ = new IntLiteral($1); }
 	| '+' exp %prec UMINUS { $$=$2; }
 	| exp '^' exp { $$ = new Power($1, $3); }
 	| MAX '(' exp ',' exp ')' { $$ = new Max($3, $5); }
+	| MIN '(' exp ',' exp ')' { $$ = new Min($3, $5); }
 	| '(' exp ')' { $$=$2; }
 	| ID { $$ = new Id($1); }
 	| '~' exp { $$ = new Not($2); }
