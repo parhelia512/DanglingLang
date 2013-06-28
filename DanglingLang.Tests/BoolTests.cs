@@ -25,6 +25,17 @@
         }
 
         [Test]
+        public void TrueOrFalse()
+        {
+            AddLine("print(false || false)");
+            AddLine("print(true || true)");
+            AddLine("print((~false) || false)");
+            AddLine("print((~true) || true)");
+            AddLine("print((~true) || (~true))");
+            Execute(new[] {"False", "True", "True", "True", "False"});
+        }
+
+        [Test]
         public void NumberEquality()
         {
             AddLine("print(1 == 1)");

@@ -58,6 +58,7 @@ exp: NUM  { $$ = new IntLiteral($1); }
 	| ID { $$ = new Id($1); }
 	| '~' exp { $$ = new Not($2); }
 	| exp AND exp { $$ = new And($1, $3); }
+	| exp OR exp { $$ = new Or($1, $3); }
 	| exp EQUAL exp { $$ = new Equal($1, $3); }
 	| exp LEQ exp { $$ = new LessEqual($1, $3); }
 	| exp LESS_THAN exp { $$ = new LessThan($1, $3); }

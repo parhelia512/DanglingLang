@@ -89,8 +89,9 @@
 
         public void Visit(Not not)
         {
+            _instructions.Add(Instruction.Create(OpCodes.Ldc_I4_1));
             not.Operand.Accept(this);
-            _instructions.Add(Instruction.Create(OpCodes.Not));
+            _instructions.Add(Instruction.Create(OpCodes.Sub));
         }
 
         public void Visit(Equal eq)
@@ -129,8 +130,8 @@
 
         public void Visit(BoolLiteral bl)
         {
-            var blVal = bl.Value ? int.MaxValue : 0;
-            _instructions.Add(Instruction.Create(OpCodes.Ldc_I4, blVal));
+            var opCode = bl.Value ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0;
+            _instructions.Add(Instruction.Create(opCode));
         }
 
         public void Visit(IntLiteral il)
