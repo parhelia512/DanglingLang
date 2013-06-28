@@ -100,7 +100,11 @@
 
         public void Visit(LessEqual leq)
         {
-            Visit(leq, OpCodes.Clt);
+            leq.Left.Accept(this);
+            leq.Right.Accept(this);
+            _instructions.Add(Instruction.Create(OpCodes.Cgt));
+            _instructions.Add(Instruction.Create(OpCodes.Ldc_I4_0));
+            _instructions.Add(Instruction.Create(OpCodes.Ceq));
         }
 
         public void Visit(LessThan lt)
