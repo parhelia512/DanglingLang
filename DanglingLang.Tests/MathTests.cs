@@ -39,5 +39,25 @@
             AddLine("print(x+7)");
             Execute(new[] {"10", "17", "14"});
         }
+
+        [Test]
+        public void UnaryMinus()
+        {
+            AddLine("print(-5--5)");
+            AddLine("print(-5+5+5+1+(-1))");
+            AddLine("x = -7");
+            AddLine("print(-x+7)");
+            Execute(new[] {"0", "5", "14"});
+        }
+
+        [Test]
+        public void UnaryPlus()
+        {
+            AddLine("print(+5++5)");
+            AddLine("print(+5+5+5+1+1)");
+            AddLine("x = +7");
+            AddLine("print(+x++7)");
+            Execute(new[] {"10", "17", "14"});
+        }
     }
 }

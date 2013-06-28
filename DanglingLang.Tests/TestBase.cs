@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading;
     using NUnit.Framework;
 
     [TestFixture]
@@ -48,8 +49,10 @@
             }
             LineAssert("", output.ReadLine(), process);
             LineAssert("Press any key to exit...", output.ReadLine(), process);
-            process.StandardInput.Write('Q');
-            process.WaitForExit();
+            process.StandardInput.Write('Q');       
+            // To avoid locked files...
+            Thread.Sleep(500);
+            process.WaitForExit();          
         }
 
         static void LineAssert(string line, string readLine, Process process)

@@ -77,6 +77,13 @@
             Visit(rem, OpCodes.Rem);
         }
 
+        public void Visit(Minus min)
+        {
+            _instructions.Add(Instruction.Create(OpCodes.Ldc_I4_0));
+            min.Operand.Accept(this);
+            _instructions.Add(Instruction.Create(OpCodes.Sub_Ovf));
+        }
+
         public void Visit(And and)
         {
             // "And" operator must be short circuited.

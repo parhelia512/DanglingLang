@@ -48,6 +48,12 @@
             rem.Right.Accept(this);
         }
 
+        public void Visit(Minus min)
+        {
+            _sb.Append("-");
+            min.Operand.Accept(this);
+        }
+
         public void Visit(And and)
         {
             and.Left.Accept(this);

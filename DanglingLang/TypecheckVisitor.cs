@@ -131,6 +131,12 @@
             ResultIsIntAndBothOperandsMustBeInt(rem);
         }
 
+        public void Visit(Minus min)
+        {
+            min.Operand.Accept(this);
+            min.Type = MustBeInt(string.Format("The operand of {0} must be integer", min));
+        }
+
         public void Visit(And and)
         {
             ResultIsBoolAndBothOperandsMustBeBool(and);
@@ -269,9 +275,9 @@
             return t;
         }
 
-        void MustBeInt(string msg)
+        Type MustBeInt(string msg)
         {
-            MustBe(Type.Int, msg);
+            return MustBe(Type.Int, msg);
         }
 
         Type MustBeBool(string msg)

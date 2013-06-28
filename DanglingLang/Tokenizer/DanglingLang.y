@@ -8,7 +8,7 @@
 }
 %token <intValue> NUM
 %token <identifier> ID
-%token MAX MIN NEWLINE IF WHILE PRINT TRUE FALSE AND EQUAL LESS_THAN LEQ
+%token MAX MIN NEWLINE IF WHILE PRINT TRUE FALSE AND OR EQUAL LESS_THAN LEQ
 %left OR
 %left AND
 %left EQUAL 
@@ -51,7 +51,8 @@ exp: NUM  { $$ = new IntLiteral($1); }
 	| exp '*' exp { $$ = new Product($1, $3); }
 	| exp '/' exp { $$ = new Division($1, $3); }
 	| exp '%' exp { $$ = new Remainder($1, $3); }
-	| '+' exp %prec UMINUS { $$=$2; }
+	| '+' exp %prec UMINUS { $$= $2; }
+	| '-' exp %prec UMINUS { $$= new Minus($2); }
 	| exp '^' exp { $$ = new Power($1, $3); }
 	| MAX '(' exp ',' exp ')' { $$ = new Max($3, $5); }
 	| MIN '(' exp ',' exp ')' { $$ = new Min($3, $5); }

@@ -21,6 +21,7 @@
         void Visit(Product prod);
         void Visit(Division div);
         void Visit(Remainder rem);
+        void Visit(Minus min);
         void Visit(And and);
         void Visit(Or or);
         void Visit(Not not);
@@ -203,20 +204,25 @@
 
     abstract class UnaryOperator : Exp
     {
-        readonly Exp _operand;
+        internal readonly Exp Operand;
 
-        public UnaryOperator(Exp operand)
+        protected UnaryOperator(Exp operand)
         {
-            _operand = operand;
-        }
-
-        public Exp Operand
-        {
-            get { return _operand; }
+            Operand = operand;
         }
     }
 
-    class Not : UnaryOperator
+    sealed class Minus : UnaryOperator
+    {
+        public Minus(Exp operand) : base(operand) {}
+
+        public override void Accept(ITreeNodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
+    sealed class Not : UnaryOperator
     {
         public Not(Exp operand) : base(operand) {}
 

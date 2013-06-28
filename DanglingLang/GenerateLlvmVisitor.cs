@@ -41,6 +41,11 @@
             VisitBinaryOp(rem, "\t{0} = srem i32 {1}, {2}\n");
         }
 
+        public void Visit(Minus min)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Visit(And and)
         {
             and.Left.Accept(this);
