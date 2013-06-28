@@ -400,25 +400,15 @@
         }
     }
 
-    class If : Stmt
+    sealed class If : Stmt
     {
-        readonly Stmt _body;
-        readonly Exp _guard;
+        internal readonly Stmt Body;
+        internal readonly Exp Guard;
 
         public If(Exp guard, Stmt body)
         {
-            _guard = guard;
-            _body = body;
-        }
-
-        public Exp Guard
-        {
-            get { return _guard; }
-        }
-
-        public Stmt Body
-        {
-            get { return _body; }
+            Guard = guard;
+            Body = body;
         }
 
         public override void Accept(ITreeNodeVisitor visitor)
@@ -429,23 +419,13 @@
 
     sealed class While : Stmt
     {
-        readonly Stmt _body;
-        readonly Exp _guard;
+        internal readonly Stmt Body;
+        internal readonly Exp Guard;
 
         public While(Exp guard, Stmt body)
         {
-            _guard = guard;
-            _body = body;
-        }
-
-        public Exp Guard
-        {
-            get { return _guard; }
-        }
-
-        public Stmt Body
-        {
-            get { return _body; }
+            Guard = guard;
+            Body = body;
         }
 
         public override void Accept(ITreeNodeVisitor visitor)

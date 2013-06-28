@@ -8,7 +8,7 @@
 }
 %token <intValue> NUM
 %token <identifier> ID
-%token MAX NEWLINE IF PRINT TRUE FALSE AND EQUAL LESS_THAN LEQ
+%token MAX MIN NEWLINE IF WHILE PRINT TRUE FALSE AND EQUAL LESS_THAN LEQ
 %left OR
 %left AND
 %left EQUAL 
@@ -39,6 +39,7 @@ stmt: NEWLINE { $$ = null; }
 	| ID '=' exp NEWLINE { $$ = new Assignment($1, $3); }
 	| '{' stmts '}' { $$ = new Block($2); }
 	| IF '(' exp ')' stmt { $$ = new If($3, $5 ?? new Block(new List<Stmt>())); }
+	| WHILE '(' exp ')' stmt { $$ = new While($3, $5 ?? new Block(new List<Stmt>())); }
 	| PRINT '(' exp ')' NEWLINE { $$ = new Print($3); }
 	;
 

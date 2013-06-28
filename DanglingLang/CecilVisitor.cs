@@ -182,15 +182,21 @@
         {
             @if.Guard.Accept(this);
             var end = Instruction.Create(OpCodes.Nop);
-            var start = Instruction.Create(OpCodes.Brfalse, end);
-            _instructions.Add(start);
+            _instructions.Add(Instruction.Create(OpCodes.Brfalse, end));
             @if.Body.Accept(this);
             _instructions.Add(end);
         }
 
         public void Visit(While @while)
         {
-            throw new System.NotImplementedException();
+            var guard = Instruction.Create(OpCodes.Nop);
+            _instructions.Add(guard);
+            @while.Guard.Accept(this);
+            var end = Instruction.Create(OpCodes.Nop);
+            _instructions.Add(Instruction.Create(OpCodes.Brfalse, end));
+            @while.Body.Accept(this);
+            _instructions.Add(Instruction.Create(OpCodes.Br, guard));
+            _instructions.Add(end);
         }
 
         public void Visit(Block block)

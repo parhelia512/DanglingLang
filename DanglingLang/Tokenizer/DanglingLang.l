@@ -4,12 +4,13 @@
 [0-9]+					{ yylval.intValue = int.Parse(yytext); return (int) Tokens.NUM; }
 [ \t]					/* empty */
 [iI][fF]				{ return (int) Tokens.IF; }
+[wW][hH][iI][lL][eE]	{ return (int) Tokens.WHILE; }
 [mM][aA][xX]			{ return (int) Tokens.MAX; }
 [mM][iI][nN]			{ return (int) Tokens.MIN; }
 [pP][rR][iI][nN][tT]	{ return (int) Tokens.PRINT; }
 [tT][rR][uU][eE]		{ return (int) Tokens.TRUE; }
 [fF][aA][lL][sS][eE]	{ return (int) Tokens.FALSE; }
-[a-zA-Z_][a-zA-Z_0-9]*	{ yylval.identifier=yytext; return (int)Tokens.ID; }
+[a-zA-Z_][a-zA-Z_0-9]*	{ yylval.identifier = yytext; return (int) Tokens.ID; }
 \&\&					{ return (int) Tokens.AND; }
 \|\|					{ return (int) Tokens.OR; }
 ==						{ return (int) Tokens.EQUAL; }
