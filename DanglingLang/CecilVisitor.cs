@@ -12,6 +12,7 @@
         readonly IDictionary<string, VariableDefinition> _varDefs = new Dictionary<string, VariableDefinition>(); 
         readonly AssemblyDefinition _assembly;
         readonly ModuleDefinition _module;
+        readonly MethodReference _objCtor;
         readonly MethodReference _fact;
         readonly MethodReference _max;
         readonly MethodReference _min;
@@ -22,13 +23,10 @@
         MethodBody _body;
         ICollection<Instruction> _instructions;
 
-        public CecilVisitor()
+        public CecilVisitor(AssemblyDefinition assembly, ModuleDefinition module)
         {
-            _assembly = AssemblyDefinition.ReadAssembly("DanglingLang.Runner.exe");
-            _module = _assembly.MainModule;
-
-            Type.Bool.Reference = _module.Import(typeof(bool));
-            Type.Int.Reference = _module.Import(typeof(int));
+            _assembly = assembly;
+            _module = module;
 
             var program = _module.Types.First(t => t.Name == "Program");
             var main = program.Methods.First(m => m.Name == "Main");
@@ -36,6 +34,8 @@
             _body = main.Body;
             _instructions = _body.Instructions;
             _instructions.Clear();
+
+            _objCtor = _module.Import(typeof(object).GetConstructor(new System.Type[0]));
 
             var systemFunctions = _module.Types.First(t => t.Name == "SystemFunctions");
             // Math methods
@@ -176,10 +176,15 @@
         {
             var st = sv.Type as StructType;
             Debug.Assert(st != null);
+            _instructions.Add(Instruction.Create(OpCodes.Newobj, st.Ctor));
+            var tempVar = _varDefs[sv.Temp.Name];
+            _instructions.Add(Instruction.Create(OpCodes.Stloc, tempVar));
             for (var i = 0; i < st.Fields.Count; ++i) {
+                _instructions.Add(Instruction.Create(OpCodes.Ldloc, tempVar));
                 sv.Values[i].Accept(this);
                 _instructions.Add(Instruction.Create(OpCodes.Stfld, st.Fields[i].Reference));
             }
+            _instructions.Add(Instruction.Create(OpCodes.Ldloc, tempVar));
         }
 
         public void Visit(Id id)
@@ -190,24 +195,35 @@
         public void Visit(Print print)
         {
             print.Exp.Accept(this);
-            var printFn = print.Exp.Type == Type.Int ? _printInt : _printBool;
+            var printFn = print.Exp.Type.Name == "int" ? _printInt : _printBool;
             _instructions.Add(Instruction.Create(OpCodes.Call, printFn));
         }
 
         public void Visit(StructDecl structDecl)
         {
-            const string nmsp = "DanglingLang.Runner";
-            const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed;
+            // Each field is added to struct type...
             const FieldAttributes fieldAttr = FieldAttributes.Public;
-            
-            var type = structDecl.Type;
-            var typeDef = new TypeDefinition(nmsp, type.Name, typeAttr);
-            foreach (var f in type.Fields) {
+            var typeDef = structDecl.Type.Reference as TypeDefinition;
+            Debug.Assert(typeDef != null);
+            foreach (var f in structDecl.Type.Fields) {
                 var fieldDef = new FieldDefinition(f.Name, fieldAttr, f.Type.Reference);
                 typeDef.Fields.Add(fieldDef);
                 f.Reference = fieldDef;
             }
-            structDecl.Type.Reference = typeDef;
+            
+            // We add an empty constructor to the new type...
+            const MethodAttributes methAttr =
+                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName |
+                MethodAttributes.RTSpecialName;
+            var ctor = new MethodDefinition(".ctor", methAttr, _module.TypeSystem.Void);
+            ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
+            ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, _objCtor));
+            ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+            typeDef.Methods.Add(ctor);
+            structDecl.Type.Ctor = ctor;
+            
+            // New type is then added to the assembly.
+            _module.Types.Add(typeDef);
         }
 
         public void Visit(EvalExp eval)
@@ -251,7 +267,7 @@
 
         public void Visit(Prog prog)
         {
-            foreach (var @var in prog.Vars) {
+            foreach (var @var in prog.Variables) {
                 var varDef = new VariableDefinition(@var.Name, @var.Type.Reference);
                 _varDefs.Add(@var.Name, varDef);
                 _body.Variables.Add(varDef);

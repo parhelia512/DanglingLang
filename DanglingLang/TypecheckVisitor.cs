@@ -18,48 +18,15 @@
 
     class Type
     {
-        protected static readonly IDictionary<string, Type> Types = new Dictionary<string, Type>();
-             
         public readonly string Name;
-        public TypeReference Reference;
+        public readonly TypeReference Reference;
+        public MethodReference Ctor;
 
-        protected Type(string name)
+        public Type(string name, TypeReference reference)
         {
-            Debug.Assert(name == name.ToLower());
+            Debug.Assert(name == name.ToLower() && reference != null);
             Name = name;
-        }
-
-        public static Type Bool
-        {
-            get { return Types["bool"]; }
-        }
-
-        public static Type Int
-        {
-            get { return Types["int"]; }
-        }
-
-        public static void Init()
-        {
-            Types.Clear();
-            Create("bool");
-            Create("int");
-        }
-
-        public static Type Create(string name)
-        {
-            name = name.ToLower();
-            Raise<TypeCheckingException>.If(Types.ContainsKey(name), "Type already existing.");
-            var type = new Type(name);
-            Types.Add(name, type);
-            return type;
-        }
-
-        public static Type Get(string name)
-        {
-            name = name.ToLower();
-            Raise<ArgumentException>.If(!Types.ContainsKey(name), "Type does not exist.");
-            return Types[name];
+            Reference = reference;
         }
 
         public override string ToString()
@@ -70,16 +37,10 @@
 
     sealed class StructType : Type
     {
-        static readonly IDictionary<string, StructType> StructTypes = new Dictionary<string, StructType>();
-        
-        readonly IList<FieldInfo> _fields;
+        readonly IList<FieldInfo> _fields = new List<FieldInfo>();
 
-        StructType(string name, StructDecl decl) : base(name)
+        public StructType(string name, TypeReference reference) : base(name, reference)
         {
-            _fields = new List<FieldInfo>(decl.Fields.Count());
-            foreach (var f in decl.Fields) {
-                _fields.Add(new FieldInfo(f.Item1, Type.Get(f.Item2)));
-            }
         }
 
         public ReadOnlyCollection<FieldInfo> Fields
@@ -87,26 +48,9 @@
             get { return new ReadOnlyCollection<FieldInfo>(_fields); }
         }
 
-        public new static void Init()
+        public void AddField(string name, Type type)
         {
-            StructTypes.Clear();
-        }
-
-        public static StructType Create(StructDecl decl)
-        {
-            var name = decl.Name.ToLower();
-            Raise<ArgumentException>.If(Types.ContainsKey(name));
-            var type = new StructType(name, decl);
-            Types.Add(name, type);
-            StructTypes.Add(name, type);
-            return type;
-        }
-
-        public new static StructType Get(string name)
-        {
-            name = name.ToLower();
-            Raise<ArgumentException>.If(!StructTypes.ContainsKey(name));
-            return StructTypes[name];
+            _fields.Add(new FieldInfo(name, type));
         }
 
         public override string ToString()
@@ -143,7 +87,7 @@
     interface IStaticEnv
     {
         Variable GetVariable(string name);
-        bool TryGetVariable(string name, out Variable t);
+        bool TryGetVariable(string name, out Variable v);
         void SetVariable(string name, Variable v);
     }
 
@@ -154,25 +98,19 @@
 
         public StaticEnv(IStaticEnv parent)
         {
-            Raise<ArgumentNullException>.IfIsNull(parent);
+            Debug.Assert(parent != null);
             _parent = parent;
         }
 
         public Variable GetVariable(string name)
         {
             Variable v;
-            if (_locals.TryGetValue(name, out v)) {
-                return v;
-            }
-            return _parent.GetVariable(name);
+            return _locals.TryGetValue(name, out v) ? v : _parent.GetVariable(name);
         }
 
-        public bool TryGetVariable(string name, out Variable t)
+        public bool TryGetVariable(string name, out Variable v)
         {
-            if (_locals.TryGetValue(name, out t)) {
-                return true;
-            }
-            return _parent.TryGetVariable(name, out t);
+            return _locals.TryGetValue(name, out v) || _parent.TryGetVariable(name, out v);
         }
 
         public void SetVariable(string name, Variable v)
@@ -189,9 +127,9 @@
             throw new TypeCheckingException(string.Format("Undefined variable {0}", name));
         }
 
-        public bool TryGetVariable(string name, out Variable t)
+        public bool TryGetVariable(string name, out Variable v)
         {
-            t = null;
+            v = null;
             return false;
         }
 
@@ -203,14 +141,25 @@
 
     sealed class TypecheckVisitor : ITreeNodeVisitor
     {
+        readonly IDictionary<string, Type> Types = new Dictionary<string, Type>();
+        readonly IDictionary<string, StructType> StructTypes = new Dictionary<string, StructType>();
+        public readonly AssemblyDefinition Assembly;
+        public readonly ModuleDefinition Module;
+        readonly Type _boolType;
+        readonly Type _intType;
+        int _tempCounter;
+            
         Prog _prog;
         Type _result;
         IStaticEnv _staticEnv = new StaticEnv(new OutmostStaticEnv());
 
         public TypecheckVisitor()
         {
-            Type.Init();
-            StructType.Init();
+            Assembly = AssemblyDefinition.ReadAssembly("DanglingLang.Runner.exe");
+            Module = Assembly.MainModule;
+            
+            _boolType = AddType("bool", Module.TypeSystem.Boolean);
+            _intType = AddType("int", Module.TypeSystem.Int32);
         }
 
         public void Visit(Sum sum)
@@ -273,7 +222,7 @@
             if (!eq.Left.Type.Equals(eq.Right.Type)) {
                 throw new TypeCheckingException("Both operands of == must have the same type");
             }
-            eq.Type = _result = Type.Bool;
+            eq.Type = _result = _boolType;
         }
 
         public void Visit(LessEqual leq)
@@ -303,22 +252,24 @@
 
         public void Visit(BoolLiteral bl)
         {
-            _result = bl.Type = Type.Bool;
+            _result = bl.Type = _boolType;
         }
 
         public void Visit(IntLiteral il)
         {
-            _result = il.Type = Type.Int;
+            _result = il.Type = _intType;
         }
 
         public void Visit(StructValue sv)
         {
-            var st = StructType.Get(sv.Name);
+            var st = GetStructType(sv.Name);
             Raise<TypeCheckingException>.IfAreNotEqual(st.Fields.Count, sv.Values.Count);
             for (var i = 0; i < st.Fields.Count; ++i) {
                 sv.Values[i].Accept(this);
                 Raise<TypeCheckingException>.IfAreNotSame(st.Fields[i].Type, sv.Values[i].Type);
-            }
+            }  
+            sv.Type = _result = st;
+            sv.Temp = CreateVar("$" + _tempCounter++);
         }
 
         public void Visit(Id id)
@@ -335,7 +286,7 @@
 
         public void Visit(StructDecl structDecl)
         {
-            structDecl.Type = StructType.Create(structDecl);
+            structDecl.Type = AddStructType(structDecl);
         }
 
         public void Visit(EvalExp eval)
@@ -395,22 +346,63 @@
             }
         }
 
+        Type AddType(string name, TypeReference reference)
+        {
+            name = name.ToLower();
+            Raise<TypeCheckingException>.If(Types.ContainsKey(name), "Type already existing.");
+            var type = new Type(name, reference);
+            Types.Add(name, type);
+            return type;
+        }
+
+        StructType AddStructType(StructDecl decl)
+        {
+            var name = decl.Name.ToLower();
+            Raise<ArgumentException>.If(Types.ContainsKey(name));
+            
+            const string nmsp = "DanglingLang.Runner";
+            const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed;
+            var typeDef = new TypeDefinition(nmsp, name, typeAttr);
+            typeDef.BaseType = Module.Import(typeof(object));
+            
+            var type = new StructType(name, typeDef);
+            foreach (var f in decl.Fields) {
+                type.AddField(f.Item1, GetType(f.Item2));
+            }
+            
+            Types.Add(name, type);
+            StructTypes.Add(name, type);
+            return type;
+        }
+
+        Type GetType(string name)
+        {
+            name = name.ToLower();
+            Raise<ArgumentException>.If(!Types.ContainsKey(name), "Type does not exist.");
+            return Types[name];
+        }
+
+        StructType GetStructType(string name)
+        {
+            name = name.ToLower();
+            Raise<ArgumentException>.If(!StructTypes.ContainsKey(name), "Type does not exist.");
+            return StructTypes[name];
+        }
+
         Type MustBe(Type t, string msg)
         {
-            if (!_result.Equals(t)) {
-                throw new TypeCheckingException(msg);
-            }
+            Raise<TypeCheckingException>.IfAreNotSame(_result, t, msg);
             return t;
         }
 
         Type MustBeInt(string msg)
         {
-            return MustBe(Type.Int, msg);
+            return MustBe(_intType, msg);
         }
 
         Type MustBeBool(string msg)
         {
-            return MustBe(Type.Bool, msg);
+            return MustBe(_boolType, msg);
         }
 
         void ResultIsIntAndBothOperandsMustBeInt(BinaryOp binaryOp)
@@ -419,7 +411,7 @@
             MustBeInt("The type of the left operand of " + binaryOp + " must be integer");
             binaryOp.Right.Accept(this);
             MustBeInt("The type of the right operand of " + binaryOp + " must be integer");
-            binaryOp.Type = _result = Type.Int;
+            binaryOp.Type = _result = _intType;
         }
 
         void ResultIsBoolAndBothOperandsMustBeBool(BinaryOp binaryOp)
@@ -428,7 +420,7 @@
             MustBeBool("The type of the left operand of " + binaryOp + " must be bool");
             binaryOp.Right.Accept(this);
             MustBeBool("The type of the right operand of " + binaryOp + " must be bool");
-            binaryOp.Type = _result = Type.Bool;
+            binaryOp.Type = _result = _boolType;
         }
 
         void ResultIsBoolAndBothOperandsMustBeInt(BinaryOp binaryOp)
@@ -437,14 +429,14 @@
             MustBeInt("The type of the left operand of " + binaryOp + " must be integer");
             binaryOp.Right.Accept(this);
             MustBeInt("The type of the right operand of " + binaryOp + " must be integer");
-            binaryOp.Type = _result = Type.Bool;
+            binaryOp.Type = _result = _boolType;
         }
 
         Variable CreateVar(string varName)
         {
-            var llvmVar = new Variable(varName, _result);
-            _prog.Vars.Add(llvmVar);
-            return llvmVar;
+            var variable = new Variable(varName, _result);
+            _prog.Variables.Add(variable);
+            return variable;
         }
     }
 }

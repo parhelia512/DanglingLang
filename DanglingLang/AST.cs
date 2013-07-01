@@ -314,13 +314,8 @@
     sealed class StructValue : Exp
     {
         readonly IList<Exp> _values = new List<Exp>();
-
-        public string Name { get; set; }
-
-        public int ValueCount
-        {
-            get { return _values.Count; }
-        }
+        public string Name;
+        public Variable Temp; // Assigned by type checker.
 
         public ReadOnlyCollection<Exp> Values
         {
@@ -404,7 +399,7 @@
 
     class Prog : TreeNode
     {
-        internal readonly List<Variable> Vars = new List<Variable>();
+        internal readonly List<Variable> Variables = new List<Variable>();
         // Initialized by TypecheckVisitor (and used by GenerateLlvmVisitor)
 
         readonly List<Stmt> _statements;

@@ -139,13 +139,12 @@
 
         public void Visit(StructValue sv)
         {
-            _sb.Append("struct ");
-            _sb.Append(" {");
-            for (var i = 0; i < sv.ValueCount - 2; ++i) {
+            _sb.AppendFormat("struct {0} {{", sv.Name);
+            for (var i = 0; i < sv.Values.Count - 2; ++i) {
                 sv.Values[i].Accept(this);
                 _sb.Append(", ");
             }
-            sv.Values[sv.ValueCount - 1].Accept(this);
+            sv.Values[sv.Values.Count - 1].Accept(this);
             _sb.Append("}");
         }
 

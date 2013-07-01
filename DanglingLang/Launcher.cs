@@ -31,7 +31,8 @@
             }         
 
             Console.Write("# Type checking file {0}: ", input);
-            prog.Accept(new TypecheckVisitor());
+            var tcv = new TypecheckVisitor();
+            prog.Accept(tcv);
             Console.WriteLine("OK");
 
             Console.WriteLine("# Contents of file {0}:", input);
@@ -41,7 +42,7 @@
 
             var output = input.Substring(0, input.LastIndexOf('.')) + ".exe";
             Console.Write("# Compiling file {0} into {1}: ", input, output);
-            var cecilVisitor = new CecilVisitor();
+            var cecilVisitor = new CecilVisitor(tcv.Assembly, tcv.Module);
             prog.Accept(cecilVisitor);
             cecilVisitor.Write(output);
             Console.WriteLine("OK");
