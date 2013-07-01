@@ -1,6 +1,10 @@
 ﻿namespace DanglingLang
 {
+    using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Linq;
+    using Thrower;
 
     abstract class TreeNode
     {
@@ -34,8 +38,10 @@
         void Visit(Power pow);
         void Visit(BoolLiteral bl);
         void Visit(IntLiteral il);
+        void Visit(StructValue sv);
         void Visit(Id id);
         void Visit(Print print);
+        void Visit(StructDecl structDecl);
         void Visit(EvalExp eval);
         void Visit(Assignment asg);
         void Visit(If ifs);
@@ -305,6 +311,31 @@
         }
     }
 
+    sealed class StructValue : Exp
+    {
+        readonly IList<Exp> _values = new List<Exp>();
+
+        public int ValueCount
+        {
+            get { return _values.Count; }
+        }
+
+        public ReadOnlyCollection<Exp> Values
+        {
+            get { return new ReadOnlyCollection<Exp>(_values); }
+        }
+
+        public void AddValue(Exp value)
+        {
+            _values.Add(value);
+        }
+
+        public override void Accept(ITreeNodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
     class Print : Stmt
     {
         readonly Exp _exp;
@@ -317,6 +348,29 @@
         public Exp Exp
         {
             get { return _exp; }
+        }
+
+        public override void Accept(ITreeNodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
+    sealed class StructDecl : Stmt
+    {
+        readonly LinkedList<Tuple<string, string>> _fields = new LinkedList<Tuple<string, string>>();
+
+        public IEnumerable<Tuple<string, string>> Fields
+        {
+            get { return _fields; }
+        } 
+
+        public string Name { get; set; }
+
+        public void AddField(string name, string type)
+        {
+            Raise<ArgumentException>.If(_fields.Any(f => f.Item1 == name && f.Item2 == type));
+            _fields.AddLast(Tuple.Create(name, type));
         }
 
         public override void Accept(ITreeNodeVisitor visitor)

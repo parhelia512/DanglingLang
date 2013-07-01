@@ -7,11 +7,6 @@
         [Test]
         public void FalseCond()
         {
-            //var r = new System.Random();
-            //var r1 = r.Next(5, 10);
-            //var r2 = r.Next(15, 20);
-            //var i = r1 <= r2;
-            //AddLine(i.ToString());
             AddLine("if (false) {");
             AddLine("print(21)");
             AddLine("}");

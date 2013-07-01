@@ -140,6 +140,18 @@
             _sb.Append(il.Value);
         }
 
+        public void Visit(StructValue sv)
+        {
+            _sb.Append("struct ");
+            _sb.Append(" {");
+            for (var i = 0; i < sv.ValueCount - 2; ++i) {
+                sv.Values[i].Accept(this);
+                _sb.Append(", ");
+            }
+            sv.Values[sv.ValueCount - 1].Accept(this);
+            _sb.Append("}");
+        }
+
         public void Visit(Id id)
         {
             _sb.Append(id.Var == null ? id.Name : id.Var.Name);
@@ -151,6 +163,22 @@
             _sb.Append("print(");
             print.Exp.Accept(this);
             _sb.Append(")\n");
+        }
+
+        public void Visit(StructDecl structDecl)
+        {
+            Indent();
+            _sb.Append("struct ");
+            _sb.Append(structDecl.Name);
+            _sb.Append(" {");
+            foreach (var f in structDecl.Fields) {
+                _sb.Append(f.Item2);
+                _sb.Append(" ");
+                _sb.Append(f.Item1);
+                _sb.Append(";");
+                _sb.Append(" ");
+            }
+            _sb.Append("}\n");
         }
 
         public void Visit(EvalExp eval)

@@ -45,6 +45,7 @@
     <Compile Include="IfTests.cs" />
     <Compile Include="MathTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StructTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="WhileTests.cs" />
   </ItemGroup>

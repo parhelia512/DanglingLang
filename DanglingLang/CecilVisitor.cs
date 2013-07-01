@@ -1,5 +1,6 @@
 ﻿namespace DanglingLang
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Mono.Cecil;
@@ -170,6 +171,11 @@
             _instructions.Add(Instruction.Create(OpCodes.Ldc_I4, il.Value));
         }
 
+        public void Visit(StructValue sv)
+        {
+            //throw new System.NotImplementedException();
+        }
+
         public void Visit(Id id)
         {
             _instructions.Add(Instruction.Create(OpCodes.Ldloc, _varDefs[id.Name]));
@@ -182,9 +188,14 @@
             _instructions.Add(Instruction.Create(OpCodes.Call, printFn));
         }
 
+        public void Visit(StructDecl structDecl)
+        {
+            //throw new NotImplementedException();
+        }
+
         public void Visit(EvalExp eval)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void Visit(Assignment asg)

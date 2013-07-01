@@ -204,6 +204,11 @@
             _result = il.Type = Type.Int;
         }
 
+        public void Visit(StructValue sv)
+        {
+            //throw new NotImplementedException();
+        }
+
         public void Visit(Id id)
         {
             var v = _staticEnv.GetVariable(id.Name);
@@ -214,6 +219,11 @@
         public void Visit(Print print)
         {
             print.Exp.Accept(this);
+        }
+
+        public void Visit(StructDecl structDecl)
+        {
+            //throw new NotImplementedException();
         }
 
         public void Visit(EvalExp eval)

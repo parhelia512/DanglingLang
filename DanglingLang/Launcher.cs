@@ -18,26 +18,31 @@
         public static string Compile(string input)
         {         
             Console.Write("# Parsing file {0}: ", input);
-            var file = new FileStream(input, FileMode.Open);
-            var scanner = new Scanner(file);
-            var parser = new Parser(scanner);
-            parser.Parse();
-            file.Close();
-            Console.WriteLine("OK");
+            Prog prog;
+            using (var file = new FileStream(input, FileMode.Open)) {
+                var scanner = new Scanner(file);
+                var parser = new Parser(scanner);
+                if (!parser.Parse()) {
+                    Console.WriteLine("Not OK :(");
+                    throw new ArgumentException("Input is not valid...");
+                }
+                Console.WriteLine("OK");
+                prog = parser.Prog;
+            }         
 
             Console.Write("# Type checking file {0}: ", input);
-            parser.Prog.Accept(new TypecheckVisitor());
+            prog.Accept(new TypecheckVisitor());
             Console.WriteLine("OK");
 
             Console.WriteLine("# Contents of file {0}:", input);
             var toStringVisitor = new ToStringVisitor();
-            parser.Prog.Accept(toStringVisitor);
+            prog.Accept(toStringVisitor);
             Console.Write(toStringVisitor.Result);
 
             var output = input.Substring(0, input.LastIndexOf('.')) + ".exe";
             Console.Write("# Compiling file {0} into {1}: ", input, output);
             var cecilVisitor = new CecilVisitor();
-            parser.Prog.Accept(cecilVisitor);
+            prog.Accept(cecilVisitor);
             cecilVisitor.Write(output);
             Console.WriteLine("OK");
 
