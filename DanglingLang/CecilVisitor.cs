@@ -236,7 +236,22 @@
 
         public void Visit(FunctionDecl funcDecl)
         {
-            throw new NotImplementedException();
+            const MethodAttributes funcAttr = MethodAttributes.Public | MethodAttributes.Static;
+            var func = new MethodDefinition(funcDecl.Name, funcAttr, funcDecl.ReturnType.Reference);
+            
+            foreach (var p in funcDecl.Params) {
+                const ParameterAttributes paramAttr = ParameterAttributes.None;
+                func.Parameters.Add(new ParameterDefinition(p.Name, paramAttr, p.Type.Reference));
+            }
+
+            var oldBody = _body;
+            var oldInstructions = _instructions;
+
+            _body = func.Body;
+            _instructions = _body.Instructions;
+
+            _body = oldBody;
+            _instructions = oldInstructions;
         }
 
         public void Visit(Assignment asg)

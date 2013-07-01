@@ -1,7 +1,7 @@
 <html><head><title>D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y</title></head>
 <body bgcolor="white">
 <hr><pre>
-<b>Grammar D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.10.27</b>
+<b>Grammar D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.30.34</b>
 
 <a name="prod1">    1</a> $accept: prog EOF
              ;
@@ -58,8 +58,8 @@
                        ;
 
 <a name="prod41">   41</a> funcArgs: /* empty */
-<a name="prod42">   42</a>         | funcArgs ',' type ID
-<a name="prod43">   43</a>         | type ID
+<a name="prod42">   42</a>         | type ID
+<a name="prod43">   43</a>         | funcArgs ',' type ID
               ;
 
 <a name="prod44">   44</a> type: BOOL
@@ -2422,7 +2422,7 @@
 
   <b>Kernel Items</b>
     12 stmt: type ID '(' funcArgs . ')' '{' stmts '}'
-    42 funcArgs: funcArgs . ',' type ID
+    43 funcArgs: funcArgs . ',' type ID
   <b>Parser Actions</b>
     ')'            shift, and go to state <a href="#state102">102</a>
     ','            shift, and go to state <a href="#state106">106</a>
@@ -2507,7 +2507,7 @@
 <b><a name="state106">State</a> <a href="#state106">106</a></b>
 
   <b>Kernel Items</b>
-    42 funcArgs: funcArgs ',' . type ID
+    43 funcArgs: funcArgs ',' . type ID
   <b>Parser Actions</b>
     BOOL           shift, and go to state <a href="#state93">93</a>
     INT            shift, and go to state <a href="#state94">94</a>
@@ -2521,7 +2521,7 @@
 <b><a name="state107">State</a> <a href="#state107">107</a></b>
 
   <b>Kernel Items</b>
-    42 funcArgs: funcArgs ',' type . ID
+    43 funcArgs: funcArgs ',' type . ID
   <b>Parser Actions</b>
     ID             shift, and go to state <a href="#state108">108</a>
 
@@ -2530,18 +2530,18 @@
 <b><a name="state108">State</a> <a href="#state108">108</a></b>
 
   <b>Kernel Items</b>
-    42 funcArgs: funcArgs ',' type ID .
+    43 funcArgs: funcArgs ',' type ID .
 	-lookahead: { ')', ',' }
   <b>Parser Actions</b>
-    ')'            reduce using <a href="#prod42">rule 42</a> (funcArgs)
-    ','            reduce using <a href="#prod42">rule 42</a> (funcArgs)
+    ')'            reduce using <a href="#prod43">rule 43</a> (funcArgs)
+    ','            reduce using <a href="#prod43">rule 43</a> (funcArgs)
 
 
 
 <b><a name="state109">State</a> <a href="#state109">109</a></b>
 
   <b>Kernel Items</b>
-    43 funcArgs: type . ID
+    42 funcArgs: type . ID
   <b>Parser Actions</b>
     ID             shift, and go to state <a href="#state110">110</a>
 
@@ -2550,11 +2550,11 @@
 <b><a name="state110">State</a> <a href="#state110">110</a></b>
 
   <b>Kernel Items</b>
-    43 funcArgs: type ID .
+    42 funcArgs: type ID .
 	-lookahead: { ')', ',' }
   <b>Parser Actions</b>
-    ')'            reduce using <a href="#prod43">rule 43</a> (funcArgs)
-    ','            reduce using <a href="#prod43">rule 43</a> (funcArgs)
+    ')'            reduce using <a href="#prod42">rule 42</a> (funcArgs)
+    ','            reduce using <a href="#prod42">rule 42</a> (funcArgs)
 
 
 

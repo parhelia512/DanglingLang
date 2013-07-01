@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.0
 // Machine:  CELESTINO
-// DateTime: 01/07/2013 22.10.29
+// DateTime: 01/07/2013 23.40.19
 // UserName: Alessio
-// Input file <D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.10.27>
+// Input file <D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.30.34>
 
 // options: lines report gplex
 
@@ -64,10 +64,10 @@ public class ScanObj {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.10.27
+  // Verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.30.34
 #line 36 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 	internal Prog Prog;
-  // End verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.10.27
+  // End verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.30.34
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
@@ -187,9 +187,9 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
     states[105] = new State(-12);
     states[106] = new State(new int[]{146,93,147,94,148,95,136,96},new int[]{-8,107});
     states[107] = new State(new int[]{130,108});
-    states[108] = new State(-42);
+    states[108] = new State(-43);
     states[109] = new State(new int[]{130,110});
-    states[110] = new State(-43);
+    states[110] = new State(-42);
 
     for (int sNo = 0; sNo < states.Length; sNo++) states[sNo].number = sNo;
 
@@ -234,8 +234,8 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
     rules[39] = new Rule(-2, new int[]{});
     rules[40] = new Rule(-2, new int[]{-2,-1,44});
     rules[41] = new Rule(-4, new int[]{});
-    rules[42] = new Rule(-4, new int[]{-4,44,-8,130});
-    rules[43] = new Rule(-4, new int[]{-8,130});
+    rules[42] = new Rule(-4, new int[]{-8,130});
+    rules[43] = new Rule(-4, new int[]{-4,44,-8,130});
     rules[44] = new Rule(-8, new int[]{146});
     rules[45] = new Rule(-8, new int[]{147});
     rules[46] = new Rule(-8, new int[]{148});
@@ -296,7 +296,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
         break;
       case 12: // stmt -> type, ID, '(', funcArgs, ')', '{', stmts, '}'
 #line 54 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
-{}
+{ValueStack[ValueStack.Depth-5].functionDecl.Name = ValueStack[ValueStack.Depth-7].identifier; ValueStack[ValueStack.Depth-5].functionDecl.ReturnTypeName = ValueStack[ValueStack.Depth-8].identifier; ValueStack[ValueStack.Depth-5].functionDecl.Body = new Block(ValueStack[ValueStack.Depth-2].stmts); CurrentSemanticValue.stmt = ValueStack[ValueStack.Depth-5].functionDecl;}
         break;
       case 13: // exp -> NUM
 #line 57 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
@@ -414,13 +414,13 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 #line 91 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.functionDecl = new FunctionDecl();}
         break;
-      case 42: // funcArgs -> funcArgs, ',', type, ID
+      case 42: // funcArgs -> type, ID
 #line 92 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
-{}
+{CurrentSemanticValue.functionDecl = new FunctionDecl(); CurrentSemanticValue.functionDecl.AddParam(ValueStack[ValueStack.Depth-1].identifier, ValueStack[ValueStack.Depth-2].identifier);}
         break;
-      case 43: // funcArgs -> type, ID
+      case 43: // funcArgs -> funcArgs, ',', type, ID
 #line 93 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
-{}
+{ValueStack[ValueStack.Depth-4].functionDecl.AddParam(ValueStack[ValueStack.Depth-1].identifier, ValueStack[ValueStack.Depth-2].identifier); CurrentSemanticValue.functionDecl = ValueStack[ValueStack.Depth-4].functionDecl;}
         break;
       case 44: // type -> BOOL
 #line 96 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"

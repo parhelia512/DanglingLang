@@ -368,20 +368,20 @@
 
     sealed class StructDecl : Stmt
     {
-        readonly LinkedList<Tuple<string, string>> _fields = new LinkedList<Tuple<string, string>>();
+        readonly IList<Tuple<string, string>> _fields = new List<Tuple<string, string>>();
         public StructType Type;
 
-        public IEnumerable<Tuple<string, string>> Fields
+        public ReadOnlyCollection<Tuple<string, string>> Fields
         {
-            get { return _fields; }
+            get { return new ReadOnlyCollection<Tuple<string, string>>(_fields); }
         } 
 
         public string Name { get; set; }
 
         public void AddField(string name, string type)
         {
-            Raise<ArgumentException>.If(_fields.Any(f => f.Item1 == name && f.Item2 == type));
-            _fields.AddLast(Tuple.Create(name, type));
+            Raise<ArgumentException>.If(_fields.Any(f => f.Item1 == name));
+            _fields.Add(Tuple.Create(name, type));
         }
 
         public override void Accept(ITreeNodeVisitor visitor)
@@ -392,9 +392,59 @@
 
     sealed class FunctionDecl : Stmt
     {
+        readonly IList<ParamInfo> _params = new List<ParamInfo>();
+        readonly IList<VarInfo> _variables = new List<VarInfo>();
+        public string Name;
+        public string ReturnTypeName;
+        public Type ReturnType;
+        public Block Body;
+
         public override void Accept(ITreeNodeVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public ReadOnlyCollection<ParamInfo> Params
+        {
+            get { return new ReadOnlyCollection<ParamInfo>(_params); }
+        }
+
+        public void AddParam(string name, string typeName)
+        {
+            Raise<ArgumentException>.If(_params.Any(p => p.Name == name));
+            _params.Add(new ParamInfo(name, typeName));
+        }
+
+        public void AddVariable(string name, string typeName)
+        {
+            Raise<ArgumentException>.If(_variables.Any(v => v.Name == name));
+            _variables.Add(new VarInfo(name, typeName));
+        }
+
+        public sealed class ParamInfo
+        {
+            public readonly string Name;
+            public readonly string TypeName;
+            public Type Type;
+
+            public ParamInfo(string name, string typeName)
+            {
+                Name = name;
+                TypeName = typeName;
+            }
+        }
+
+        public sealed class VarInfo
+        {
+            public readonly string Name;
+            public readonly string TypeName;
+            public Type Type;
+
+            public VarInfo(string name, string typeName)
+            {
+                Name = name;
+                TypeName = typeName;
+            }
         }
     }
 

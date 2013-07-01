@@ -190,7 +190,18 @@
 
         public void Visit(FunctionDecl funcDecl)
         {
-            throw new System.NotImplementedException();
+            Indent();
+            _sb.AppendFormat("{0} {1}(", funcDecl.ReturnType, funcDecl.Name);
+            var i = 0;
+            FunctionDecl.ParamInfo p;
+            for (; i < funcDecl.Params.Count - 1; ++i) {
+                p = funcDecl.Params[i];
+                _sb.AppendFormat("{0} {1},", p.Type, p.Name);
+            }
+            p = funcDecl.Params[i];
+            _sb.AppendFormat("{0} {1}) {{\n", p.Type, p.Name);
+            funcDecl.Body.Accept(this);
+            _sb.Append("}\n");
         }
 
         public void Visit(Assignment asg)

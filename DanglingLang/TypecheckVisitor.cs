@@ -149,8 +149,9 @@
 
     sealed class TypecheckVisitor : ITreeNodeVisitor
     {
-        readonly IDictionary<string, Type> Types = new Dictionary<string, Type>();
-        readonly IDictionary<string, StructType> StructTypes = new Dictionary<string, StructType>();
+        readonly IDictionary<string, Type> _types = new Dictionary<string, Type>();
+        readonly IDictionary<string, StructType> _structTypes = new Dictionary<string, StructType>();
+        readonly IDictionary<string, FunctionDecl> _funcDecls = new Dictionary<string, FunctionDecl>();
         public readonly AssemblyDefinition Assembly;
         public readonly ModuleDefinition Module;
         readonly Type _boolType;
@@ -309,7 +310,17 @@
 
         public void Visit(FunctionDecl funcDecl)
         {
-            throw new NotImplementedException();
+            Raise<TypeCheckingException>.If(_funcDecls.ContainsKey(funcDecl.Name));
+            funcDecl.ReturnType = GetType(funcDecl.ReturnTypeName);
+            var previousStaticEnv = _staticEnv;
+            _staticEnv = new OutmostStaticEnv();
+            foreach (var p in funcDecl.Params) {
+                p.Type = GetType(p.TypeName);
+                _staticEnv.SetVariable(p.Name, CreateVar(p.Name));
+            }
+            funcDecl.Body.Accept(this);
+            _staticEnv = previousStaticEnv;
+            _funcDecls.Add(funcDecl.Name, funcDecl);
         }
 
         public void Visit(Assignment asg)
@@ -367,16 +378,16 @@
         Type AddType(string name, TypeReference reference)
         {
             name = name.ToLower();
-            Raise<TypeCheckingException>.If(Types.ContainsKey(name), "Type already existing.");
+            Raise<TypeCheckingException>.If(_types.ContainsKey(name), "Type already existing.");
             var type = new Type(name, reference);
-            Types.Add(name, type);
+            _types.Add(name, type);
             return type;
         }
 
         StructType AddStructType(StructDecl decl)
         {
             var name = decl.Name.ToLower();
-            Raise<ArgumentException>.If(Types.ContainsKey(name));
+            Raise<ArgumentException>.If(_types.ContainsKey(name));
             
             const string nmsp = "DanglingLang.Runner";
             const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed;
@@ -389,23 +400,23 @@
                 type.AddField(f.Item1, fieldType);
             }
             
-            Types.Add(name, type);
-            StructTypes.Add(name, type);
+            _types.Add(name, type);
+            _structTypes.Add(name, type);
             return type;
         }
 
         Type GetType(string name)
         {
             name = name.ToLower();
-            Raise<ArgumentException>.If(!Types.ContainsKey(name), "Type does not exist.");
-            return Types[name];
+            Raise<ArgumentException>.If(!_types.ContainsKey(name), "Type does not exist.");
+            return _types[name];
         }
 
         StructType GetStructType(string name)
         {
             name = name.ToLower();
-            Raise<ArgumentException>.If(!StructTypes.ContainsKey(name), "Type does not exist.");
-            return StructTypes[name];
+            Raise<ArgumentException>.If(!_structTypes.ContainsKey(name), "Type does not exist.");
+            return _structTypes[name];
         }
 
         Type MustBe(Type t, string msg)

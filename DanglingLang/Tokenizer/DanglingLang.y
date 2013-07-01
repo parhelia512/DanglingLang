@@ -51,7 +51,7 @@ stmt: NEWLINE {$$ = null;}
 	| WHILE '(' exp ')' stmt { $$ = new While($3, $5 ?? new Block(new List<Stmt>())); }
 	| PRINT '(' exp ')' NEWLINE {$$ = new Print($3);}
 	| STRUCT ID '{' structFieldDecl '}' {$4.Name = $2; $$ = $4;}
-	| type ID '(' funcArgs ')' '{' stmts '}' {}
+	| type ID '(' funcArgs ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = $1; $4.Body = new Block($7); $$ = $4;}
 	;
 
 exp: NUM  { $$ = new IntLiteral($1); }
@@ -89,8 +89,8 @@ structFieldValues: /* Empty */ {$$ = new StructValue();}
                  ;
 
 funcArgs: /* Empty */ {$$ = new FunctionDecl();}
-        | funcArgs ',' type ID {}
-		| type ID {}
+		| type ID {$$ = new FunctionDecl(); $$.AddParam($2, $1);}
+        | funcArgs ',' type ID {$1.AddParam($4, $3); $$ = $1;}
         ;
 
 type: BOOL {$$ = "bool";}
