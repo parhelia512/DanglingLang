@@ -10,7 +10,8 @@
 }
 %token <intValue> NUM
 %token <identifier> ID
-%token MAX MIN NEWLINE IF WHILE STRUCT INT BOOL PRINT TRUE FALSE AND OR EQUAL LESS_THAN LEQ DOT
+%token MAX MIN NEWLINE IF WHILE STRUCT PRINT TRUE FALSE AND OR EQUAL LESS_THAN LEQ DOT
+%token BOOL INT VOID
 %left OR
 %left AND
 %left EQUAL 
@@ -28,6 +29,7 @@
 %type <stmt> stmt
 %type <stmts> stmts 
 %type <void> prog
+%type <identifier> type
 %{
 	internal Prog Prog;
 %}
@@ -40,14 +42,15 @@ stmts: /* empty */ {$$ = new List<Stmt>();}
 	 | stmts stmt { if (($2) != null) $1.Add($2); $$ = $1; }
 	 ;
 
-stmt: NEWLINE { $$ = null; }
+stmt: NEWLINE {$$ = null;}
 	| exp NEWLINE { $$ = new EvalExp($1); }
 	| ID '=' exp NEWLINE { $$ = new Assignment($1, $3); }
 	| '{' stmts '}' { $$ = new Block($2); }
 	| IF '(' exp ')' stmt { $$ = new If($3, $5 ?? new Block(new List<Stmt>())); }
 	| WHILE '(' exp ')' stmt { $$ = new While($3, $5 ?? new Block(new List<Stmt>())); }
-	| PRINT '(' exp ')' NEWLINE { $$ = new Print($3); }
+	| PRINT '(' exp ')' NEWLINE {$$ = new Print($3);}
 	| STRUCT ID '{' structFieldDecl '}' {$4.Name = $2; $$ = $4;}
+	| ID ID '(' funcArgs ')' '{' stmts '}' {}
 	;
 
 exp: NUM  { $$ = new IntLiteral($1); }
@@ -77,14 +80,21 @@ exp: NUM  { $$ = new IntLiteral($1); }
    ;
 
 structFieldDecl: /* Empty */ {$$ = new StructDecl();}
-               | structFieldDecl INT ID ';' {$1.AddField($3, "int"); $$ = $1;}
-			   | structFieldDecl BOOL ID ';' {$1.AddField($3, "bool"); $$ = $1;}
-			   | structFieldDecl STRUCT ID ID ';' {$1.AddField($4, $3); $$ = $1;}
+               | structFieldDecl type ID ';' {$1.AddField($3, $2); $$ = $1;}
 			   ;
 
 structFieldValues: /* Empty */ {$$ = new StructValue();}
                  | structFieldValues exp ',' {$1.AddValue($2); $$ = $1;}
                  ;
+
+funcArgs: {}
+        ;
+
+type: BOOL {$$ = "bool";}
+    | INT {$$ = "int";}
+	| VOID {$$ = "void";}
+	| STRUCT ID {$$ = $2;}
+	;
 
 %%
 	public Parser(Scanner s) : base(s) {}

@@ -385,7 +385,9 @@
             
             var type = new StructType(name, typeDef);
             foreach (var f in decl.Fields) {
-                type.AddField(f.Item1, GetType(f.Item2));
+                var fieldType = GetType(f.Item2);
+                Raise<TypeCheckingException>.IfAreEqual("void", fieldType.Name);
+                type.AddField(f.Item1, fieldType);
             }
             
             Types.Add(name, type);

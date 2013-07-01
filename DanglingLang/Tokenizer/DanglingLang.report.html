@@ -1,7 +1,7 @@
 <html><head><title>D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y</title></head>
 <body bgcolor="white">
 <hr><pre>
-<b>Grammar D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 17.18.09</b>
+<b>Grammar D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 21.51.28</b>
 
 <a name="prod1">    1</a> $accept: prog EOF
              ;
@@ -21,43 +21,51 @@
 <a name="prod10">   10</a>     | WHILE '(' exp ')' stmt
 <a name="prod11">   11</a>     | PRINT '(' exp ')' NEWLINE
 <a name="prod12">   12</a>     | STRUCT ID '{' structFieldDecl '}'
+<a name="prod13">   13</a>     | ID ID '(' funcArgs ')' '{' stmts '}'
           ;
 
-<a name="prod13">   13</a> exp: NUM
-<a name="prod14">   14</a>    | TRUE
-<a name="prod15">   15</a>    | FALSE
-<a name="prod16">   16</a>    | STRUCT ID '{' structFieldValues exp '}'
-<a name="prod17">   17</a>    | exp '+' exp
-<a name="prod18">   18</a>    | exp '-' exp
-<a name="prod19">   19</a>    | exp '*' exp
-<a name="prod20">   20</a>    | exp '/' exp
-<a name="prod21">   21</a>    | exp '%' exp
-<a name="prod22">   22</a>    | '+' exp
-<a name="prod23">   23</a>    | '-' exp
-<a name="prod24">   24</a>    | exp '!'
-<a name="prod25">   25</a>    | exp '^' exp
-<a name="prod26">   26</a>    | MAX '(' exp ',' exp ')'
-<a name="prod27">   27</a>    | MIN '(' exp ',' exp ')'
-<a name="prod28">   28</a>    | '(' exp ')'
-<a name="prod29">   29</a>    | ID
-<a name="prod30">   30</a>    | '~' exp
-<a name="prod31">   31</a>    | exp AND exp
-<a name="prod32">   32</a>    | exp OR exp
-<a name="prod33">   33</a>    | exp EQUAL exp
-<a name="prod34">   34</a>    | exp LEQ exp
-<a name="prod35">   35</a>    | exp LESS_THAN exp
-<a name="prod36">   36</a>    | exp DOT ID
+<a name="prod14">   14</a> exp: NUM
+<a name="prod15">   15</a>    | TRUE
+<a name="prod16">   16</a>    | FALSE
+<a name="prod17">   17</a>    | STRUCT ID '{' structFieldValues exp '}'
+<a name="prod18">   18</a>    | exp '+' exp
+<a name="prod19">   19</a>    | exp '-' exp
+<a name="prod20">   20</a>    | exp '*' exp
+<a name="prod21">   21</a>    | exp '/' exp
+<a name="prod22">   22</a>    | exp '%' exp
+<a name="prod23">   23</a>    | '+' exp
+<a name="prod24">   24</a>    | '-' exp
+<a name="prod25">   25</a>    | exp '!'
+<a name="prod26">   26</a>    | exp '^' exp
+<a name="prod27">   27</a>    | MAX '(' exp ',' exp ')'
+<a name="prod28">   28</a>    | MIN '(' exp ',' exp ')'
+<a name="prod29">   29</a>    | '(' exp ')'
+<a name="prod30">   30</a>    | ID
+<a name="prod31">   31</a>    | '~' exp
+<a name="prod32">   32</a>    | exp AND exp
+<a name="prod33">   33</a>    | exp OR exp
+<a name="prod34">   34</a>    | exp EQUAL exp
+<a name="prod35">   35</a>    | exp LEQ exp
+<a name="prod36">   36</a>    | exp LESS_THAN exp
+<a name="prod37">   37</a>    | exp DOT ID
          ;
 
-<a name="prod37">   37</a> structFieldDecl: /* empty */
-<a name="prod38">   38</a>                | structFieldDecl INT ID ';'
-<a name="prod39">   39</a>                | structFieldDecl BOOL ID ';'
-<a name="prod40">   40</a>                | structFieldDecl STRUCT ID ID ';'
+<a name="prod38">   38</a> structFieldDecl: /* empty */
+<a name="prod39">   39</a>                | structFieldDecl type ID ';'
                      ;
 
-<a name="prod41">   41</a> structFieldValues: /* empty */
-<a name="prod42">   42</a>                  | structFieldValues exp ','
+<a name="prod40">   40</a> structFieldValues: /* empty */
+<a name="prod41">   41</a>                  | structFieldValues exp ','
                        ;
+
+<a name="prod42">   42</a> funcArgs: /* empty */
+              ;
+
+<a name="prod43">   43</a> type: BOOL
+<a name="prod44">   44</a>     | INT
+<a name="prod45">   45</a>     | VOID
+<a name="prod46">   46</a>     | STRUCT ID
+          ;
 <b><a name="state0">State</a> <a href="#state0">0</a></b>
 
   <b>Kernel Items</b>
@@ -111,8 +119,6 @@
     IF             reduce using <a href="#prod1">rule 1</a> ($accept)
     WHILE          reduce using <a href="#prod1">rule 1</a> ($accept)
     STRUCT         reduce using <a href="#prod1">rule 1</a> ($accept)
-    INT            reduce using <a href="#prod1">rule 1</a> ($accept)
-    BOOL           reduce using <a href="#prod1">rule 1</a> ($accept)
     PRINT          reduce using <a href="#prod1">rule 1</a> ($accept)
     TRUE           reduce using <a href="#prod1">rule 1</a> ($accept)
     FALSE          reduce using <a href="#prod1">rule 1</a> ($accept)
@@ -122,6 +128,9 @@
     LESS_THAN      reduce using <a href="#prod1">rule 1</a> ($accept)
     LEQ            reduce using <a href="#prod1">rule 1</a> ($accept)
     DOT            reduce using <a href="#prod1">rule 1</a> ($accept)
+    BOOL           reduce using <a href="#prod1">rule 1</a> ($accept)
+    INT            reduce using <a href="#prod1">rule 1</a> ($accept)
+    VOID           reduce using <a href="#prod1">rule 1</a> ($accept)
     '+'            reduce using <a href="#prod1">rule 1</a> ($accept)
     '-'            reduce using <a href="#prod1">rule 1</a> ($accept)
     '*'            reduce using <a href="#prod1">rule 1</a> ($accept)
@@ -158,12 +167,12 @@
     MAX            shift, and go to state <a href="#state47">47</a>
     MIN            shift, and go to state <a href="#state53">53</a>
     '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state80">80</a>
+    ID             shift, and go to state <a href="#state78">78</a>
     '~'            shift, and go to state <a href="#state63">63</a>
-    '{'            shift, and go to state <a href="#state84">84</a>
-    IF             shift, and go to state <a href="#state87">87</a>
-    WHILE          shift, and go to state <a href="#state92">92</a>
-    PRINT          shift, and go to state <a href="#state97">97</a>
+    '{'            shift, and go to state <a href="#state89">89</a>
+    IF             shift, and go to state <a href="#state92">92</a>
+    WHILE          shift, and go to state <a href="#state97">97</a>
+    PRINT          shift, and go to state <a href="#state102">102</a>
     EOF            reduce using <a href="#prod2">rule 2</a> (prog)
 
   <b>Transitions</b>
@@ -231,19 +240,19 @@
 
   <b>Kernel Items</b>
     6 stmt: exp . NEWLINE
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     NEWLINE        shift, and go to state <a href="#state7">7</a>
     '+'            shift, and go to state <a href="#state8">8</a>
@@ -293,7 +302,7 @@
 <b><a name="state8">State</a> <a href="#state8">8</a></b>
 
   <b>Kernel Items</b>
-    17 exp: exp '+' . exp
+    18 exp: exp '+' . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -314,83 +323,22 @@
 <b><a name="state9">State</a> <a href="#state9">9</a></b>
 
   <b>Kernel Items</b>
-    17 exp: exp '+' exp .
+    18 exp: exp '+' exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
-  <b>Parser Actions</b>
-    '+'            reduce using <a href="#prod17">rule 17</a> (exp)
-    '-'            reduce using <a href="#prod17">rule 17</a> (exp)
-    '*'            shift, and go to state <a href="#state12">12</a>
-    '/'            shift, and go to state <a href="#state14">14</a>
-    '%'            shift, and go to state <a href="#state16">16</a>
-    '!'            shift, and go to state <a href="#state18">18</a>
-    '^'            shift, and go to state <a href="#state19">19</a>
-    AND            reduce using <a href="#prod17">rule 17</a> (exp)
-    OR             reduce using <a href="#prod17">rule 17</a> (exp)
-    EQUAL          reduce using <a href="#prod17">rule 17</a> (exp)
-    LEQ            reduce using <a href="#prod17">rule 17</a> (exp)
-    LESS_THAN      reduce using <a href="#prod17">rule 17</a> (exp)
-    DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod17">rule 17</a> (exp)
-    '}'            reduce using <a href="#prod17">rule 17</a> (exp)
-    ','            reduce using <a href="#prod17">rule 17</a> (exp)
-    ')'            reduce using <a href="#prod17">rule 17</a> (exp)
-
-
-
-<b><a name="state10">State</a> <a href="#state10">10</a></b>
-
-  <b>Kernel Items</b>
-    18 exp: exp '-' . exp
-  <b>Parser Actions</b>
-    NUM            shift, and go to state <a href="#state33">33</a>
-    TRUE           shift, and go to state <a href="#state34">34</a>
-    FALSE          shift, and go to state <a href="#state35">35</a>
-    STRUCT         shift, and go to state <a href="#state36">36</a>
-    '+'            shift, and go to state <a href="#state43">43</a>
-    '-'            shift, and go to state <a href="#state45">45</a>
-    MAX            shift, and go to state <a href="#state47">47</a>
-    MIN            shift, and go to state <a href="#state53">53</a>
-    '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state62">62</a>
-    '~'            shift, and go to state <a href="#state63">63</a>
-
-  <b>Transitions</b>
-    exp            go to state <a href="#state11">11</a>
-
-
-<b><a name="state11">State</a> <a href="#state11">11</a></b>
-
-  <b>Kernel Items</b>
-    18 exp: exp '-' exp .
-	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
-                LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     '+'            reduce using <a href="#prod18">rule 18</a> (exp)
     '-'            reduce using <a href="#prod18">rule 18</a> (exp)
@@ -412,10 +360,71 @@
 
 
 
+<b><a name="state10">State</a> <a href="#state10">10</a></b>
+
+  <b>Kernel Items</b>
+    19 exp: exp '-' . exp
+  <b>Parser Actions</b>
+    NUM            shift, and go to state <a href="#state33">33</a>
+    TRUE           shift, and go to state <a href="#state34">34</a>
+    FALSE          shift, and go to state <a href="#state35">35</a>
+    STRUCT         shift, and go to state <a href="#state36">36</a>
+    '+'            shift, and go to state <a href="#state43">43</a>
+    '-'            shift, and go to state <a href="#state45">45</a>
+    MAX            shift, and go to state <a href="#state47">47</a>
+    MIN            shift, and go to state <a href="#state53">53</a>
+    '('            shift, and go to state <a href="#state59">59</a>
+    ID             shift, and go to state <a href="#state62">62</a>
+    '~'            shift, and go to state <a href="#state63">63</a>
+
+  <b>Transitions</b>
+    exp            go to state <a href="#state11">11</a>
+
+
+<b><a name="state11">State</a> <a href="#state11">11</a></b>
+
+  <b>Kernel Items</b>
+    19 exp: exp '-' exp .
+	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
+                LESS_THAN, DOT, '}', ',', ')' }
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
+  <b>Parser Actions</b>
+    '+'            reduce using <a href="#prod19">rule 19</a> (exp)
+    '-'            reduce using <a href="#prod19">rule 19</a> (exp)
+    '*'            shift, and go to state <a href="#state12">12</a>
+    '/'            shift, and go to state <a href="#state14">14</a>
+    '%'            shift, and go to state <a href="#state16">16</a>
+    '!'            shift, and go to state <a href="#state18">18</a>
+    '^'            shift, and go to state <a href="#state19">19</a>
+    AND            reduce using <a href="#prod19">rule 19</a> (exp)
+    OR             reduce using <a href="#prod19">rule 19</a> (exp)
+    EQUAL          reduce using <a href="#prod19">rule 19</a> (exp)
+    LEQ            reduce using <a href="#prod19">rule 19</a> (exp)
+    LESS_THAN      reduce using <a href="#prod19">rule 19</a> (exp)
+    DOT            shift, and go to state <a href="#state31">31</a>
+    NEWLINE        reduce using <a href="#prod19">rule 19</a> (exp)
+    '}'            reduce using <a href="#prod19">rule 19</a> (exp)
+    ','            reduce using <a href="#prod19">rule 19</a> (exp)
+    ')'            reduce using <a href="#prod19">rule 19</a> (exp)
+
+
+
 <b><a name="state12">State</a> <a href="#state12">12</a></b>
 
   <b>Kernel Items</b>
-    19 exp: exp '*' . exp
+    20 exp: exp '*' . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -436,83 +445,22 @@
 <b><a name="state13">State</a> <a href="#state13">13</a></b>
 
   <b>Kernel Items</b>
-    19 exp: exp '*' exp .
+    20 exp: exp '*' exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
-  <b>Parser Actions</b>
-    '+'            reduce using <a href="#prod19">rule 19</a> (exp)
-    '-'            reduce using <a href="#prod19">rule 19</a> (exp)
-    '*'            reduce using <a href="#prod19">rule 19</a> (exp)
-    '/'            reduce using <a href="#prod19">rule 19</a> (exp)
-    '%'            reduce using <a href="#prod19">rule 19</a> (exp)
-    '!'            shift, and go to state <a href="#state18">18</a>
-    '^'            shift, and go to state <a href="#state19">19</a>
-    AND            reduce using <a href="#prod19">rule 19</a> (exp)
-    OR             reduce using <a href="#prod19">rule 19</a> (exp)
-    EQUAL          reduce using <a href="#prod19">rule 19</a> (exp)
-    LEQ            reduce using <a href="#prod19">rule 19</a> (exp)
-    LESS_THAN      reduce using <a href="#prod19">rule 19</a> (exp)
-    DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod19">rule 19</a> (exp)
-    '}'            reduce using <a href="#prod19">rule 19</a> (exp)
-    ','            reduce using <a href="#prod19">rule 19</a> (exp)
-    ')'            reduce using <a href="#prod19">rule 19</a> (exp)
-
-
-
-<b><a name="state14">State</a> <a href="#state14">14</a></b>
-
-  <b>Kernel Items</b>
-    20 exp: exp '/' . exp
-  <b>Parser Actions</b>
-    NUM            shift, and go to state <a href="#state33">33</a>
-    TRUE           shift, and go to state <a href="#state34">34</a>
-    FALSE          shift, and go to state <a href="#state35">35</a>
-    STRUCT         shift, and go to state <a href="#state36">36</a>
-    '+'            shift, and go to state <a href="#state43">43</a>
-    '-'            shift, and go to state <a href="#state45">45</a>
-    MAX            shift, and go to state <a href="#state47">47</a>
-    MIN            shift, and go to state <a href="#state53">53</a>
-    '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state62">62</a>
-    '~'            shift, and go to state <a href="#state63">63</a>
-
-  <b>Transitions</b>
-    exp            go to state <a href="#state15">15</a>
-
-
-<b><a name="state15">State</a> <a href="#state15">15</a></b>
-
-  <b>Kernel Items</b>
-    20 exp: exp '/' exp .
-	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
-                LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     '+'            reduce using <a href="#prod20">rule 20</a> (exp)
     '-'            reduce using <a href="#prod20">rule 20</a> (exp)
@@ -534,10 +482,10 @@
 
 
 
-<b><a name="state16">State</a> <a href="#state16">16</a></b>
+<b><a name="state14">State</a> <a href="#state14">14</a></b>
 
   <b>Kernel Items</b>
-    21 exp: exp '%' . exp
+    21 exp: exp '/' . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -552,28 +500,28 @@
     '~'            shift, and go to state <a href="#state63">63</a>
 
   <b>Transitions</b>
-    exp            go to state <a href="#state17">17</a>
+    exp            go to state <a href="#state15">15</a>
 
 
-<b><a name="state17">State</a> <a href="#state17">17</a></b>
+<b><a name="state15">State</a> <a href="#state15">15</a></b>
 
   <b>Kernel Items</b>
-    21 exp: exp '%' exp .
+    21 exp: exp '/' exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     '+'            reduce using <a href="#prod21">rule 21</a> (exp)
     '-'            reduce using <a href="#prod21">rule 21</a> (exp)
@@ -595,37 +543,98 @@
 
 
 
+<b><a name="state16">State</a> <a href="#state16">16</a></b>
+
+  <b>Kernel Items</b>
+    22 exp: exp '%' . exp
+  <b>Parser Actions</b>
+    NUM            shift, and go to state <a href="#state33">33</a>
+    TRUE           shift, and go to state <a href="#state34">34</a>
+    FALSE          shift, and go to state <a href="#state35">35</a>
+    STRUCT         shift, and go to state <a href="#state36">36</a>
+    '+'            shift, and go to state <a href="#state43">43</a>
+    '-'            shift, and go to state <a href="#state45">45</a>
+    MAX            shift, and go to state <a href="#state47">47</a>
+    MIN            shift, and go to state <a href="#state53">53</a>
+    '('            shift, and go to state <a href="#state59">59</a>
+    ID             shift, and go to state <a href="#state62">62</a>
+    '~'            shift, and go to state <a href="#state63">63</a>
+
+  <b>Transitions</b>
+    exp            go to state <a href="#state17">17</a>
+
+
+<b><a name="state17">State</a> <a href="#state17">17</a></b>
+
+  <b>Kernel Items</b>
+    22 exp: exp '%' exp .
+	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
+                LESS_THAN, DOT, '}', ',', ')' }
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
+  <b>Parser Actions</b>
+    '+'            reduce using <a href="#prod22">rule 22</a> (exp)
+    '-'            reduce using <a href="#prod22">rule 22</a> (exp)
+    '*'            reduce using <a href="#prod22">rule 22</a> (exp)
+    '/'            reduce using <a href="#prod22">rule 22</a> (exp)
+    '%'            reduce using <a href="#prod22">rule 22</a> (exp)
+    '!'            shift, and go to state <a href="#state18">18</a>
+    '^'            shift, and go to state <a href="#state19">19</a>
+    AND            reduce using <a href="#prod22">rule 22</a> (exp)
+    OR             reduce using <a href="#prod22">rule 22</a> (exp)
+    EQUAL          reduce using <a href="#prod22">rule 22</a> (exp)
+    LEQ            reduce using <a href="#prod22">rule 22</a> (exp)
+    LESS_THAN      reduce using <a href="#prod22">rule 22</a> (exp)
+    DOT            shift, and go to state <a href="#state31">31</a>
+    NEWLINE        reduce using <a href="#prod22">rule 22</a> (exp)
+    '}'            reduce using <a href="#prod22">rule 22</a> (exp)
+    ','            reduce using <a href="#prod22">rule 22</a> (exp)
+    ')'            reduce using <a href="#prod22">rule 22</a> (exp)
+
+
+
 <b><a name="state18">State</a> <a href="#state18">18</a></b>
 
   <b>Kernel Items</b>
-    24 exp: exp '!' .
+    25 exp: exp '!' .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
   <b>Parser Actions</b>
-    NEWLINE        reduce using <a href="#prod24">rule 24</a> (exp)
-    '+'            reduce using <a href="#prod24">rule 24</a> (exp)
-    '-'            reduce using <a href="#prod24">rule 24</a> (exp)
-    '*'            reduce using <a href="#prod24">rule 24</a> (exp)
-    '/'            reduce using <a href="#prod24">rule 24</a> (exp)
-    '%'            reduce using <a href="#prod24">rule 24</a> (exp)
-    '!'            reduce using <a href="#prod24">rule 24</a> (exp)
-    '^'            reduce using <a href="#prod24">rule 24</a> (exp)
-    AND            reduce using <a href="#prod24">rule 24</a> (exp)
-    OR             reduce using <a href="#prod24">rule 24</a> (exp)
-    EQUAL          reduce using <a href="#prod24">rule 24</a> (exp)
-    LEQ            reduce using <a href="#prod24">rule 24</a> (exp)
-    LESS_THAN      reduce using <a href="#prod24">rule 24</a> (exp)
-    DOT            reduce using <a href="#prod24">rule 24</a> (exp)
-    '}'            reduce using <a href="#prod24">rule 24</a> (exp)
-    ','            reduce using <a href="#prod24">rule 24</a> (exp)
-    ')'            reduce using <a href="#prod24">rule 24</a> (exp)
+    NEWLINE        reduce using <a href="#prod25">rule 25</a> (exp)
+    '+'            reduce using <a href="#prod25">rule 25</a> (exp)
+    '-'            reduce using <a href="#prod25">rule 25</a> (exp)
+    '*'            reduce using <a href="#prod25">rule 25</a> (exp)
+    '/'            reduce using <a href="#prod25">rule 25</a> (exp)
+    '%'            reduce using <a href="#prod25">rule 25</a> (exp)
+    '!'            reduce using <a href="#prod25">rule 25</a> (exp)
+    '^'            reduce using <a href="#prod25">rule 25</a> (exp)
+    AND            reduce using <a href="#prod25">rule 25</a> (exp)
+    OR             reduce using <a href="#prod25">rule 25</a> (exp)
+    EQUAL          reduce using <a href="#prod25">rule 25</a> (exp)
+    LEQ            reduce using <a href="#prod25">rule 25</a> (exp)
+    LESS_THAN      reduce using <a href="#prod25">rule 25</a> (exp)
+    DOT            reduce using <a href="#prod25">rule 25</a> (exp)
+    '}'            reduce using <a href="#prod25">rule 25</a> (exp)
+    ','            reduce using <a href="#prod25">rule 25</a> (exp)
+    ')'            reduce using <a href="#prod25">rule 25</a> (exp)
 
 
 
 <b><a name="state19">State</a> <a href="#state19">19</a></b>
 
   <b>Kernel Items</b>
-    25 exp: exp '^' . exp
+    26 exp: exp '^' . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -646,47 +655,47 @@
 <b><a name="state20">State</a> <a href="#state20">20</a></b>
 
   <b>Kernel Items</b>
-    25 exp: exp '^' exp .
+    26 exp: exp '^' exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
-    '+'            reduce using <a href="#prod25">rule 25</a> (exp)
-    '-'            reduce using <a href="#prod25">rule 25</a> (exp)
-    '*'            reduce using <a href="#prod25">rule 25</a> (exp)
-    '/'            reduce using <a href="#prod25">rule 25</a> (exp)
-    '%'            reduce using <a href="#prod25">rule 25</a> (exp)
-    '!'            reduce using <a href="#prod25">rule 25</a> (exp)
+    '+'            reduce using <a href="#prod26">rule 26</a> (exp)
+    '-'            reduce using <a href="#prod26">rule 26</a> (exp)
+    '*'            reduce using <a href="#prod26">rule 26</a> (exp)
+    '/'            reduce using <a href="#prod26">rule 26</a> (exp)
+    '%'            reduce using <a href="#prod26">rule 26</a> (exp)
+    '!'            reduce using <a href="#prod26">rule 26</a> (exp)
     '^'            shift, and go to state <a href="#state19">19</a>
-    AND            reduce using <a href="#prod25">rule 25</a> (exp)
-    OR             reduce using <a href="#prod25">rule 25</a> (exp)
-    EQUAL          reduce using <a href="#prod25">rule 25</a> (exp)
-    LEQ            reduce using <a href="#prod25">rule 25</a> (exp)
-    LESS_THAN      reduce using <a href="#prod25">rule 25</a> (exp)
+    AND            reduce using <a href="#prod26">rule 26</a> (exp)
+    OR             reduce using <a href="#prod26">rule 26</a> (exp)
+    EQUAL          reduce using <a href="#prod26">rule 26</a> (exp)
+    LEQ            reduce using <a href="#prod26">rule 26</a> (exp)
+    LESS_THAN      reduce using <a href="#prod26">rule 26</a> (exp)
     DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod25">rule 25</a> (exp)
-    '}'            reduce using <a href="#prod25">rule 25</a> (exp)
-    ','            reduce using <a href="#prod25">rule 25</a> (exp)
-    ')'            reduce using <a href="#prod25">rule 25</a> (exp)
+    NEWLINE        reduce using <a href="#prod26">rule 26</a> (exp)
+    '}'            reduce using <a href="#prod26">rule 26</a> (exp)
+    ','            reduce using <a href="#prod26">rule 26</a> (exp)
+    ')'            reduce using <a href="#prod26">rule 26</a> (exp)
 
 
 
 <b><a name="state21">State</a> <a href="#state21">21</a></b>
 
   <b>Kernel Items</b>
-    31 exp: exp AND . exp
+    32 exp: exp AND . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -707,22 +716,22 @@
 <b><a name="state22">State</a> <a href="#state22">22</a></b>
 
   <b>Kernel Items</b>
-    31 exp: exp AND exp .
+    32 exp: exp AND exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
@@ -731,23 +740,23 @@
     '%'            shift, and go to state <a href="#state16">16</a>
     '!'            shift, and go to state <a href="#state18">18</a>
     '^'            shift, and go to state <a href="#state19">19</a>
-    AND            reduce using <a href="#prod31">rule 31</a> (exp)
-    OR             reduce using <a href="#prod31">rule 31</a> (exp)
+    AND            reduce using <a href="#prod32">rule 32</a> (exp)
+    OR             reduce using <a href="#prod32">rule 32</a> (exp)
     EQUAL          shift, and go to state <a href="#state25">25</a>
     LEQ            shift, and go to state <a href="#state27">27</a>
     LESS_THAN      shift, and go to state <a href="#state29">29</a>
     DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod31">rule 31</a> (exp)
-    '}'            reduce using <a href="#prod31">rule 31</a> (exp)
-    ','            reduce using <a href="#prod31">rule 31</a> (exp)
-    ')'            reduce using <a href="#prod31">rule 31</a> (exp)
+    NEWLINE        reduce using <a href="#prod32">rule 32</a> (exp)
+    '}'            reduce using <a href="#prod32">rule 32</a> (exp)
+    ','            reduce using <a href="#prod32">rule 32</a> (exp)
+    ')'            reduce using <a href="#prod32">rule 32</a> (exp)
 
 
 
 <b><a name="state23">State</a> <a href="#state23">23</a></b>
 
   <b>Kernel Items</b>
-    32 exp: exp OR . exp
+    33 exp: exp OR . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -768,22 +777,22 @@
 <b><a name="state24">State</a> <a href="#state24">24</a></b>
 
   <b>Kernel Items</b>
-    32 exp: exp OR exp .
+    33 exp: exp OR exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
@@ -793,22 +802,22 @@
     '!'            shift, and go to state <a href="#state18">18</a>
     '^'            shift, and go to state <a href="#state19">19</a>
     AND            shift, and go to state <a href="#state21">21</a>
-    OR             reduce using <a href="#prod32">rule 32</a> (exp)
+    OR             reduce using <a href="#prod33">rule 33</a> (exp)
     EQUAL          shift, and go to state <a href="#state25">25</a>
     LEQ            shift, and go to state <a href="#state27">27</a>
     LESS_THAN      shift, and go to state <a href="#state29">29</a>
     DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod32">rule 32</a> (exp)
-    '}'            reduce using <a href="#prod32">rule 32</a> (exp)
-    ','            reduce using <a href="#prod32">rule 32</a> (exp)
-    ')'            reduce using <a href="#prod32">rule 32</a> (exp)
+    NEWLINE        reduce using <a href="#prod33">rule 33</a> (exp)
+    '}'            reduce using <a href="#prod33">rule 33</a> (exp)
+    ','            reduce using <a href="#prod33">rule 33</a> (exp)
+    ')'            reduce using <a href="#prod33">rule 33</a> (exp)
 
 
 
 <b><a name="state25">State</a> <a href="#state25">25</a></b>
 
   <b>Kernel Items</b>
-    33 exp: exp EQUAL . exp
+    34 exp: exp EQUAL . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -829,22 +838,22 @@
 <b><a name="state26">State</a> <a href="#state26">26</a></b>
 
   <b>Kernel Items</b>
-    33 exp: exp EQUAL exp .
+    34 exp: exp EQUAL exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
@@ -853,23 +862,23 @@
     '%'            shift, and go to state <a href="#state16">16</a>
     '!'            shift, and go to state <a href="#state18">18</a>
     '^'            shift, and go to state <a href="#state19">19</a>
-    AND            reduce using <a href="#prod33">rule 33</a> (exp)
-    OR             reduce using <a href="#prod33">rule 33</a> (exp)
-    EQUAL          reduce using <a href="#prod33">rule 33</a> (exp)
+    AND            reduce using <a href="#prod34">rule 34</a> (exp)
+    OR             reduce using <a href="#prod34">rule 34</a> (exp)
+    EQUAL          reduce using <a href="#prod34">rule 34</a> (exp)
     LEQ            shift, and go to state <a href="#state27">27</a>
     LESS_THAN      shift, and go to state <a href="#state29">29</a>
     DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod33">rule 33</a> (exp)
-    '}'            reduce using <a href="#prod33">rule 33</a> (exp)
-    ','            reduce using <a href="#prod33">rule 33</a> (exp)
-    ')'            reduce using <a href="#prod33">rule 33</a> (exp)
+    NEWLINE        reduce using <a href="#prod34">rule 34</a> (exp)
+    '}'            reduce using <a href="#prod34">rule 34</a> (exp)
+    ','            reduce using <a href="#prod34">rule 34</a> (exp)
+    ')'            reduce using <a href="#prod34">rule 34</a> (exp)
 
 
 
 <b><a name="state27">State</a> <a href="#state27">27</a></b>
 
   <b>Kernel Items</b>
-    34 exp: exp LEQ . exp
+    35 exp: exp LEQ . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -890,83 +899,22 @@
 <b><a name="state28">State</a> <a href="#state28">28</a></b>
 
   <b>Kernel Items</b>
-    34 exp: exp LEQ exp .
+    35 exp: exp LEQ exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
-  <b>Parser Actions</b>
-    '+'            shift, and go to state <a href="#state8">8</a>
-    '-'            shift, and go to state <a href="#state10">10</a>
-    '*'            shift, and go to state <a href="#state12">12</a>
-    '/'            shift, and go to state <a href="#state14">14</a>
-    '%'            shift, and go to state <a href="#state16">16</a>
-    '!'            shift, and go to state <a href="#state18">18</a>
-    '^'            shift, and go to state <a href="#state19">19</a>
-    AND            reduce using <a href="#prod34">rule 34</a> (exp)
-    OR             reduce using <a href="#prod34">rule 34</a> (exp)
-    EQUAL          reduce using <a href="#prod34">rule 34</a> (exp)
-    LEQ            reduce using <a href="#prod34">rule 34</a> (exp)
-    LESS_THAN      reduce using <a href="#prod34">rule 34</a> (exp)
-    DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod34">rule 34</a> (exp)
-    '}'            reduce using <a href="#prod34">rule 34</a> (exp)
-    ','            reduce using <a href="#prod34">rule 34</a> (exp)
-    ')'            reduce using <a href="#prod34">rule 34</a> (exp)
-
-
-
-<b><a name="state29">State</a> <a href="#state29">29</a></b>
-
-  <b>Kernel Items</b>
-    35 exp: exp LESS_THAN . exp
-  <b>Parser Actions</b>
-    NUM            shift, and go to state <a href="#state33">33</a>
-    TRUE           shift, and go to state <a href="#state34">34</a>
-    FALSE          shift, and go to state <a href="#state35">35</a>
-    STRUCT         shift, and go to state <a href="#state36">36</a>
-    '+'            shift, and go to state <a href="#state43">43</a>
-    '-'            shift, and go to state <a href="#state45">45</a>
-    MAX            shift, and go to state <a href="#state47">47</a>
-    MIN            shift, and go to state <a href="#state53">53</a>
-    '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state62">62</a>
-    '~'            shift, and go to state <a href="#state63">63</a>
-
-  <b>Transitions</b>
-    exp            go to state <a href="#state30">30</a>
-
-
-<b><a name="state30">State</a> <a href="#state30">30</a></b>
-
-  <b>Kernel Items</b>
-    35 exp: exp LESS_THAN exp .
-	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
-                LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
@@ -988,10 +936,71 @@
 
 
 
+<b><a name="state29">State</a> <a href="#state29">29</a></b>
+
+  <b>Kernel Items</b>
+    36 exp: exp LESS_THAN . exp
+  <b>Parser Actions</b>
+    NUM            shift, and go to state <a href="#state33">33</a>
+    TRUE           shift, and go to state <a href="#state34">34</a>
+    FALSE          shift, and go to state <a href="#state35">35</a>
+    STRUCT         shift, and go to state <a href="#state36">36</a>
+    '+'            shift, and go to state <a href="#state43">43</a>
+    '-'            shift, and go to state <a href="#state45">45</a>
+    MAX            shift, and go to state <a href="#state47">47</a>
+    MIN            shift, and go to state <a href="#state53">53</a>
+    '('            shift, and go to state <a href="#state59">59</a>
+    ID             shift, and go to state <a href="#state62">62</a>
+    '~'            shift, and go to state <a href="#state63">63</a>
+
+  <b>Transitions</b>
+    exp            go to state <a href="#state30">30</a>
+
+
+<b><a name="state30">State</a> <a href="#state30">30</a></b>
+
+  <b>Kernel Items</b>
+    36 exp: exp LESS_THAN exp .
+	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
+                LESS_THAN, DOT, '}', ',', ')' }
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
+  <b>Parser Actions</b>
+    '+'            shift, and go to state <a href="#state8">8</a>
+    '-'            shift, and go to state <a href="#state10">10</a>
+    '*'            shift, and go to state <a href="#state12">12</a>
+    '/'            shift, and go to state <a href="#state14">14</a>
+    '%'            shift, and go to state <a href="#state16">16</a>
+    '!'            shift, and go to state <a href="#state18">18</a>
+    '^'            shift, and go to state <a href="#state19">19</a>
+    AND            reduce using <a href="#prod36">rule 36</a> (exp)
+    OR             reduce using <a href="#prod36">rule 36</a> (exp)
+    EQUAL          reduce using <a href="#prod36">rule 36</a> (exp)
+    LEQ            reduce using <a href="#prod36">rule 36</a> (exp)
+    LESS_THAN      reduce using <a href="#prod36">rule 36</a> (exp)
+    DOT            shift, and go to state <a href="#state31">31</a>
+    NEWLINE        reduce using <a href="#prod36">rule 36</a> (exp)
+    '}'            reduce using <a href="#prod36">rule 36</a> (exp)
+    ','            reduce using <a href="#prod36">rule 36</a> (exp)
+    ')'            reduce using <a href="#prod36">rule 36</a> (exp)
+
+
+
 <b><a name="state31">State</a> <a href="#state31">31</a></b>
 
   <b>Kernel Items</b>
-    36 exp: exp DOT . ID
+    37 exp: exp DOT . ID
   <b>Parser Actions</b>
     ID             shift, and go to state <a href="#state32">32</a>
 
@@ -1000,61 +1009,34 @@
 <b><a name="state32">State</a> <a href="#state32">32</a></b>
 
   <b>Kernel Items</b>
-    36 exp: exp DOT ID .
+    37 exp: exp DOT ID .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
   <b>Parser Actions</b>
-    NEWLINE        reduce using <a href="#prod36">rule 36</a> (exp)
-    '+'            reduce using <a href="#prod36">rule 36</a> (exp)
-    '-'            reduce using <a href="#prod36">rule 36</a> (exp)
-    '*'            reduce using <a href="#prod36">rule 36</a> (exp)
-    '/'            reduce using <a href="#prod36">rule 36</a> (exp)
-    '%'            reduce using <a href="#prod36">rule 36</a> (exp)
-    '!'            reduce using <a href="#prod36">rule 36</a> (exp)
-    '^'            reduce using <a href="#prod36">rule 36</a> (exp)
-    AND            reduce using <a href="#prod36">rule 36</a> (exp)
-    OR             reduce using <a href="#prod36">rule 36</a> (exp)
-    EQUAL          reduce using <a href="#prod36">rule 36</a> (exp)
-    LEQ            reduce using <a href="#prod36">rule 36</a> (exp)
-    LESS_THAN      reduce using <a href="#prod36">rule 36</a> (exp)
-    DOT            reduce using <a href="#prod36">rule 36</a> (exp)
-    '}'            reduce using <a href="#prod36">rule 36</a> (exp)
-    ','            reduce using <a href="#prod36">rule 36</a> (exp)
-    ')'            reduce using <a href="#prod36">rule 36</a> (exp)
+    NEWLINE        reduce using <a href="#prod37">rule 37</a> (exp)
+    '+'            reduce using <a href="#prod37">rule 37</a> (exp)
+    '-'            reduce using <a href="#prod37">rule 37</a> (exp)
+    '*'            reduce using <a href="#prod37">rule 37</a> (exp)
+    '/'            reduce using <a href="#prod37">rule 37</a> (exp)
+    '%'            reduce using <a href="#prod37">rule 37</a> (exp)
+    '!'            reduce using <a href="#prod37">rule 37</a> (exp)
+    '^'            reduce using <a href="#prod37">rule 37</a> (exp)
+    AND            reduce using <a href="#prod37">rule 37</a> (exp)
+    OR             reduce using <a href="#prod37">rule 37</a> (exp)
+    EQUAL          reduce using <a href="#prod37">rule 37</a> (exp)
+    LEQ            reduce using <a href="#prod37">rule 37</a> (exp)
+    LESS_THAN      reduce using <a href="#prod37">rule 37</a> (exp)
+    DOT            reduce using <a href="#prod37">rule 37</a> (exp)
+    '}'            reduce using <a href="#prod37">rule 37</a> (exp)
+    ','            reduce using <a href="#prod37">rule 37</a> (exp)
+    ')'            reduce using <a href="#prod37">rule 37</a> (exp)
 
 
 
 <b><a name="state33">State</a> <a href="#state33">33</a></b>
 
   <b>Kernel Items</b>
-    13 exp: NUM .
-	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
-                LESS_THAN, DOT, '}', ',', ')' }
-  <b>Parser Actions</b>
-    NEWLINE        reduce using <a href="#prod13">rule 13</a> (exp)
-    '+'            reduce using <a href="#prod13">rule 13</a> (exp)
-    '-'            reduce using <a href="#prod13">rule 13</a> (exp)
-    '*'            reduce using <a href="#prod13">rule 13</a> (exp)
-    '/'            reduce using <a href="#prod13">rule 13</a> (exp)
-    '%'            reduce using <a href="#prod13">rule 13</a> (exp)
-    '!'            reduce using <a href="#prod13">rule 13</a> (exp)
-    '^'            reduce using <a href="#prod13">rule 13</a> (exp)
-    AND            reduce using <a href="#prod13">rule 13</a> (exp)
-    OR             reduce using <a href="#prod13">rule 13</a> (exp)
-    EQUAL          reduce using <a href="#prod13">rule 13</a> (exp)
-    LEQ            reduce using <a href="#prod13">rule 13</a> (exp)
-    LESS_THAN      reduce using <a href="#prod13">rule 13</a> (exp)
-    DOT            reduce using <a href="#prod13">rule 13</a> (exp)
-    '}'            reduce using <a href="#prod13">rule 13</a> (exp)
-    ','            reduce using <a href="#prod13">rule 13</a> (exp)
-    ')'            reduce using <a href="#prod13">rule 13</a> (exp)
-
-
-
-<b><a name="state34">State</a> <a href="#state34">34</a></b>
-
-  <b>Kernel Items</b>
-    14 exp: TRUE .
+    14 exp: NUM .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
   <b>Parser Actions</b>
@@ -1078,10 +1060,10 @@
 
 
 
-<b><a name="state35">State</a> <a href="#state35">35</a></b>
+<b><a name="state34">State</a> <a href="#state34">34</a></b>
 
   <b>Kernel Items</b>
-    15 exp: FALSE .
+    15 exp: TRUE .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
   <b>Parser Actions</b>
@@ -1105,108 +1087,10 @@
 
 
 
-<b><a name="state36">State</a> <a href="#state36">36</a></b>
+<b><a name="state35">State</a> <a href="#state35">35</a></b>
 
   <b>Kernel Items</b>
-    16 exp: STRUCT . ID '{' structFieldValues exp '}'
-  <b>Parser Actions</b>
-    ID             shift, and go to state <a href="#state37">37</a>
-
-
-
-<b><a name="state37">State</a> <a href="#state37">37</a></b>
-
-  <b>Kernel Items</b>
-    16 exp: STRUCT ID . '{' structFieldValues exp '}'
-  <b>Parser Actions</b>
-    '{'            shift, and go to state <a href="#state38">38</a>
-
-
-
-<b><a name="state38">State</a> <a href="#state38">38</a></b>
-
-  <b>Kernel Items</b>
-    16 exp: STRUCT ID '{' . structFieldValues exp '}'
-  <b>Parser Actions</b>
-    NUM            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    TRUE           reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    FALSE          reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    STRUCT         reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    '+'            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    '-'            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    MAX            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    MIN            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    '('            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    ID             reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    '~'            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-
-  <b>Transitions</b>
-    structFieldValues go to state <a href="#state39">39</a>
-
-
-<b><a name="state39">State</a> <a href="#state39">39</a></b>
-
-  <b>Kernel Items</b>
-    16 exp: STRUCT ID '{' structFieldValues . exp '}'
-    42 structFieldValues: structFieldValues . exp ','
-  <b>Parser Actions</b>
-    NUM            shift, and go to state <a href="#state33">33</a>
-    TRUE           shift, and go to state <a href="#state34">34</a>
-    FALSE          shift, and go to state <a href="#state35">35</a>
-    STRUCT         shift, and go to state <a href="#state36">36</a>
-    '+'            shift, and go to state <a href="#state43">43</a>
-    '-'            shift, and go to state <a href="#state45">45</a>
-    MAX            shift, and go to state <a href="#state47">47</a>
-    MIN            shift, and go to state <a href="#state53">53</a>
-    '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state62">62</a>
-    '~'            shift, and go to state <a href="#state63">63</a>
-
-  <b>Transitions</b>
-    exp            go to state <a href="#state40">40</a>
-
-
-<b><a name="state40">State</a> <a href="#state40">40</a></b>
-
-  <b>Kernel Items</b>
-    16 exp: STRUCT ID '{' structFieldValues exp . '}'
-    42 structFieldValues: structFieldValues exp . ','
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
-  <b>Parser Actions</b>
-    '}'            shift, and go to state <a href="#state41">41</a>
-    ','            shift, and go to state <a href="#state42">42</a>
-    '+'            shift, and go to state <a href="#state8">8</a>
-    '-'            shift, and go to state <a href="#state10">10</a>
-    '*'            shift, and go to state <a href="#state12">12</a>
-    '/'            shift, and go to state <a href="#state14">14</a>
-    '%'            shift, and go to state <a href="#state16">16</a>
-    '!'            shift, and go to state <a href="#state18">18</a>
-    '^'            shift, and go to state <a href="#state19">19</a>
-    AND            shift, and go to state <a href="#state21">21</a>
-    OR             shift, and go to state <a href="#state23">23</a>
-    EQUAL          shift, and go to state <a href="#state25">25</a>
-    LEQ            shift, and go to state <a href="#state27">27</a>
-    LESS_THAN      shift, and go to state <a href="#state29">29</a>
-    DOT            shift, and go to state <a href="#state31">31</a>
-
-
-
-<b><a name="state41">State</a> <a href="#state41">41</a></b>
-
-  <b>Kernel Items</b>
-    16 exp: STRUCT ID '{' structFieldValues exp '}' .
+    16 exp: FALSE .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
   <b>Parser Actions</b>
@@ -1230,30 +1114,155 @@
 
 
 
+<b><a name="state36">State</a> <a href="#state36">36</a></b>
+
+  <b>Kernel Items</b>
+    17 exp: STRUCT . ID '{' structFieldValues exp '}'
+  <b>Parser Actions</b>
+    ID             shift, and go to state <a href="#state37">37</a>
+
+
+
+<b><a name="state37">State</a> <a href="#state37">37</a></b>
+
+  <b>Kernel Items</b>
+    17 exp: STRUCT ID . '{' structFieldValues exp '}'
+  <b>Parser Actions</b>
+    '{'            shift, and go to state <a href="#state38">38</a>
+
+
+
+<b><a name="state38">State</a> <a href="#state38">38</a></b>
+
+  <b>Kernel Items</b>
+    17 exp: STRUCT ID '{' . structFieldValues exp '}'
+  <b>Parser Actions</b>
+    NUM            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    TRUE           reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    FALSE          reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    STRUCT         reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    '+'            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    '-'            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    MAX            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    MIN            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    '('            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    ID             reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    '~'            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+
+  <b>Transitions</b>
+    structFieldValues go to state <a href="#state39">39</a>
+
+
+<b><a name="state39">State</a> <a href="#state39">39</a></b>
+
+  <b>Kernel Items</b>
+    17 exp: STRUCT ID '{' structFieldValues . exp '}'
+    41 structFieldValues: structFieldValues . exp ','
+  <b>Parser Actions</b>
+    NUM            shift, and go to state <a href="#state33">33</a>
+    TRUE           shift, and go to state <a href="#state34">34</a>
+    FALSE          shift, and go to state <a href="#state35">35</a>
+    STRUCT         shift, and go to state <a href="#state36">36</a>
+    '+'            shift, and go to state <a href="#state43">43</a>
+    '-'            shift, and go to state <a href="#state45">45</a>
+    MAX            shift, and go to state <a href="#state47">47</a>
+    MIN            shift, and go to state <a href="#state53">53</a>
+    '('            shift, and go to state <a href="#state59">59</a>
+    ID             shift, and go to state <a href="#state62">62</a>
+    '~'            shift, and go to state <a href="#state63">63</a>
+
+  <b>Transitions</b>
+    exp            go to state <a href="#state40">40</a>
+
+
+<b><a name="state40">State</a> <a href="#state40">40</a></b>
+
+  <b>Kernel Items</b>
+    17 exp: STRUCT ID '{' structFieldValues exp . '}'
+    41 structFieldValues: structFieldValues exp . ','
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
+  <b>Parser Actions</b>
+    '}'            shift, and go to state <a href="#state41">41</a>
+    ','            shift, and go to state <a href="#state42">42</a>
+    '+'            shift, and go to state <a href="#state8">8</a>
+    '-'            shift, and go to state <a href="#state10">10</a>
+    '*'            shift, and go to state <a href="#state12">12</a>
+    '/'            shift, and go to state <a href="#state14">14</a>
+    '%'            shift, and go to state <a href="#state16">16</a>
+    '!'            shift, and go to state <a href="#state18">18</a>
+    '^'            shift, and go to state <a href="#state19">19</a>
+    AND            shift, and go to state <a href="#state21">21</a>
+    OR             shift, and go to state <a href="#state23">23</a>
+    EQUAL          shift, and go to state <a href="#state25">25</a>
+    LEQ            shift, and go to state <a href="#state27">27</a>
+    LESS_THAN      shift, and go to state <a href="#state29">29</a>
+    DOT            shift, and go to state <a href="#state31">31</a>
+
+
+
+<b><a name="state41">State</a> <a href="#state41">41</a></b>
+
+  <b>Kernel Items</b>
+    17 exp: STRUCT ID '{' structFieldValues exp '}' .
+	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
+                LESS_THAN, DOT, '}', ',', ')' }
+  <b>Parser Actions</b>
+    NEWLINE        reduce using <a href="#prod17">rule 17</a> (exp)
+    '+'            reduce using <a href="#prod17">rule 17</a> (exp)
+    '-'            reduce using <a href="#prod17">rule 17</a> (exp)
+    '*'            reduce using <a href="#prod17">rule 17</a> (exp)
+    '/'            reduce using <a href="#prod17">rule 17</a> (exp)
+    '%'            reduce using <a href="#prod17">rule 17</a> (exp)
+    '!'            reduce using <a href="#prod17">rule 17</a> (exp)
+    '^'            reduce using <a href="#prod17">rule 17</a> (exp)
+    AND            reduce using <a href="#prod17">rule 17</a> (exp)
+    OR             reduce using <a href="#prod17">rule 17</a> (exp)
+    EQUAL          reduce using <a href="#prod17">rule 17</a> (exp)
+    LEQ            reduce using <a href="#prod17">rule 17</a> (exp)
+    LESS_THAN      reduce using <a href="#prod17">rule 17</a> (exp)
+    DOT            reduce using <a href="#prod17">rule 17</a> (exp)
+    '}'            reduce using <a href="#prod17">rule 17</a> (exp)
+    ','            reduce using <a href="#prod17">rule 17</a> (exp)
+    ')'            reduce using <a href="#prod17">rule 17</a> (exp)
+
+
+
 <b><a name="state42">State</a> <a href="#state42">42</a></b>
 
   <b>Kernel Items</b>
-    42 structFieldValues: structFieldValues exp ',' .
+    41 structFieldValues: structFieldValues exp ',' .
 	-lookahead: { NUM, TRUE, FALSE, STRUCT, '+', '-', MAX, MIN, '(', ID, '~' }
   <b>Parser Actions</b>
-    NUM            reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    TRUE           reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    FALSE          reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    STRUCT         reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    '+'            reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    '-'            reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    MAX            reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    MIN            reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    '('            reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    ID             reduce using <a href="#prod42">rule 42</a> (structFieldValues)
-    '~'            reduce using <a href="#prod42">rule 42</a> (structFieldValues)
+    NUM            reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    TRUE           reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    FALSE          reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    STRUCT         reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    '+'            reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    '-'            reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    MAX            reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    MIN            reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    '('            reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    ID             reduce using <a href="#prod41">rule 41</a> (structFieldValues)
+    '~'            reduce using <a href="#prod41">rule 41</a> (structFieldValues)
 
 
 
 <b><a name="state43">State</a> <a href="#state43">43</a></b>
 
   <b>Kernel Items</b>
-    22 exp: '+' . exp
+    23 exp: '+' . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -1274,83 +1283,22 @@
 <b><a name="state44">State</a> <a href="#state44">44</a></b>
 
   <b>Kernel Items</b>
-    22 exp: '+' exp .
+    23 exp: '+' exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
-  <b>Parser Actions</b>
-    '+'            reduce using <a href="#prod22">rule 22</a> (exp)
-    '-'            reduce using <a href="#prod22">rule 22</a> (exp)
-    '*'            reduce using <a href="#prod22">rule 22</a> (exp)
-    '/'            reduce using <a href="#prod22">rule 22</a> (exp)
-    '%'            reduce using <a href="#prod22">rule 22</a> (exp)
-    '!'            shift, and go to state <a href="#state18">18</a>
-    '^'            shift, and go to state <a href="#state19">19</a>
-    AND            reduce using <a href="#prod22">rule 22</a> (exp)
-    OR             reduce using <a href="#prod22">rule 22</a> (exp)
-    EQUAL          reduce using <a href="#prod22">rule 22</a> (exp)
-    LEQ            reduce using <a href="#prod22">rule 22</a> (exp)
-    LESS_THAN      reduce using <a href="#prod22">rule 22</a> (exp)
-    DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod22">rule 22</a> (exp)
-    '}'            reduce using <a href="#prod22">rule 22</a> (exp)
-    ','            reduce using <a href="#prod22">rule 22</a> (exp)
-    ')'            reduce using <a href="#prod22">rule 22</a> (exp)
-
-
-
-<b><a name="state45">State</a> <a href="#state45">45</a></b>
-
-  <b>Kernel Items</b>
-    23 exp: '-' . exp
-  <b>Parser Actions</b>
-    NUM            shift, and go to state <a href="#state33">33</a>
-    TRUE           shift, and go to state <a href="#state34">34</a>
-    FALSE          shift, and go to state <a href="#state35">35</a>
-    STRUCT         shift, and go to state <a href="#state36">36</a>
-    '+'            shift, and go to state <a href="#state43">43</a>
-    '-'            shift, and go to state <a href="#state45">45</a>
-    MAX            shift, and go to state <a href="#state47">47</a>
-    MIN            shift, and go to state <a href="#state53">53</a>
-    '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state62">62</a>
-    '~'            shift, and go to state <a href="#state63">63</a>
-
-  <b>Transitions</b>
-    exp            go to state <a href="#state46">46</a>
-
-
-<b><a name="state46">State</a> <a href="#state46">46</a></b>
-
-  <b>Kernel Items</b>
-    23 exp: '-' exp .
-	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
-                LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     '+'            reduce using <a href="#prod23">rule 23</a> (exp)
     '-'            reduce using <a href="#prod23">rule 23</a> (exp)
@@ -1372,10 +1320,71 @@
 
 
 
+<b><a name="state45">State</a> <a href="#state45">45</a></b>
+
+  <b>Kernel Items</b>
+    24 exp: '-' . exp
+  <b>Parser Actions</b>
+    NUM            shift, and go to state <a href="#state33">33</a>
+    TRUE           shift, and go to state <a href="#state34">34</a>
+    FALSE          shift, and go to state <a href="#state35">35</a>
+    STRUCT         shift, and go to state <a href="#state36">36</a>
+    '+'            shift, and go to state <a href="#state43">43</a>
+    '-'            shift, and go to state <a href="#state45">45</a>
+    MAX            shift, and go to state <a href="#state47">47</a>
+    MIN            shift, and go to state <a href="#state53">53</a>
+    '('            shift, and go to state <a href="#state59">59</a>
+    ID             shift, and go to state <a href="#state62">62</a>
+    '~'            shift, and go to state <a href="#state63">63</a>
+
+  <b>Transitions</b>
+    exp            go to state <a href="#state46">46</a>
+
+
+<b><a name="state46">State</a> <a href="#state46">46</a></b>
+
+  <b>Kernel Items</b>
+    24 exp: '-' exp .
+	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
+                LESS_THAN, DOT, '}', ',', ')' }
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
+  <b>Parser Actions</b>
+    '+'            reduce using <a href="#prod24">rule 24</a> (exp)
+    '-'            reduce using <a href="#prod24">rule 24</a> (exp)
+    '*'            reduce using <a href="#prod24">rule 24</a> (exp)
+    '/'            reduce using <a href="#prod24">rule 24</a> (exp)
+    '%'            reduce using <a href="#prod24">rule 24</a> (exp)
+    '!'            shift, and go to state <a href="#state18">18</a>
+    '^'            shift, and go to state <a href="#state19">19</a>
+    AND            reduce using <a href="#prod24">rule 24</a> (exp)
+    OR             reduce using <a href="#prod24">rule 24</a> (exp)
+    EQUAL          reduce using <a href="#prod24">rule 24</a> (exp)
+    LEQ            reduce using <a href="#prod24">rule 24</a> (exp)
+    LESS_THAN      reduce using <a href="#prod24">rule 24</a> (exp)
+    DOT            shift, and go to state <a href="#state31">31</a>
+    NEWLINE        reduce using <a href="#prod24">rule 24</a> (exp)
+    '}'            reduce using <a href="#prod24">rule 24</a> (exp)
+    ','            reduce using <a href="#prod24">rule 24</a> (exp)
+    ')'            reduce using <a href="#prod24">rule 24</a> (exp)
+
+
+
 <b><a name="state47">State</a> <a href="#state47">47</a></b>
 
   <b>Kernel Items</b>
-    26 exp: MAX . '(' exp ',' exp ')'
+    27 exp: MAX . '(' exp ',' exp ')'
   <b>Parser Actions</b>
     '('            shift, and go to state <a href="#state48">48</a>
 
@@ -1384,7 +1393,7 @@
 <b><a name="state48">State</a> <a href="#state48">48</a></b>
 
   <b>Kernel Items</b>
-    26 exp: MAX '(' . exp ',' exp ')'
+    27 exp: MAX '(' . exp ',' exp ')'
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -1405,20 +1414,20 @@
 <b><a name="state49">State</a> <a href="#state49">49</a></b>
 
   <b>Kernel Items</b>
-    26 exp: MAX '(' exp . ',' exp ')'
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    27 exp: MAX '(' exp . ',' exp ')'
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     ','            shift, and go to state <a href="#state50">50</a>
     '+'            shift, and go to state <a href="#state8">8</a>
@@ -1440,7 +1449,7 @@
 <b><a name="state50">State</a> <a href="#state50">50</a></b>
 
   <b>Kernel Items</b>
-    26 exp: MAX '(' exp ',' . exp ')'
+    27 exp: MAX '(' exp ',' . exp ')'
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -1461,20 +1470,20 @@
 <b><a name="state51">State</a> <a href="#state51">51</a></b>
 
   <b>Kernel Items</b>
-    26 exp: MAX '(' exp ',' exp . ')'
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    27 exp: MAX '(' exp ',' exp . ')'
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
     ')'            shift, and go to state <a href="#state52">52</a>
     '+'            shift, and go to state <a href="#state8">8</a>
@@ -1496,155 +1505,7 @@
 <b><a name="state52">State</a> <a href="#state52">52</a></b>
 
   <b>Kernel Items</b>
-    26 exp: MAX '(' exp ',' exp ')' .
-	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
-                LESS_THAN, DOT, '}', ',', ')' }
-  <b>Parser Actions</b>
-    NEWLINE        reduce using <a href="#prod26">rule 26</a> (exp)
-    '+'            reduce using <a href="#prod26">rule 26</a> (exp)
-    '-'            reduce using <a href="#prod26">rule 26</a> (exp)
-    '*'            reduce using <a href="#prod26">rule 26</a> (exp)
-    '/'            reduce using <a href="#prod26">rule 26</a> (exp)
-    '%'            reduce using <a href="#prod26">rule 26</a> (exp)
-    '!'            reduce using <a href="#prod26">rule 26</a> (exp)
-    '^'            reduce using <a href="#prod26">rule 26</a> (exp)
-    AND            reduce using <a href="#prod26">rule 26</a> (exp)
-    OR             reduce using <a href="#prod26">rule 26</a> (exp)
-    EQUAL          reduce using <a href="#prod26">rule 26</a> (exp)
-    LEQ            reduce using <a href="#prod26">rule 26</a> (exp)
-    LESS_THAN      reduce using <a href="#prod26">rule 26</a> (exp)
-    DOT            reduce using <a href="#prod26">rule 26</a> (exp)
-    '}'            reduce using <a href="#prod26">rule 26</a> (exp)
-    ','            reduce using <a href="#prod26">rule 26</a> (exp)
-    ')'            reduce using <a href="#prod26">rule 26</a> (exp)
-
-
-
-<b><a name="state53">State</a> <a href="#state53">53</a></b>
-
-  <b>Kernel Items</b>
-    27 exp: MIN . '(' exp ',' exp ')'
-  <b>Parser Actions</b>
-    '('            shift, and go to state <a href="#state54">54</a>
-
-
-
-<b><a name="state54">State</a> <a href="#state54">54</a></b>
-
-  <b>Kernel Items</b>
-    27 exp: MIN '(' . exp ',' exp ')'
-  <b>Parser Actions</b>
-    NUM            shift, and go to state <a href="#state33">33</a>
-    TRUE           shift, and go to state <a href="#state34">34</a>
-    FALSE          shift, and go to state <a href="#state35">35</a>
-    STRUCT         shift, and go to state <a href="#state36">36</a>
-    '+'            shift, and go to state <a href="#state43">43</a>
-    '-'            shift, and go to state <a href="#state45">45</a>
-    MAX            shift, and go to state <a href="#state47">47</a>
-    MIN            shift, and go to state <a href="#state53">53</a>
-    '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state62">62</a>
-    '~'            shift, and go to state <a href="#state63">63</a>
-
-  <b>Transitions</b>
-    exp            go to state <a href="#state55">55</a>
-
-
-<b><a name="state55">State</a> <a href="#state55">55</a></b>
-
-  <b>Kernel Items</b>
-    27 exp: MIN '(' exp . ',' exp ')'
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
-  <b>Parser Actions</b>
-    ','            shift, and go to state <a href="#state56">56</a>
-    '+'            shift, and go to state <a href="#state8">8</a>
-    '-'            shift, and go to state <a href="#state10">10</a>
-    '*'            shift, and go to state <a href="#state12">12</a>
-    '/'            shift, and go to state <a href="#state14">14</a>
-    '%'            shift, and go to state <a href="#state16">16</a>
-    '!'            shift, and go to state <a href="#state18">18</a>
-    '^'            shift, and go to state <a href="#state19">19</a>
-    AND            shift, and go to state <a href="#state21">21</a>
-    OR             shift, and go to state <a href="#state23">23</a>
-    EQUAL          shift, and go to state <a href="#state25">25</a>
-    LEQ            shift, and go to state <a href="#state27">27</a>
-    LESS_THAN      shift, and go to state <a href="#state29">29</a>
-    DOT            shift, and go to state <a href="#state31">31</a>
-
-
-
-<b><a name="state56">State</a> <a href="#state56">56</a></b>
-
-  <b>Kernel Items</b>
-    27 exp: MIN '(' exp ',' . exp ')'
-  <b>Parser Actions</b>
-    NUM            shift, and go to state <a href="#state33">33</a>
-    TRUE           shift, and go to state <a href="#state34">34</a>
-    FALSE          shift, and go to state <a href="#state35">35</a>
-    STRUCT         shift, and go to state <a href="#state36">36</a>
-    '+'            shift, and go to state <a href="#state43">43</a>
-    '-'            shift, and go to state <a href="#state45">45</a>
-    MAX            shift, and go to state <a href="#state47">47</a>
-    MIN            shift, and go to state <a href="#state53">53</a>
-    '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state62">62</a>
-    '~'            shift, and go to state <a href="#state63">63</a>
-
-  <b>Transitions</b>
-    exp            go to state <a href="#state57">57</a>
-
-
-<b><a name="state57">State</a> <a href="#state57">57</a></b>
-
-  <b>Kernel Items</b>
-    27 exp: MIN '(' exp ',' exp . ')'
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
-  <b>Parser Actions</b>
-    ')'            shift, and go to state <a href="#state58">58</a>
-    '+'            shift, and go to state <a href="#state8">8</a>
-    '-'            shift, and go to state <a href="#state10">10</a>
-    '*'            shift, and go to state <a href="#state12">12</a>
-    '/'            shift, and go to state <a href="#state14">14</a>
-    '%'            shift, and go to state <a href="#state16">16</a>
-    '!'            shift, and go to state <a href="#state18">18</a>
-    '^'            shift, and go to state <a href="#state19">19</a>
-    AND            shift, and go to state <a href="#state21">21</a>
-    OR             shift, and go to state <a href="#state23">23</a>
-    EQUAL          shift, and go to state <a href="#state25">25</a>
-    LEQ            shift, and go to state <a href="#state27">27</a>
-    LESS_THAN      shift, and go to state <a href="#state29">29</a>
-    DOT            shift, and go to state <a href="#state31">31</a>
-
-
-
-<b><a name="state58">State</a> <a href="#state58">58</a></b>
-
-  <b>Kernel Items</b>
-    27 exp: MIN '(' exp ',' exp ')' .
+    27 exp: MAX '(' exp ',' exp ')' .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
   <b>Parser Actions</b>
@@ -1668,10 +1529,19 @@
 
 
 
-<b><a name="state59">State</a> <a href="#state59">59</a></b>
+<b><a name="state53">State</a> <a href="#state53">53</a></b>
 
   <b>Kernel Items</b>
-    28 exp: '(' . exp ')'
+    28 exp: MIN . '(' exp ',' exp ')'
+  <b>Parser Actions</b>
+    '('            shift, and go to state <a href="#state54">54</a>
+
+
+
+<b><a name="state54">State</a> <a href="#state54">54</a></b>
+
+  <b>Kernel Items</b>
+    28 exp: MIN '(' . exp ',' exp ')'
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -1686,28 +1556,28 @@
     '~'            shift, and go to state <a href="#state63">63</a>
 
   <b>Transitions</b>
-    exp            go to state <a href="#state60">60</a>
+    exp            go to state <a href="#state55">55</a>
 
 
-<b><a name="state60">State</a> <a href="#state60">60</a></b>
+<b><a name="state55">State</a> <a href="#state55">55</a></b>
 
   <b>Kernel Items</b>
-    28 exp: '(' exp . ')'
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    28 exp: MIN '(' exp . ',' exp ')'
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
-    ')'            shift, and go to state <a href="#state61">61</a>
+    ','            shift, and go to state <a href="#state56">56</a>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
     '*'            shift, and go to state <a href="#state12">12</a>
@@ -1724,10 +1594,66 @@
 
 
 
-<b><a name="state61">State</a> <a href="#state61">61</a></b>
+<b><a name="state56">State</a> <a href="#state56">56</a></b>
 
   <b>Kernel Items</b>
-    28 exp: '(' exp ')' .
+    28 exp: MIN '(' exp ',' . exp ')'
+  <b>Parser Actions</b>
+    NUM            shift, and go to state <a href="#state33">33</a>
+    TRUE           shift, and go to state <a href="#state34">34</a>
+    FALSE          shift, and go to state <a href="#state35">35</a>
+    STRUCT         shift, and go to state <a href="#state36">36</a>
+    '+'            shift, and go to state <a href="#state43">43</a>
+    '-'            shift, and go to state <a href="#state45">45</a>
+    MAX            shift, and go to state <a href="#state47">47</a>
+    MIN            shift, and go to state <a href="#state53">53</a>
+    '('            shift, and go to state <a href="#state59">59</a>
+    ID             shift, and go to state <a href="#state62">62</a>
+    '~'            shift, and go to state <a href="#state63">63</a>
+
+  <b>Transitions</b>
+    exp            go to state <a href="#state57">57</a>
+
+
+<b><a name="state57">State</a> <a href="#state57">57</a></b>
+
+  <b>Kernel Items</b>
+    28 exp: MIN '(' exp ',' exp . ')'
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
+  <b>Parser Actions</b>
+    ')'            shift, and go to state <a href="#state58">58</a>
+    '+'            shift, and go to state <a href="#state8">8</a>
+    '-'            shift, and go to state <a href="#state10">10</a>
+    '*'            shift, and go to state <a href="#state12">12</a>
+    '/'            shift, and go to state <a href="#state14">14</a>
+    '%'            shift, and go to state <a href="#state16">16</a>
+    '!'            shift, and go to state <a href="#state18">18</a>
+    '^'            shift, and go to state <a href="#state19">19</a>
+    AND            shift, and go to state <a href="#state21">21</a>
+    OR             shift, and go to state <a href="#state23">23</a>
+    EQUAL          shift, and go to state <a href="#state25">25</a>
+    LEQ            shift, and go to state <a href="#state27">27</a>
+    LESS_THAN      shift, and go to state <a href="#state29">29</a>
+    DOT            shift, and go to state <a href="#state31">31</a>
+
+
+
+<b><a name="state58">State</a> <a href="#state58">58</a></b>
+
+  <b>Kernel Items</b>
+    28 exp: MIN '(' exp ',' exp ')' .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
   <b>Parser Actions</b>
@@ -1751,13 +1677,70 @@
 
 
 
-<b><a name="state62">State</a> <a href="#state62">62</a></b>
+<b><a name="state59">State</a> <a href="#state59">59</a></b>
 
   <b>Kernel Items</b>
-    29 exp: ID .
-	-lookahead: { '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
-                LESS_THAN, DOT, NEWLINE, '}', ',', ')' }
+    29 exp: '(' . exp ')'
   <b>Parser Actions</b>
+    NUM            shift, and go to state <a href="#state33">33</a>
+    TRUE           shift, and go to state <a href="#state34">34</a>
+    FALSE          shift, and go to state <a href="#state35">35</a>
+    STRUCT         shift, and go to state <a href="#state36">36</a>
+    '+'            shift, and go to state <a href="#state43">43</a>
+    '-'            shift, and go to state <a href="#state45">45</a>
+    MAX            shift, and go to state <a href="#state47">47</a>
+    MIN            shift, and go to state <a href="#state53">53</a>
+    '('            shift, and go to state <a href="#state59">59</a>
+    ID             shift, and go to state <a href="#state62">62</a>
+    '~'            shift, and go to state <a href="#state63">63</a>
+
+  <b>Transitions</b>
+    exp            go to state <a href="#state60">60</a>
+
+
+<b><a name="state60">State</a> <a href="#state60">60</a></b>
+
+  <b>Kernel Items</b>
+    29 exp: '(' exp . ')'
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
+  <b>Parser Actions</b>
+    ')'            shift, and go to state <a href="#state61">61</a>
+    '+'            shift, and go to state <a href="#state8">8</a>
+    '-'            shift, and go to state <a href="#state10">10</a>
+    '*'            shift, and go to state <a href="#state12">12</a>
+    '/'            shift, and go to state <a href="#state14">14</a>
+    '%'            shift, and go to state <a href="#state16">16</a>
+    '!'            shift, and go to state <a href="#state18">18</a>
+    '^'            shift, and go to state <a href="#state19">19</a>
+    AND            shift, and go to state <a href="#state21">21</a>
+    OR             shift, and go to state <a href="#state23">23</a>
+    EQUAL          shift, and go to state <a href="#state25">25</a>
+    LEQ            shift, and go to state <a href="#state27">27</a>
+    LESS_THAN      shift, and go to state <a href="#state29">29</a>
+    DOT            shift, and go to state <a href="#state31">31</a>
+
+
+
+<b><a name="state61">State</a> <a href="#state61">61</a></b>
+
+  <b>Kernel Items</b>
+    29 exp: '(' exp ')' .
+	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
+                LESS_THAN, DOT, '}', ',', ')' }
+  <b>Parser Actions</b>
+    NEWLINE        reduce using <a href="#prod29">rule 29</a> (exp)
     '+'            reduce using <a href="#prod29">rule 29</a> (exp)
     '-'            reduce using <a href="#prod29">rule 29</a> (exp)
     '*'            reduce using <a href="#prod29">rule 29</a> (exp)
@@ -1771,17 +1754,43 @@
     LEQ            reduce using <a href="#prod29">rule 29</a> (exp)
     LESS_THAN      reduce using <a href="#prod29">rule 29</a> (exp)
     DOT            reduce using <a href="#prod29">rule 29</a> (exp)
-    NEWLINE        reduce using <a href="#prod29">rule 29</a> (exp)
     '}'            reduce using <a href="#prod29">rule 29</a> (exp)
     ','            reduce using <a href="#prod29">rule 29</a> (exp)
     ')'            reduce using <a href="#prod29">rule 29</a> (exp)
 
 
 
+<b><a name="state62">State</a> <a href="#state62">62</a></b>
+
+  <b>Kernel Items</b>
+    30 exp: ID .
+	-lookahead: { '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
+                LESS_THAN, DOT, NEWLINE, '}', ',', ')' }
+  <b>Parser Actions</b>
+    '+'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '-'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '*'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '/'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '%'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '!'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '^'            reduce using <a href="#prod30">rule 30</a> (exp)
+    AND            reduce using <a href="#prod30">rule 30</a> (exp)
+    OR             reduce using <a href="#prod30">rule 30</a> (exp)
+    EQUAL          reduce using <a href="#prod30">rule 30</a> (exp)
+    LEQ            reduce using <a href="#prod30">rule 30</a> (exp)
+    LESS_THAN      reduce using <a href="#prod30">rule 30</a> (exp)
+    DOT            reduce using <a href="#prod30">rule 30</a> (exp)
+    NEWLINE        reduce using <a href="#prod30">rule 30</a> (exp)
+    '}'            reduce using <a href="#prod30">rule 30</a> (exp)
+    ','            reduce using <a href="#prod30">rule 30</a> (exp)
+    ')'            reduce using <a href="#prod30">rule 30</a> (exp)
+
+
+
 <b><a name="state63">State</a> <a href="#state63">63</a></b>
 
   <b>Kernel Items</b>
-    30 exp: '~' . exp
+    31 exp: '~' . exp
   <b>Parser Actions</b>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -1802,47 +1811,47 @@
 <b><a name="state64">State</a> <a href="#state64">64</a></b>
 
   <b>Kernel Items</b>
-    30 exp: '~' exp .
+    31 exp: '~' exp .
 	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
                 LESS_THAN, DOT, '}', ',', ')' }
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
-    '+'            reduce using <a href="#prod30">rule 30</a> (exp)
-    '-'            reduce using <a href="#prod30">rule 30</a> (exp)
-    '*'            reduce using <a href="#prod30">rule 30</a> (exp)
-    '/'            reduce using <a href="#prod30">rule 30</a> (exp)
-    '%'            reduce using <a href="#prod30">rule 30</a> (exp)
-    '!'            reduce using <a href="#prod30">rule 30</a> (exp)
-    '^'            reduce using <a href="#prod30">rule 30</a> (exp)
-    AND            reduce using <a href="#prod30">rule 30</a> (exp)
-    OR             reduce using <a href="#prod30">rule 30</a> (exp)
-    EQUAL          reduce using <a href="#prod30">rule 30</a> (exp)
-    LEQ            reduce using <a href="#prod30">rule 30</a> (exp)
-    LESS_THAN      reduce using <a href="#prod30">rule 30</a> (exp)
+    '+'            reduce using <a href="#prod31">rule 31</a> (exp)
+    '-'            reduce using <a href="#prod31">rule 31</a> (exp)
+    '*'            reduce using <a href="#prod31">rule 31</a> (exp)
+    '/'            reduce using <a href="#prod31">rule 31</a> (exp)
+    '%'            reduce using <a href="#prod31">rule 31</a> (exp)
+    '!'            reduce using <a href="#prod31">rule 31</a> (exp)
+    '^'            reduce using <a href="#prod31">rule 31</a> (exp)
+    AND            reduce using <a href="#prod31">rule 31</a> (exp)
+    OR             reduce using <a href="#prod31">rule 31</a> (exp)
+    EQUAL          reduce using <a href="#prod31">rule 31</a> (exp)
+    LEQ            reduce using <a href="#prod31">rule 31</a> (exp)
+    LESS_THAN      reduce using <a href="#prod31">rule 31</a> (exp)
     DOT            shift, and go to state <a href="#state31">31</a>
-    NEWLINE        reduce using <a href="#prod30">rule 30</a> (exp)
-    '}'            reduce using <a href="#prod30">rule 30</a> (exp)
-    ','            reduce using <a href="#prod30">rule 30</a> (exp)
-    ')'            reduce using <a href="#prod30">rule 30</a> (exp)
+    NEWLINE        reduce using <a href="#prod31">rule 31</a> (exp)
+    '}'            reduce using <a href="#prod31">rule 31</a> (exp)
+    ','            reduce using <a href="#prod31">rule 31</a> (exp)
+    ')'            reduce using <a href="#prod31">rule 31</a> (exp)
 
 
 
 <b><a name="state65">State</a> <a href="#state65">65</a></b>
 
   <b>Kernel Items</b>
-    16 exp: STRUCT . ID '{' structFieldValues exp '}'
+    17 exp: STRUCT . ID '{' structFieldValues exp '}'
     12 stmt: STRUCT . ID '{' structFieldDecl '}'
   <b>Parser Actions</b>
     ID             shift, and go to state <a href="#state66">66</a>
@@ -1852,7 +1861,7 @@
 <b><a name="state66">State</a> <a href="#state66">66</a></b>
 
   <b>Kernel Items</b>
-    16 exp: STRUCT ID . '{' structFieldValues exp '}'
+    17 exp: STRUCT ID . '{' structFieldValues exp '}'
     12 stmt: STRUCT ID . '{' structFieldDecl '}'
   <b>Parser Actions</b>
     '{'            shift, and go to state <a href="#state67">67</a>
@@ -1862,23 +1871,24 @@
 <b><a name="state67">State</a> <a href="#state67">67</a></b>
 
   <b>Kernel Items</b>
-    16 exp: STRUCT ID '{' . structFieldValues exp '}'
+    17 exp: STRUCT ID '{' . structFieldValues exp '}'
     12 stmt: STRUCT ID '{' . structFieldDecl '}'
   <b>Parser Actions</b>
-    NUM            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    TRUE           reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    FALSE          reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    STRUCT         reduce using <a href="#prod37">rule 37</a> (Erasing structFieldDecl)
-    '+'            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    '-'            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    MAX            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    MIN            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    '('            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    ID             reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    '~'            reduce using <a href="#prod41">rule 41</a> (Erasing structFieldValues)
-    '}'            reduce using <a href="#prod37">rule 37</a> (Erasing structFieldDecl)
-    INT            reduce using <a href="#prod37">rule 37</a> (Erasing structFieldDecl)
-    BOOL           reduce using <a href="#prod37">rule 37</a> (Erasing structFieldDecl)
+    NUM            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    TRUE           reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    FALSE          reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    STRUCT         reduce using <a href="#prod38">rule 38</a> (Erasing structFieldDecl)
+    '+'            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    '-'            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    MAX            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    MIN            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    '('            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    ID             reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    '~'            reduce using <a href="#prod40">rule 40</a> (Erasing structFieldValues)
+    '}'            reduce using <a href="#prod38">rule 38</a> (Erasing structFieldDecl)
+    BOOL           reduce using <a href="#prod38">rule 38</a> (Erasing structFieldDecl)
+    INT            reduce using <a href="#prod38">rule 38</a> (Erasing structFieldDecl)
+    VOID           reduce using <a href="#prod38">rule 38</a> (Erasing structFieldDecl)
 
   <b>Transitions</b>
     structFieldValues go to state <a href="#state39">39</a>
@@ -1889,15 +1899,16 @@
 
   <b>Kernel Items</b>
     12 stmt: STRUCT ID '{' structFieldDecl . '}'
-    38 structFieldDecl: structFieldDecl . INT ID ';'
-    39 structFieldDecl: structFieldDecl . BOOL ID ';'
-    40 structFieldDecl: structFieldDecl . STRUCT ID ID ';'
+    39 structFieldDecl: structFieldDecl . type ID ';'
   <b>Parser Actions</b>
     '}'            shift, and go to state <a href="#state69">69</a>
-    INT            shift, and go to state <a href="#state70">70</a>
     BOOL           shift, and go to state <a href="#state73">73</a>
+    INT            shift, and go to state <a href="#state74">74</a>
+    VOID           shift, and go to state <a href="#state75">75</a>
     STRUCT         shift, and go to state <a href="#state76">76</a>
 
+  <b>Transitions</b>
+    type           go to state <a href="#state70">70</a>
 
 
 <b><a name="state69">State</a> <a href="#state69">69</a></b>
@@ -1931,7 +1942,7 @@
 <b><a name="state70">State</a> <a href="#state70">70</a></b>
 
   <b>Kernel Items</b>
-    38 structFieldDecl: structFieldDecl INT . ID ';'
+    39 structFieldDecl: structFieldDecl type . ID ';'
   <b>Parser Actions</b>
     ID             shift, and go to state <a href="#state71">71</a>
 
@@ -1940,7 +1951,7 @@
 <b><a name="state71">State</a> <a href="#state71">71</a></b>
 
   <b>Kernel Items</b>
-    38 structFieldDecl: structFieldDecl INT ID . ';'
+    39 structFieldDecl: structFieldDecl type ID . ';'
   <b>Parser Actions</b>
     ';'            shift, and go to state <a href="#state72">72</a>
 
@@ -1949,51 +1960,51 @@
 <b><a name="state72">State</a> <a href="#state72">72</a></b>
 
   <b>Kernel Items</b>
-    38 structFieldDecl: structFieldDecl INT ID ';' .
-	-lookahead: { '}', INT, BOOL, STRUCT }
+    39 structFieldDecl: structFieldDecl type ID ';' .
+	-lookahead: { '}', BOOL, INT, VOID, STRUCT }
   <b>Parser Actions</b>
-    '}'            reduce using <a href="#prod38">rule 38</a> (structFieldDecl)
-    INT            reduce using <a href="#prod38">rule 38</a> (structFieldDecl)
-    BOOL           reduce using <a href="#prod38">rule 38</a> (structFieldDecl)
-    STRUCT         reduce using <a href="#prod38">rule 38</a> (structFieldDecl)
+    '}'            reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
+    BOOL           reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
+    INT            reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
+    VOID           reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
+    STRUCT         reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
 
 
 
 <b><a name="state73">State</a> <a href="#state73">73</a></b>
 
   <b>Kernel Items</b>
-    39 structFieldDecl: structFieldDecl BOOL . ID ';'
+    43 type: BOOL .
+	-lookahead: { ID }
   <b>Parser Actions</b>
-    ID             shift, and go to state <a href="#state74">74</a>
+    ID             reduce using <a href="#prod43">rule 43</a> (type)
 
 
 
 <b><a name="state74">State</a> <a href="#state74">74</a></b>
 
   <b>Kernel Items</b>
-    39 structFieldDecl: structFieldDecl BOOL ID . ';'
+    44 type: INT .
+	-lookahead: { ID }
   <b>Parser Actions</b>
-    ';'            shift, and go to state <a href="#state75">75</a>
+    ID             reduce using <a href="#prod44">rule 44</a> (type)
 
 
 
 <b><a name="state75">State</a> <a href="#state75">75</a></b>
 
   <b>Kernel Items</b>
-    39 structFieldDecl: structFieldDecl BOOL ID ';' .
-	-lookahead: { '}', INT, BOOL, STRUCT }
+    45 type: VOID .
+	-lookahead: { ID }
   <b>Parser Actions</b>
-    '}'            reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
-    INT            reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
-    BOOL           reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
-    STRUCT         reduce using <a href="#prod39">rule 39</a> (structFieldDecl)
+    ID             reduce using <a href="#prod45">rule 45</a> (type)
 
 
 
 <b><a name="state76">State</a> <a href="#state76">76</a></b>
 
   <b>Kernel Items</b>
-    40 structFieldDecl: structFieldDecl STRUCT . ID ID ';'
+    46 type: STRUCT . ID
   <b>Parser Actions</b>
     ID             shift, and go to state <a href="#state77">77</a>
 
@@ -2002,61 +2013,42 @@
 <b><a name="state77">State</a> <a href="#state77">77</a></b>
 
   <b>Kernel Items</b>
-    40 structFieldDecl: structFieldDecl STRUCT ID . ID ';'
+    46 type: STRUCT ID .
+	-lookahead: { ID }
   <b>Parser Actions</b>
-    ID             shift, and go to state <a href="#state78">78</a>
+    ID             reduce using <a href="#prod46">rule 46</a> (type)
 
 
 
 <b><a name="state78">State</a> <a href="#state78">78</a></b>
 
   <b>Kernel Items</b>
-    40 structFieldDecl: structFieldDecl STRUCT ID ID . ';'
+    30 exp: ID .
+	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
+                LESS_THAN, DOT }
+    7 stmt: ID . '=' exp NEWLINE
+    13 stmt: ID . ID '(' funcArgs ')' '{' stmts '}'
   <b>Parser Actions</b>
-    ';'            shift, and go to state <a href="#state79">79</a>
+    '='            shift, and go to state <a href="#state79">79</a>
+    ID             shift, and go to state <a href="#state82">82</a>
+    NEWLINE        reduce using <a href="#prod30">rule 30</a> (exp)
+    '+'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '-'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '*'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '/'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '%'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '!'            reduce using <a href="#prod30">rule 30</a> (exp)
+    '^'            reduce using <a href="#prod30">rule 30</a> (exp)
+    AND            reduce using <a href="#prod30">rule 30</a> (exp)
+    OR             reduce using <a href="#prod30">rule 30</a> (exp)
+    EQUAL          reduce using <a href="#prod30">rule 30</a> (exp)
+    LEQ            reduce using <a href="#prod30">rule 30</a> (exp)
+    LESS_THAN      reduce using <a href="#prod30">rule 30</a> (exp)
+    DOT            reduce using <a href="#prod30">rule 30</a> (exp)
 
 
 
 <b><a name="state79">State</a> <a href="#state79">79</a></b>
-
-  <b>Kernel Items</b>
-    40 structFieldDecl: structFieldDecl STRUCT ID ID ';' .
-	-lookahead: { '}', INT, BOOL, STRUCT }
-  <b>Parser Actions</b>
-    '}'            reduce using <a href="#prod40">rule 40</a> (structFieldDecl)
-    INT            reduce using <a href="#prod40">rule 40</a> (structFieldDecl)
-    BOOL           reduce using <a href="#prod40">rule 40</a> (structFieldDecl)
-    STRUCT         reduce using <a href="#prod40">rule 40</a> (structFieldDecl)
-
-
-
-<b><a name="state80">State</a> <a href="#state80">80</a></b>
-
-  <b>Kernel Items</b>
-    29 exp: ID .
-	-lookahead: { NEWLINE, '+', '-', '*', '/', '%', '!', '^', AND, OR, EQUAL, LEQ, 
-                LESS_THAN, DOT }
-    7 stmt: ID . '=' exp NEWLINE
-  <b>Parser Actions</b>
-    '='            shift, and go to state <a href="#state81">81</a>
-    NEWLINE        reduce using <a href="#prod29">rule 29</a> (exp)
-    '+'            reduce using <a href="#prod29">rule 29</a> (exp)
-    '-'            reduce using <a href="#prod29">rule 29</a> (exp)
-    '*'            reduce using <a href="#prod29">rule 29</a> (exp)
-    '/'            reduce using <a href="#prod29">rule 29</a> (exp)
-    '%'            reduce using <a href="#prod29">rule 29</a> (exp)
-    '!'            reduce using <a href="#prod29">rule 29</a> (exp)
-    '^'            reduce using <a href="#prod29">rule 29</a> (exp)
-    AND            reduce using <a href="#prod29">rule 29</a> (exp)
-    OR             reduce using <a href="#prod29">rule 29</a> (exp)
-    EQUAL          reduce using <a href="#prod29">rule 29</a> (exp)
-    LEQ            reduce using <a href="#prod29">rule 29</a> (exp)
-    LESS_THAN      reduce using <a href="#prod29">rule 29</a> (exp)
-    DOT            reduce using <a href="#prod29">rule 29</a> (exp)
-
-
-
-<b><a name="state81">State</a> <a href="#state81">81</a></b>
 
   <b>Kernel Items</b>
     7 stmt: ID '=' . exp NEWLINE
@@ -2074,28 +2066,28 @@
     '~'            shift, and go to state <a href="#state63">63</a>
 
   <b>Transitions</b>
-    exp            go to state <a href="#state82">82</a>
+    exp            go to state <a href="#state80">80</a>
 
 
-<b><a name="state82">State</a> <a href="#state82">82</a></b>
+<b><a name="state80">State</a> <a href="#state80">80</a></b>
 
   <b>Kernel Items</b>
     7 stmt: ID '=' exp . NEWLINE
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
-    NEWLINE        shift, and go to state <a href="#state83">83</a>
+    NEWLINE        shift, and go to state <a href="#state81">81</a>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
     '*'            shift, and go to state <a href="#state12">12</a>
@@ -2112,7 +2104,7 @@
 
 
 
-<b><a name="state83">State</a> <a href="#state83">83</a></b>
+<b><a name="state81">State</a> <a href="#state81">81</a></b>
 
   <b>Kernel Items</b>
     7 stmt: ID '=' exp NEWLINE .
@@ -2140,7 +2132,129 @@
 
 
 
+<b><a name="state82">State</a> <a href="#state82">82</a></b>
+
+  <b>Kernel Items</b>
+    13 stmt: ID ID . '(' funcArgs ')' '{' stmts '}'
+  <b>Parser Actions</b>
+    '('            shift, and go to state <a href="#state83">83</a>
+
+
+
+<b><a name="state83">State</a> <a href="#state83">83</a></b>
+
+  <b>Kernel Items</b>
+    13 stmt: ID ID '(' . funcArgs ')' '{' stmts '}'
+  <b>Parser Actions</b>
+    ')'            reduce using <a href="#prod42">rule 42</a> (Erasing funcArgs)
+
+  <b>Transitions</b>
+    funcArgs       go to state <a href="#state84">84</a>
+
+
 <b><a name="state84">State</a> <a href="#state84">84</a></b>
+
+  <b>Kernel Items</b>
+    13 stmt: ID ID '(' funcArgs . ')' '{' stmts '}'
+  <b>Parser Actions</b>
+    ')'            shift, and go to state <a href="#state85">85</a>
+
+
+
+<b><a name="state85">State</a> <a href="#state85">85</a></b>
+
+  <b>Kernel Items</b>
+    13 stmt: ID ID '(' funcArgs ')' . '{' stmts '}'
+  <b>Parser Actions</b>
+    '{'            shift, and go to state <a href="#state86">86</a>
+
+
+
+<b><a name="state86">State</a> <a href="#state86">86</a></b>
+
+  <b>Kernel Items</b>
+    13 stmt: ID ID '(' funcArgs ')' '{' . stmts '}'
+  <b>Parser Actions</b>
+    '}'            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    NEWLINE        reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    NUM            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    TRUE           reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    FALSE          reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    STRUCT         reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    '+'            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    '-'            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    MAX            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    MIN            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    '('            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    ID             reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    '~'            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    '{'            reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    IF             reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    WHILE          reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+    PRINT          reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
+
+  <b>Transitions</b>
+    stmts          go to state <a href="#state87">87</a>
+
+
+<b><a name="state87">State</a> <a href="#state87">87</a></b>
+
+  <b>Kernel Items</b>
+    13 stmt: ID ID '(' funcArgs ')' '{' stmts . '}'
+    4 stmts: stmts . stmt
+  <b>Parser Actions</b>
+    '}'            shift, and go to state <a href="#state88">88</a>
+    NEWLINE        shift, and go to state <a href="#state5">5</a>
+    NUM            shift, and go to state <a href="#state33">33</a>
+    TRUE           shift, and go to state <a href="#state34">34</a>
+    FALSE          shift, and go to state <a href="#state35">35</a>
+    STRUCT         shift, and go to state <a href="#state65">65</a>
+    '+'            shift, and go to state <a href="#state43">43</a>
+    '-'            shift, and go to state <a href="#state45">45</a>
+    MAX            shift, and go to state <a href="#state47">47</a>
+    MIN            shift, and go to state <a href="#state53">53</a>
+    '('            shift, and go to state <a href="#state59">59</a>
+    ID             shift, and go to state <a href="#state78">78</a>
+    '~'            shift, and go to state <a href="#state63">63</a>
+    '{'            shift, and go to state <a href="#state89">89</a>
+    IF             shift, and go to state <a href="#state92">92</a>
+    WHILE          shift, and go to state <a href="#state97">97</a>
+    PRINT          shift, and go to state <a href="#state102">102</a>
+
+  <b>Transitions</b>
+    stmt           go to state <a href="#state4">4</a>
+    exp            go to state <a href="#state6">6</a>
+
+
+<b><a name="state88">State</a> <a href="#state88">88</a></b>
+
+  <b>Kernel Items</b>
+    13 stmt: ID ID '(' funcArgs ')' '{' stmts '}' .
+	-lookahead: { NEWLINE, NUM, TRUE, FALSE, STRUCT, '+', '-', MAX, MIN, '(', ID, 
+                '~', '{', IF, WHILE, PRINT, EOF, '}' }
+  <b>Parser Actions</b>
+    NEWLINE        reduce using <a href="#prod13">rule 13</a> (stmt)
+    NUM            reduce using <a href="#prod13">rule 13</a> (stmt)
+    TRUE           reduce using <a href="#prod13">rule 13</a> (stmt)
+    FALSE          reduce using <a href="#prod13">rule 13</a> (stmt)
+    STRUCT         reduce using <a href="#prod13">rule 13</a> (stmt)
+    '+'            reduce using <a href="#prod13">rule 13</a> (stmt)
+    '-'            reduce using <a href="#prod13">rule 13</a> (stmt)
+    MAX            reduce using <a href="#prod13">rule 13</a> (stmt)
+    MIN            reduce using <a href="#prod13">rule 13</a> (stmt)
+    '('            reduce using <a href="#prod13">rule 13</a> (stmt)
+    ID             reduce using <a href="#prod13">rule 13</a> (stmt)
+    '~'            reduce using <a href="#prod13">rule 13</a> (stmt)
+    '{'            reduce using <a href="#prod13">rule 13</a> (stmt)
+    IF             reduce using <a href="#prod13">rule 13</a> (stmt)
+    WHILE          reduce using <a href="#prod13">rule 13</a> (stmt)
+    PRINT          reduce using <a href="#prod13">rule 13</a> (stmt)
+    EOF            reduce using <a href="#prod13">rule 13</a> (stmt)
+    '}'            reduce using <a href="#prod13">rule 13</a> (stmt)
+
+
+
+<b><a name="state89">State</a> <a href="#state89">89</a></b>
 
   <b>Kernel Items</b>
     8 stmt: '{' . stmts '}'
@@ -2164,16 +2278,16 @@
     PRINT          reduce using <a href="#prod3">rule 3</a> (Erasing stmts)
 
   <b>Transitions</b>
-    stmts          go to state <a href="#state85">85</a>
+    stmts          go to state <a href="#state90">90</a>
 
 
-<b><a name="state85">State</a> <a href="#state85">85</a></b>
+<b><a name="state90">State</a> <a href="#state90">90</a></b>
 
   <b>Kernel Items</b>
     8 stmt: '{' stmts . '}'
     4 stmts: stmts . stmt
   <b>Parser Actions</b>
-    '}'            shift, and go to state <a href="#state86">86</a>
+    '}'            shift, and go to state <a href="#state91">91</a>
     NEWLINE        shift, and go to state <a href="#state5">5</a>
     NUM            shift, and go to state <a href="#state33">33</a>
     TRUE           shift, and go to state <a href="#state34">34</a>
@@ -2184,19 +2298,19 @@
     MAX            shift, and go to state <a href="#state47">47</a>
     MIN            shift, and go to state <a href="#state53">53</a>
     '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state80">80</a>
+    ID             shift, and go to state <a href="#state78">78</a>
     '~'            shift, and go to state <a href="#state63">63</a>
-    '{'            shift, and go to state <a href="#state84">84</a>
-    IF             shift, and go to state <a href="#state87">87</a>
-    WHILE          shift, and go to state <a href="#state92">92</a>
-    PRINT          shift, and go to state <a href="#state97">97</a>
+    '{'            shift, and go to state <a href="#state89">89</a>
+    IF             shift, and go to state <a href="#state92">92</a>
+    WHILE          shift, and go to state <a href="#state97">97</a>
+    PRINT          shift, and go to state <a href="#state102">102</a>
 
   <b>Transitions</b>
     stmt           go to state <a href="#state4">4</a>
     exp            go to state <a href="#state6">6</a>
 
 
-<b><a name="state86">State</a> <a href="#state86">86</a></b>
+<b><a name="state91">State</a> <a href="#state91">91</a></b>
 
   <b>Kernel Items</b>
     8 stmt: '{' stmts '}' .
@@ -2224,16 +2338,16 @@
 
 
 
-<b><a name="state87">State</a> <a href="#state87">87</a></b>
+<b><a name="state92">State</a> <a href="#state92">92</a></b>
 
   <b>Kernel Items</b>
     9 stmt: IF . '(' exp ')' stmt
   <b>Parser Actions</b>
-    '('            shift, and go to state <a href="#state88">88</a>
+    '('            shift, and go to state <a href="#state93">93</a>
 
 
 
-<b><a name="state88">State</a> <a href="#state88">88</a></b>
+<b><a name="state93">State</a> <a href="#state93">93</a></b>
 
   <b>Kernel Items</b>
     9 stmt: IF '(' . exp ')' stmt
@@ -2251,28 +2365,28 @@
     '~'            shift, and go to state <a href="#state63">63</a>
 
   <b>Transitions</b>
-    exp            go to state <a href="#state89">89</a>
+    exp            go to state <a href="#state94">94</a>
 
 
-<b><a name="state89">State</a> <a href="#state89">89</a></b>
+<b><a name="state94">State</a> <a href="#state94">94</a></b>
 
   <b>Kernel Items</b>
     9 stmt: IF '(' exp . ')' stmt
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
-    ')'            shift, and go to state <a href="#state90">90</a>
+    ')'            shift, and go to state <a href="#state95">95</a>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
     '*'            shift, and go to state <a href="#state12">12</a>
@@ -2289,7 +2403,7 @@
 
 
 
-<b><a name="state90">State</a> <a href="#state90">90</a></b>
+<b><a name="state95">State</a> <a href="#state95">95</a></b>
 
   <b>Kernel Items</b>
     9 stmt: IF '(' exp ')' . stmt
@@ -2304,19 +2418,19 @@
     MAX            shift, and go to state <a href="#state47">47</a>
     MIN            shift, and go to state <a href="#state53">53</a>
     '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state80">80</a>
+    ID             shift, and go to state <a href="#state78">78</a>
     '~'            shift, and go to state <a href="#state63">63</a>
-    '{'            shift, and go to state <a href="#state84">84</a>
-    IF             shift, and go to state <a href="#state87">87</a>
-    WHILE          shift, and go to state <a href="#state92">92</a>
-    PRINT          shift, and go to state <a href="#state97">97</a>
+    '{'            shift, and go to state <a href="#state89">89</a>
+    IF             shift, and go to state <a href="#state92">92</a>
+    WHILE          shift, and go to state <a href="#state97">97</a>
+    PRINT          shift, and go to state <a href="#state102">102</a>
 
   <b>Transitions</b>
-    stmt           go to state <a href="#state91">91</a>
+    stmt           go to state <a href="#state96">96</a>
     exp            go to state <a href="#state6">6</a>
 
 
-<b><a name="state91">State</a> <a href="#state91">91</a></b>
+<b><a name="state96">State</a> <a href="#state96">96</a></b>
 
   <b>Kernel Items</b>
     9 stmt: IF '(' exp ')' stmt .
@@ -2344,16 +2458,16 @@
 
 
 
-<b><a name="state92">State</a> <a href="#state92">92</a></b>
+<b><a name="state97">State</a> <a href="#state97">97</a></b>
 
   <b>Kernel Items</b>
     10 stmt: WHILE . '(' exp ')' stmt
   <b>Parser Actions</b>
-    '('            shift, and go to state <a href="#state93">93</a>
+    '('            shift, and go to state <a href="#state98">98</a>
 
 
 
-<b><a name="state93">State</a> <a href="#state93">93</a></b>
+<b><a name="state98">State</a> <a href="#state98">98</a></b>
 
   <b>Kernel Items</b>
     10 stmt: WHILE '(' . exp ')' stmt
@@ -2371,28 +2485,28 @@
     '~'            shift, and go to state <a href="#state63">63</a>
 
   <b>Transitions</b>
-    exp            go to state <a href="#state94">94</a>
+    exp            go to state <a href="#state99">99</a>
 
 
-<b><a name="state94">State</a> <a href="#state94">94</a></b>
+<b><a name="state99">State</a> <a href="#state99">99</a></b>
 
   <b>Kernel Items</b>
     10 stmt: WHILE '(' exp . ')' stmt
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
-    ')'            shift, and go to state <a href="#state95">95</a>
+    ')'            shift, and go to state <a href="#state100">100</a>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
     '*'            shift, and go to state <a href="#state12">12</a>
@@ -2409,7 +2523,7 @@
 
 
 
-<b><a name="state95">State</a> <a href="#state95">95</a></b>
+<b><a name="state100">State</a> <a href="#state100">100</a></b>
 
   <b>Kernel Items</b>
     10 stmt: WHILE '(' exp ')' . stmt
@@ -2424,19 +2538,19 @@
     MAX            shift, and go to state <a href="#state47">47</a>
     MIN            shift, and go to state <a href="#state53">53</a>
     '('            shift, and go to state <a href="#state59">59</a>
-    ID             shift, and go to state <a href="#state80">80</a>
+    ID             shift, and go to state <a href="#state78">78</a>
     '~'            shift, and go to state <a href="#state63">63</a>
-    '{'            shift, and go to state <a href="#state84">84</a>
-    IF             shift, and go to state <a href="#state87">87</a>
-    WHILE          shift, and go to state <a href="#state92">92</a>
-    PRINT          shift, and go to state <a href="#state97">97</a>
+    '{'            shift, and go to state <a href="#state89">89</a>
+    IF             shift, and go to state <a href="#state92">92</a>
+    WHILE          shift, and go to state <a href="#state97">97</a>
+    PRINT          shift, and go to state <a href="#state102">102</a>
 
   <b>Transitions</b>
-    stmt           go to state <a href="#state96">96</a>
+    stmt           go to state <a href="#state101">101</a>
     exp            go to state <a href="#state6">6</a>
 
 
-<b><a name="state96">State</a> <a href="#state96">96</a></b>
+<b><a name="state101">State</a> <a href="#state101">101</a></b>
 
   <b>Kernel Items</b>
     10 stmt: WHILE '(' exp ')' stmt .
@@ -2464,16 +2578,16 @@
 
 
 
-<b><a name="state97">State</a> <a href="#state97">97</a></b>
+<b><a name="state102">State</a> <a href="#state102">102</a></b>
 
   <b>Kernel Items</b>
     11 stmt: PRINT . '(' exp ')' NEWLINE
   <b>Parser Actions</b>
-    '('            shift, and go to state <a href="#state98">98</a>
+    '('            shift, and go to state <a href="#state103">103</a>
 
 
 
-<b><a name="state98">State</a> <a href="#state98">98</a></b>
+<b><a name="state103">State</a> <a href="#state103">103</a></b>
 
   <b>Kernel Items</b>
     11 stmt: PRINT '(' . exp ')' NEWLINE
@@ -2491,28 +2605,28 @@
     '~'            shift, and go to state <a href="#state63">63</a>
 
   <b>Transitions</b>
-    exp            go to state <a href="#state99">99</a>
+    exp            go to state <a href="#state104">104</a>
 
 
-<b><a name="state99">State</a> <a href="#state99">99</a></b>
+<b><a name="state104">State</a> <a href="#state104">104</a></b>
 
   <b>Kernel Items</b>
     11 stmt: PRINT '(' exp . ')' NEWLINE
-    17 exp: exp . '+' exp
-    18 exp: exp . '-' exp
-    19 exp: exp . '*' exp
-    20 exp: exp . '/' exp
-    21 exp: exp . '%' exp
-    24 exp: exp . '!'
-    25 exp: exp . '^' exp
-    31 exp: exp . AND exp
-    32 exp: exp . OR exp
-    33 exp: exp . EQUAL exp
-    34 exp: exp . LEQ exp
-    35 exp: exp . LESS_THAN exp
-    36 exp: exp . DOT ID
+    18 exp: exp . '+' exp
+    19 exp: exp . '-' exp
+    20 exp: exp . '*' exp
+    21 exp: exp . '/' exp
+    22 exp: exp . '%' exp
+    25 exp: exp . '!'
+    26 exp: exp . '^' exp
+    32 exp: exp . AND exp
+    33 exp: exp . OR exp
+    34 exp: exp . EQUAL exp
+    35 exp: exp . LEQ exp
+    36 exp: exp . LESS_THAN exp
+    37 exp: exp . DOT ID
   <b>Parser Actions</b>
-    ')'            shift, and go to state <a href="#state100">100</a>
+    ')'            shift, and go to state <a href="#state105">105</a>
     '+'            shift, and go to state <a href="#state8">8</a>
     '-'            shift, and go to state <a href="#state10">10</a>
     '*'            shift, and go to state <a href="#state12">12</a>
@@ -2529,16 +2643,16 @@
 
 
 
-<b><a name="state100">State</a> <a href="#state100">100</a></b>
+<b><a name="state105">State</a> <a href="#state105">105</a></b>
 
   <b>Kernel Items</b>
     11 stmt: PRINT '(' exp ')' . NEWLINE
   <b>Parser Actions</b>
-    NEWLINE        shift, and go to state <a href="#state101">101</a>
+    NEWLINE        shift, and go to state <a href="#state106">106</a>
 
 
 
-<b><a name="state101">State</a> <a href="#state101">101</a></b>
+<b><a name="state106">State</a> <a href="#state106">106</a></b>
 
   <b>Kernel Items</b>
     11 stmt: PRINT '(' exp ')' NEWLINE .
