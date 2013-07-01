@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
+    using Mono.Cecil;
     using Thrower;
 
     [Serializable]
@@ -14,17 +16,116 @@
         public TypeCheckingException(string message, Exception inner) : base(message, inner) {}
     }
 
-    sealed class Type
+    class Type
     {
-        internal static readonly Type Bool = new Type("i1");
-        internal static readonly Type Int = new Type("i32");
+        protected static readonly IDictionary<string, Type> Types = new Dictionary<string, Type>();
+             
+        public readonly string Name;
+        public TypeReference Reference;
 
-        Type(string llvmType)
+        protected Type(string name)
         {
-            LlvmType = llvmType;
+            Debug.Assert(name == name.ToLower());
+            Name = name;
         }
 
-        public string LlvmType { get; private set; }
+        public static Type Bool
+        {
+            get { return Types["bool"]; }
+        }
+
+        public static Type Int
+        {
+            get { return Types["int"]; }
+        }
+
+        public static void Init()
+        {
+            Types.Clear();
+            Create("bool");
+            Create("int");
+        }
+
+        public static Type Create(string name)
+        {
+            name = name.ToLower();
+            Raise<TypeCheckingException>.If(Types.ContainsKey(name), "Type already existing.");
+            var type = new Type(name);
+            Types.Add(name, type);
+            return type;
+        }
+
+        public static Type Get(string name)
+        {
+            name = name.ToLower();
+            Raise<ArgumentException>.If(!Types.ContainsKey(name), "Type does not exist.");
+            return Types[name];
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+
+    sealed class StructType : Type
+    {
+        static readonly IDictionary<string, StructType> StructTypes = new Dictionary<string, StructType>();
+        
+        readonly IList<FieldInfo> _fields;
+
+        StructType(string name, StructDecl decl) : base(name)
+        {
+            _fields = new List<FieldInfo>(decl.Fields.Count());
+            foreach (var f in decl.Fields) {
+                _fields.Add(new FieldInfo(f.Item1, Type.Get(f.Item2)));
+            }
+        }
+
+        public ReadOnlyCollection<FieldInfo> Fields
+        {
+            get { return new ReadOnlyCollection<FieldInfo>(_fields); }
+        }
+
+        public new static void Init()
+        {
+            StructTypes.Clear();
+        }
+
+        public static StructType Create(StructDecl decl)
+        {
+            var name = decl.Name.ToLower();
+            Raise<ArgumentException>.If(Types.ContainsKey(name));
+            var type = new StructType(name, decl);
+            Types.Add(name, type);
+            StructTypes.Add(name, type);
+            return type;
+        }
+
+        public new static StructType Get(string name)
+        {
+            name = name.ToLower();
+            Raise<ArgumentException>.If(!StructTypes.ContainsKey(name));
+            return StructTypes[name];
+        }
+
+        public override string ToString()
+        {
+            return "struct " + Name;
+        }
+
+        public sealed class FieldInfo
+        {
+            public readonly string Name;
+            public readonly Type Type;
+            public FieldReference Reference;
+
+            public FieldInfo(string name, Type type)
+            {
+                Name = name;
+                Type = type;
+            }
+        }
     }
 
     sealed class Variable
@@ -105,6 +206,12 @@
         Prog _prog;
         Type _result;
         IStaticEnv _staticEnv = new StaticEnv(new OutmostStaticEnv());
+
+        public TypecheckVisitor()
+        {
+            Type.Init();
+            StructType.Init();
+        }
 
         public void Visit(Sum sum)
         {
@@ -206,7 +313,12 @@
 
         public void Visit(StructValue sv)
         {
-            //throw new NotImplementedException();
+            var st = StructType.Get(sv.Name);
+            Raise<TypeCheckingException>.IfAreNotEqual(st.Fields.Count, sv.Values.Count);
+            for (var i = 0; i < st.Fields.Count; ++i) {
+                sv.Values[i].Accept(this);
+                Raise<TypeCheckingException>.IfAreNotSame(st.Fields[i].Type, sv.Values[i].Type);
+            }
         }
 
         public void Visit(Id id)
@@ -223,7 +335,7 @@
 
         public void Visit(StructDecl structDecl)
         {
-            //throw new NotImplementedException();
+            structDecl.Type = StructType.Create(structDecl);
         }
 
         public void Visit(EvalExp eval)
@@ -330,8 +442,6 @@
 
         Variable CreateVar(string varName)
         {
-            var sameName = _prog.Vars.Count(v => v.Name == varName);
-            var llvmName = sameName == 0 ? string.Format("%{0}", varName) : string.Format("%{0}.{1}", varName, sameName);
             var llvmVar = new Variable(varName, _result);
             _prog.Vars.Add(llvmVar);
             return llvmVar;

@@ -84,10 +84,7 @@
         {
             eq.Left.Accept(this);
             _sb.Append(" == ");
-            if (eq.Type != null) {
-                Debug.Assert(eq.Left.Type.Equals(eq.Right.Type));
-                _sb.Append(eq.Left.Type.LlvmType).Append(' ');
-            }
+            Debug.Assert(eq.Left.Type.Equals(eq.Right.Type));
             eq.Right.Accept(this);
         }
 
@@ -167,18 +164,22 @@
 
         public void Visit(StructDecl structDecl)
         {
+            var type = structDecl.Type;
             Indent();
             _sb.Append("struct ");
-            _sb.Append(structDecl.Name);
+            _sb.Append(type.Name);
             _sb.Append(" {");
-            foreach (var f in structDecl.Fields) {
-                _sb.Append(f.Item2);
+            int i = 0;
+            for (; i < type.Fields.Count - 1; ++i) {
+                _sb.Append(type.Fields[i].Type);
                 _sb.Append(" ");
-                _sb.Append(f.Item1);
-                _sb.Append(";");
-                _sb.Append(" ");
+                _sb.Append(type.Fields[i].Name);
+                _sb.Append("; ");
             }
-            _sb.Append("}\n");
+            _sb.Append(type.Fields[i].Type);
+            _sb.Append(" ");
+            _sb.Append(type.Fields[i].Name);
+            _sb.Append(";}\n");
         }
 
         public void Visit(EvalExp eval)
@@ -236,12 +237,6 @@
         {
             foreach (var stmt in prog.Statements) {
                 stmt.Accept(this);
-            }
-            if (prog.Vars.Count != 0) {
-                _sb.Append("--- LLVM Vars ---\n");
-                foreach (var v in prog.Vars) {
-                    _sb.Append(v.Name).Append(" : ").Append(v.Type.LlvmType).Append('\n');
-                }
             }
         }
 

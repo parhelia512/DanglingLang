@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Mono.Cecil;
     using Mono.Cecil.Cil;
@@ -18,7 +19,6 @@
         readonly MethodReference _pause;
         readonly MethodReference _printBool;
         readonly MethodReference _printInt;
-        readonly TypeReference _intType;
         MethodBody _body;
         ICollection<Instruction> _instructions;
 
@@ -27,7 +27,8 @@
             _assembly = AssemblyDefinition.ReadAssembly("DanglingLang.Runner.exe");
             _module = _assembly.MainModule;
 
-            _intType = _module.Import(typeof(int));
+            Type.Bool.Reference = _module.Import(typeof(bool));
+            Type.Int.Reference = _module.Import(typeof(int));
 
             var program = _module.Types.First(t => t.Name == "Program");
             var main = program.Methods.First(m => m.Name == "Main");
@@ -173,7 +174,12 @@
 
         public void Visit(StructValue sv)
         {
-            //throw new System.NotImplementedException();
+            var st = sv.Type as StructType;
+            Debug.Assert(st != null);
+            for (var i = 0; i < st.Fields.Count; ++i) {
+                sv.Values[i].Accept(this);
+                _instructions.Add(Instruction.Create(OpCodes.Stfld, st.Fields[i].Reference));
+            }
         }
 
         public void Visit(Id id)
@@ -190,7 +196,18 @@
 
         public void Visit(StructDecl structDecl)
         {
-            //throw new NotImplementedException();
+            const string nmsp = "DanglingLang.Runner";
+            const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed;
+            const FieldAttributes fieldAttr = FieldAttributes.Public;
+            
+            var type = structDecl.Type;
+            var typeDef = new TypeDefinition(nmsp, type.Name, typeAttr);
+            foreach (var f in type.Fields) {
+                var fieldDef = new FieldDefinition(f.Name, fieldAttr, f.Type.Reference);
+                typeDef.Fields.Add(fieldDef);
+                f.Reference = fieldDef;
+            }
+            structDecl.Type.Reference = typeDef;
         }
 
         public void Visit(EvalExp eval)
@@ -235,7 +252,7 @@
         public void Visit(Prog prog)
         {
             foreach (var @var in prog.Vars) {
-                var varDef = new VariableDefinition(@var.Name, _intType);
+                var varDef = new VariableDefinition(@var.Name, @var.Type.Reference);
                 _varDefs.Add(@var.Name, varDef);
                 _body.Variables.Add(varDef);
             }

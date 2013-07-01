@@ -12,5 +12,15 @@ namespace DanglingLang.Tests
             AddLine("print(42)");
             Execute(new[] {"21", "42"});
         }
+
+        [Test]
+        public void NestedStruct()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("struct twoTime {struct time t1; struct time t2;}");
+            AddLine("print(21)");
+            AddLine("print(42)");
+            Execute(new[] {"21", "42"});
+        }
     }
 }

@@ -52,7 +52,7 @@
 
     abstract class Exp : TreeNode
     {
-        internal Type Type { get; set; } // Initialized by TypecheckVisitor (and used by GenerateLlvmVisitor)
+        internal Type Type { get; set; } // Initialized by TypecheckVisitor (and used by CecilVisitor)
     }
 
     abstract class Stmt : TreeNode {}
@@ -315,6 +315,8 @@
     {
         readonly IList<Exp> _values = new List<Exp>();
 
+        public string Name { get; set; }
+
         public int ValueCount
         {
             get { return _values.Count; }
@@ -359,6 +361,7 @@
     sealed class StructDecl : Stmt
     {
         readonly LinkedList<Tuple<string, string>> _fields = new LinkedList<Tuple<string, string>>();
+        public StructType Type;
 
         public IEnumerable<Tuple<string, string>> Fields
         {

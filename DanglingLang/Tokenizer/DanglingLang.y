@@ -10,7 +10,7 @@
 }
 %token <intValue> NUM
 %token <identifier> ID
-%token MAX MIN NEWLINE IF WHILE STRUCT INT BOOL PRINT TRUE FALSE AND OR EQUAL LESS_THAN LEQ
+%token MAX MIN NEWLINE IF WHILE STRUCT INT BOOL PRINT TRUE FALSE AND OR EQUAL LESS_THAN LEQ DOT
 %left OR
 %left AND
 %left EQUAL 
@@ -21,6 +21,7 @@
 %left '!'
 %right '^'
 %left '~' MIN MAX
+%left DOT
 %type <exp> exp
 %type <structValue> structFieldValues
 %type <structDecl> structFieldDecl
@@ -52,27 +53,27 @@ stmt: NEWLINE { $$ = null; }
 exp: NUM  { $$ = new IntLiteral($1); }
    | TRUE { $$ = new BoolLiteral(true); }
    | FALSE { $$ = new BoolLiteral(false); }
-   | STRUCT ID '{' structFieldValues exp '}' { $4.AddValue($5); $$ = $4; }
+   | STRUCT ID '{' structFieldValues exp '}' { $4.AddValue($5); $4.Name = $2; $$ = $4; }
    | exp '+' exp { $$ = new Sum($1, $3); }
    | exp '-' exp { $$ = new Subtraction($1, $3); }
    | exp '*' exp { $$ = new Product($1, $3); }
    | exp '/' exp { $$ = new Division($1, $3); }
    | exp '%' exp { $$ = new Remainder($1, $3); }
    | '+' exp %prec UMINUS { $$= $2; }
-	| '-' exp %prec UMINUS { $$= new Minus($2); }
-	| exp '!' { $$= new Factorial($1); }
-	| exp '^' exp { $$ = new Power($1, $3); }
-	| MAX '(' exp ',' exp ')' { $$ = new Max($3, $5); }
-	| MIN '(' exp ',' exp ')' { $$ = new Min($3, $5); }
-	| '(' exp ')' { $$=$2; }
-	| ID { $$ = new Id($1); }
-	| '~' exp { $$ = new Not($2); }
-	| exp AND exp { $$ = new And($1, $3); }
-	| exp OR exp { $$ = new Or($1, $3); }
-	| exp EQUAL exp { $$ = new Equal($1, $3); }
-	| exp LEQ exp { $$ = new LessEqual($1, $3); }
-	| exp LESS_THAN exp { $$ = new LessThan($1, $3); }
-	;
+   | '-' exp %prec UMINUS { $$= new Minus($2); }
+   | exp '!' { $$= new Factorial($1); }
+   | exp '^' exp { $$ = new Power($1, $3); }
+   | MAX '(' exp ',' exp ')' { $$ = new Max($3, $5); }
+   | MIN '(' exp ',' exp ')' { $$ = new Min($3, $5); }
+   | '(' exp ')' { $$=$2; }
+   | ID { $$ = new Id($1); }
+   | '~' exp { $$ = new Not($2); }
+   | exp AND exp { $$ = new And($1, $3); }
+   | exp OR exp { $$ = new Or($1, $3); }
+   | exp EQUAL exp { $$ = new Equal($1, $3); }
+   | exp LEQ exp { $$ = new LessEqual($1, $3); }
+   | exp LESS_THAN exp { $$ = new LessThan($1, $3); }
+   ;
 
 structFieldDecl: /* Empty */ {$$ = new StructDecl();}
                | structFieldDecl INT ID ';' {$1.AddField($3, "int"); $$ = $1;}
