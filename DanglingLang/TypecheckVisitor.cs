@@ -307,9 +307,9 @@
             structDecl.Type = AddStructType(structDecl);
         }
 
-        public void Visit(EvalExp eval)
+        public void Visit(FunctionDecl funcDecl)
         {
-            eval.Exp.Accept(this);
+            throw new NotImplementedException();
         }
 
         public void Visit(Assignment asg)
@@ -380,9 +380,8 @@
             
             const string nmsp = "DanglingLang.Runner";
             const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed;
-            var typeDef = new TypeDefinition(nmsp, name, typeAttr);
-            typeDef.BaseType = Module.Import(typeof(object));
-            
+            var typeDef = new TypeDefinition(nmsp, name, typeAttr) {BaseType = Module.Import(typeof(object))};
+
             var type = new StructType(name, typeDef);
             foreach (var f in decl.Fields) {
                 var fieldType = GetType(f.Item2);

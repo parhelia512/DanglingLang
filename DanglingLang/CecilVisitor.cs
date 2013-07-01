@@ -234,7 +234,7 @@
             _module.Types.Add(typeDef);
         }
 
-        public void Visit(EvalExp eval)
+        public void Visit(FunctionDecl funcDecl)
         {
             throw new NotImplementedException();
         }

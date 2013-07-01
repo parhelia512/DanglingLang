@@ -5,6 +5,7 @@
 	internal Exp exp;
 	internal StructValue structValue;
 	internal StructDecl structDecl;
+	internal FunctionDecl functionDecl;
 	internal Stmt stmt;
 	internal List<Stmt> stmts;
 }
@@ -26,6 +27,7 @@
 %type <exp> exp
 %type <structValue> structFieldValues
 %type <structDecl> structFieldDecl
+%type <functionDecl> funcArgs
 %type <stmt> stmt
 %type <stmts> stmts 
 %type <void> prog
@@ -43,20 +45,19 @@ stmts: /* empty */ {$$ = new List<Stmt>();}
 	 ;
 
 stmt: NEWLINE {$$ = null;}
-	| exp NEWLINE { $$ = new EvalExp($1); }
 	| ID '=' exp NEWLINE { $$ = new Assignment($1, $3); }
 	| '{' stmts '}' { $$ = new Block($2); }
 	| IF '(' exp ')' stmt { $$ = new If($3, $5 ?? new Block(new List<Stmt>())); }
 	| WHILE '(' exp ')' stmt { $$ = new While($3, $5 ?? new Block(new List<Stmt>())); }
 	| PRINT '(' exp ')' NEWLINE {$$ = new Print($3);}
 	| STRUCT ID '{' structFieldDecl '}' {$4.Name = $2; $$ = $4;}
-	| ID ID '(' funcArgs ')' '{' stmts '}' {}
+	| type ID '(' funcArgs ')' '{' stmts '}' {}
 	;
 
 exp: NUM  { $$ = new IntLiteral($1); }
    | TRUE { $$ = new BoolLiteral(true); }
    | FALSE { $$ = new BoolLiteral(false); }
-   | STRUCT ID '{' structFieldValues exp '}' { $4.AddValue($5); $4.Name = $2; $$ = $4; }
+   | STRUCT ID '{' structFieldValues exp '}' {$4.AddValue($5); $4.Name = $2; $$ = $4;}
    | exp '+' exp { $$ = new Sum($1, $3); }
    | exp '-' exp { $$ = new Subtraction($1, $3); }
    | exp '*' exp { $$ = new Product($1, $3); }
@@ -68,7 +69,7 @@ exp: NUM  { $$ = new IntLiteral($1); }
    | exp '^' exp { $$ = new Power($1, $3); }
    | MAX '(' exp ',' exp ')' { $$ = new Max($3, $5); }
    | MIN '(' exp ',' exp ')' { $$ = new Min($3, $5); }
-   | '(' exp ')' { $$=$2; }
+   | '(' exp ')' {$$ = $2;}
    | ID { $$ = new Id($1); }
    | '~' exp { $$ = new Not($2); }
    | exp AND exp { $$ = new And($1, $3); }
@@ -87,7 +88,9 @@ structFieldValues: /* Empty */ {$$ = new StructValue();}
                  | structFieldValues exp ',' {$1.AddValue($2); $$ = $1;}
                  ;
 
-funcArgs: {}
+funcArgs: /* Empty */ {$$ = new FunctionDecl();}
+        | funcArgs ',' type ID {}
+		| type ID {}
         ;
 
 type: BOOL {$$ = "bool";}

@@ -188,11 +188,9 @@
             _sb.Append(";}\n");
         }
 
-        public void Visit(EvalExp eval)
+        public void Visit(FunctionDecl funcDecl)
         {
-            Indent();
-            eval.Exp.Accept(this);
-            _sb.Append("\n");
+            throw new System.NotImplementedException();
         }
 
         public void Visit(Assignment asg)

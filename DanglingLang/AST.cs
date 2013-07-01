@@ -43,7 +43,7 @@
         void Visit(Id id);
         void Visit(Print print);
         void Visit(StructDecl structDecl);
-        void Visit(EvalExp eval);
+        void Visit(FunctionDecl funcDecl);
         void Visit(Assignment asg);
         void Visit(If ifs);
         void Visit(While whiles);
@@ -390,27 +390,15 @@
         }
     }
 
-    class EvalExp : Stmt
+    sealed class FunctionDecl : Stmt
     {
-        readonly Exp _exp;
-
-        public EvalExp(Exp exp)
-        {
-            _exp = exp;
-        }
-
-        public Exp Exp
-        {
-            get { return _exp; }
-        }
-
         public override void Accept(ITreeNodeVisitor visitor)
         {
             visitor.Visit(this);
         }
     }
 
-    class Prog : TreeNode
+    sealed class Prog : TreeNode
     {
         internal readonly List<Variable> Variables = new List<Variable>();
         // Initialized by TypecheckVisitor (and used by GenerateLlvmVisitor)
