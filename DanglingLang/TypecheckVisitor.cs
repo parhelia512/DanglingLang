@@ -50,7 +50,15 @@
 
         public void AddField(string name, Type type)
         {
+            Raise<TypeCheckingException>.If(_fields.Any(f => f.Name == name));
             _fields.Add(new FieldInfo(name, type));
+        }
+
+        public FieldInfo GetField(string name)
+        {
+            var field = _fields.FirstOrDefault(f => f.Name == name);
+            Raise<TypeCheckingException>.IfIsNull(field);
+            return field;
         }
 
         public override string ToString()
@@ -235,6 +243,15 @@
             ResultIsBoolAndBothOperandsMustBeInt(lt);
         }
 
+        public void Visit(Dot dot)
+        {
+            dot.Left.Accept(this);
+            var st = dot.Left.Type as StructType;
+            Raise<TypeCheckingException>.IfIsNull(st);
+            Debug.Assert(st != null); // To keep ReSharper quiet :)
+            dot.Type = _result = st.GetField(dot.Right).Type;
+        }
+
         public void Visit(Max max)
         {
             ResultIsIntAndBothOperandsMustBeInt(max);
@@ -282,6 +299,7 @@
         public void Visit(Print print)
         {
             print.Exp.Accept(this);
+            Raise<TypeCheckingException>.If(print.Exp.Type != _intType && print.Exp.Type != _boolType);
         }
 
         public void Visit(StructDecl structDecl)

@@ -146,6 +146,14 @@
             Visit(lt, OpCodes.Clt);
         }
 
+        public void Visit(Dot dot)
+        {
+            dot.Left.Accept(this);
+            var st = dot.Left.Type as StructType;
+            Debug.Assert(st != null); // To keep ReSharper quiet :)
+            _instructions.Add(Instruction.Create(OpCodes.Ldfld, st.GetField(dot.Right).Reference));
+        }
+
         public void Visit(Max max)
         {
             Visit(max, _max);

@@ -73,6 +73,7 @@ exp: NUM  { $$ = new IntLiteral($1); }
    | exp EQUAL exp { $$ = new Equal($1, $3); }
    | exp LEQ exp { $$ = new LessEqual($1, $3); }
    | exp LESS_THAN exp { $$ = new LessThan($1, $3); }
+   | exp DOT ID { $$ = new Dot($1, $3); }
    ;
 
 structFieldDecl: /* Empty */ {$$ = new StructDecl();}

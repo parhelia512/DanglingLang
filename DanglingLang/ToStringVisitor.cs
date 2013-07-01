@@ -102,6 +102,12 @@
             lt.Right.Accept(this);
         }
 
+        public void Visit(Dot dot)
+        {
+            dot.Left.Accept(this);
+            _sb.AppendFormat(".{0}", dot.Right);
+        }
+
         public void Visit(Max max)
         {
             _sb.Append("max(");
@@ -140,11 +146,12 @@
         public void Visit(StructValue sv)
         {
             _sb.AppendFormat("struct {0} {{", sv.Name);
-            for (var i = 0; i < sv.Values.Count - 2; ++i) {
+            int i = 0;
+            for (; i < sv.Values.Count - 1; ++i) {
                 sv.Values[i].Accept(this);
                 _sb.Append(", ");
             }
-            sv.Values[sv.Values.Count - 1].Accept(this);
+            sv.Values[i].Accept(this);
             _sb.Append("}");
         }
 

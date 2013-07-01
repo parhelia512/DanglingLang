@@ -33,6 +33,7 @@
         void Visit(Equal eq);
         void Visit(LessEqual leq);
         void Visit(LessThan lt);
+        void Visit(Dot dot);
         void Visit(Max max);
         void Visit(Min min);
         void Visit(Power pow);
@@ -59,18 +60,13 @@
 
     abstract class BinaryOp : Exp
     {
-        readonly Exp _left;
+        public readonly Exp Left;
         readonly Exp _right;
 
         protected BinaryOp(Exp left, Exp right)
         {
-            _left = left;
+            Left = left;
             _right = right;
-        }
-
-        public Exp Left
-        {
-            get { return _left; }
         }
 
         public Exp Right
@@ -209,6 +205,23 @@
         }
     }
 
+    sealed class Dot : Exp
+    {
+        public readonly Exp Left;
+        public readonly string Right;
+
+        public Dot(Exp left, string right)
+        {
+            Left = left;
+            Right = right;
+        }
+
+        public override void Accept(ITreeNodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
     abstract class UnaryOperator : Exp
     {
         internal readonly Exp Operand;
@@ -249,7 +262,7 @@
         }
     }
 
-    class Id : Exp
+    sealed class Id : Exp
     {
         readonly string _name;
 
