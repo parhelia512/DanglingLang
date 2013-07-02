@@ -80,68 +80,73 @@
         }
     }
 
-    sealed class Variable
+    abstract class StaticEnvBase
     {
-        internal readonly string Name;
-        internal readonly Type Type;
+        public abstract VarInfo GetVariable(string name);
+        public abstract bool TryGetVariable(string name, out VarInfo v);
+        public abstract void SetVariable(string name, VarInfo v);
 
-        public Variable(string name, Type type)
+        public sealed class VarInfo
         {
-            Name = name;
-            Type = type;
+            public readonly string Name;
+            public readonly Type Type;
+            public readonly bool IsParam;
+            public readonly object Info;
+
+            public VarInfo(string name, Type type, bool isParam, object info)
+            {
+                Name = name;
+                Type = type;
+                IsParam = isParam;
+                Debug.Assert(info is FunctionDecl.ParamInfo || info is FunctionDecl.VarInfo);
+                Info = info;
+            }
         }
     }
 
-    interface IStaticEnv
+    sealed class StaticEnv : StaticEnvBase
     {
-        Variable GetVariable(string name);
-        bool TryGetVariable(string name, out Variable v);
-        void SetVariable(string name, Variable v);
-    }
+        readonly Dictionary<string, VarInfo> _locals = new Dictionary<string, VarInfo>();
+        readonly StaticEnvBase _parent;
 
-    sealed class StaticEnv : IStaticEnv
-    {
-        readonly Dictionary<string, Variable> _locals = new Dictionary<string, Variable>();
-        readonly IStaticEnv _parent;
-
-        public StaticEnv(IStaticEnv parent)
+        public StaticEnv(StaticEnvBase parent)
         {
             Debug.Assert(parent != null);
             _parent = parent;
         }
 
-        public Variable GetVariable(string name)
+        public override VarInfo GetVariable(string name)
         {
-            Variable v;
+            VarInfo v;
             return _locals.TryGetValue(name, out v) ? v : _parent.GetVariable(name);
         }
 
-        public bool TryGetVariable(string name, out Variable v)
+        public override bool TryGetVariable(string name, out VarInfo v)
         {
             return _locals.TryGetValue(name, out v) || _parent.TryGetVariable(name, out v);
         }
 
-        public void SetVariable(string name, Variable v)
+        public override void SetVariable(string name, VarInfo v)
         {
             Debug.Assert(!_locals.ContainsKey(name));
             _locals[name] = v;
         }
     }
 
-    sealed class OutmostStaticEnv : IStaticEnv
+    sealed class OutmostStaticEnv : StaticEnvBase
     {
-        public Variable GetVariable(string name)
+        public override VarInfo GetVariable(string name)
         {
             throw new TypeCheckingException(string.Format("Undefined variable {0}", name));
         }
 
-        public bool TryGetVariable(string name, out Variable v)
+        public override bool TryGetVariable(string name, out VarInfo v)
         {
             v = null;
             return false;
         }
 
-        public void SetVariable(string name, Variable v)
+        public override void SetVariable(string name, VarInfo v)
         {
             throw new TypeCheckingException("Internal compiler error");
         }
@@ -158,9 +163,9 @@
         readonly Type _intType;
         int _tempCounter;
             
-        Prog _prog;
+        FunctionDecl _main;
         Type _result;
-        IStaticEnv _staticEnv = new StaticEnv(new OutmostStaticEnv());
+        StaticEnvBase _staticEnv = new StaticEnv(new OutmostStaticEnv());
 
         public TypecheckVisitor()
         {
@@ -169,6 +174,7 @@
             
             _boolType = AddType("bool", Module.TypeSystem.Boolean);
             _intType = AddType("int", Module.TypeSystem.Int32);
+            AddType("void", Module.TypeSystem.Void);
         }
 
         public void Visit(Sum sum)
@@ -287,7 +293,7 @@
                 Raise<TypeCheckingException>.IfAreNotSame(st.Fields[i].Type, sv.Values[i].Type);
             }  
             sv.Type = _result = st;
-            sv.Temp = CreateVar("$" + _tempCounter++);
+            sv.Temp = _main.AddVariable("$" + _tempCounter++, st);
         }
 
         public void Visit(Id id)
@@ -316,8 +322,10 @@
             _staticEnv = new OutmostStaticEnv();
             foreach (var p in funcDecl.Params) {
                 p.Type = GetType(p.TypeName);
-                _staticEnv.SetVariable(p.Name, CreateVar(p.Name));
+                var vInfo = new StaticEnvBase.VarInfo(p.Name, p.Type, true, p);
+                _staticEnv.SetVariable(p.Name, vInfo);
             }
+            _main = funcDecl;
             funcDecl.Body.Accept(this);
             _staticEnv = previousStaticEnv;
             _funcDecls.Add(funcDecl.Name, funcDecl);
@@ -327,17 +335,18 @@
         {
             asg.Exp.Accept(this);
             var varName = asg.VarName;
-            Variable variable;
-            if (_staticEnv.TryGetVariable(varName, out variable)) {
-                if (!variable.Type.Equals(_result)) {
+            StaticEnvBase.VarInfo varInfo;
+            if (_staticEnv.TryGetVariable(varName, out varInfo)) {
+                if (!varInfo.Type.Equals(_result)) {
                     throw new TypeCheckingException(string.Format(
                         "Cannot re-assign {0} with a value of different type", varName));
                 }
             } else {
-                variable = CreateVar(varName);
-                _staticEnv.SetVariable(varName, variable);
+                var info = _main.AddVariable(varName, asg.Exp.Type);
+                varInfo = new StaticEnvBase.VarInfo(varName, asg.Exp.Type, false, info);
+                _staticEnv.SetVariable(varName, varInfo);
             }
-            asg.Var = variable;
+            asg.Var = varInfo;
         }
 
         public void Visit(If ifs)
@@ -364,14 +373,6 @@
                 }
             } finally {
                 _staticEnv = previousStaticEnv;
-            }
-        }
-
-        public void Visit(Prog prog)
-        {
-            _prog = prog;
-            foreach (var stmt in prog.Statements) {
-                stmt.Accept(this);
             }
         }
 
@@ -460,13 +461,6 @@
             binaryOp.Right.Accept(this);
             MustBeInt("The type of the right operand of " + binaryOp + " must be integer");
             binaryOp.Type = _result = _boolType;
-        }
-
-        Variable CreateVar(string varName)
-        {
-            var variable = new Variable(varName, _result);
-            _prog.Variables.Add(variable);
-            return variable;
         }
     }
 }

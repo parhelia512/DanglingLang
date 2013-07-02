@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using Mono.Cecil;
+    using Mono.Cecil.Cil;
     using Thrower;
 
     abstract class TreeNode
@@ -48,7 +50,6 @@
         void Visit(If ifs);
         void Visit(While whiles);
         void Visit(Block block);
-        void Visit(Prog prog);
     }
 
     abstract class Exp : TreeNode
@@ -264,14 +265,13 @@
 
     sealed class Id : Exp
     {
+        public StaticEnvBase.VarInfo Var;
         readonly string _name;
 
         public Id(string name)
         {
             _name = name;
         }
-
-        internal Variable Var { get; set; }
 
         public string Name
         {
@@ -328,7 +328,7 @@
     {
         readonly IList<Exp> _values = new List<Exp>();
         public string Name;
-        public Variable Temp; // Assigned by type checker.
+        public FunctionDecl.VarInfo Temp; // Assigned by type checker.
 
         public ReadOnlyCollection<Exp> Values
         {
@@ -409,16 +409,23 @@
             get { return new ReadOnlyCollection<ParamInfo>(_params); }
         }
 
+        public ReadOnlyCollection<VarInfo> Variables
+        {
+            get { return new ReadOnlyCollection<VarInfo>(_variables); }
+        }
+
         public void AddParam(string name, string typeName)
         {
             Raise<ArgumentException>.If(_params.Any(p => p.Name == name));
             _params.Add(new ParamInfo(name, typeName));
         }
 
-        public void AddVariable(string name, string typeName)
+        public VarInfo AddVariable(string name, Type type)
         {
             Raise<ArgumentException>.If(_variables.Any(v => v.Name == name));
-            _variables.Add(new VarInfo(name, typeName));
+            var varInfo = new VarInfo(name, type);
+            _variables.Add(varInfo);
+            return varInfo;
         }
 
         public sealed class ParamInfo
@@ -426,6 +433,7 @@
             public readonly string Name;
             public readonly string TypeName;
             public Type Type;
+            public ParameterDefinition Reference;
 
             public ParamInfo(string name, string typeName)
             {
@@ -437,37 +445,14 @@
         public sealed class VarInfo
         {
             public readonly string Name;
-            public readonly string TypeName;
-            public Type Type;
+            public readonly Type Type;
+            public VariableDefinition Reference;
 
-            public VarInfo(string name, string typeName)
+            public VarInfo(string name, Type type)
             {
                 Name = name;
-                TypeName = typeName;
+                Type = type;
             }
-        }
-    }
-
-    sealed class Prog : TreeNode
-    {
-        internal readonly List<Variable> Variables = new List<Variable>();
-        // Initialized by TypecheckVisitor (and used by GenerateLlvmVisitor)
-
-        readonly List<Stmt> _statements;
-
-        public Prog(List<Stmt> statements)
-        {
-            _statements = statements;
-        }
-
-        public IEnumerable<Stmt> Statements
-        {
-            get { return _statements; }
-        }
-
-        public override void Accept(ITreeNodeVisitor visitor)
-        {
-            visitor.Visit(this);
         }
     }
 
@@ -493,6 +478,7 @@
 
     sealed class Assignment : Stmt
     {
+        public StaticEnvBase.VarInfo Var;
         readonly Exp _exp;
         readonly string _varName;
 
@@ -501,8 +487,6 @@
             _varName = varName;
             _exp = exp;
         }
-
-        internal Variable Var { get; set; }
 
         public string VarName
         {

@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.0
 // Machine:  CELESTINO
-// DateTime: 01/07/2013 23.40.19
+// DateTime: 02/07/2013 14.26.46
 // UserName: Alessio
-// Input file <D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.30.34>
+// Input file <D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.18.39>
 
 // options: lines report gplex
 
@@ -64,10 +64,10 @@ public class ScanObj {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.30.34
+  // Verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.18.39
 #line 36 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
-	internal Prog Prog;
-  // End verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 01/07/2013 22.30.34
+	internal FunctionDecl Prog;
+  // End verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.18.39
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
@@ -256,7 +256,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
     {
       case 2: // prog -> stmts
 #line 40 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
-{Prog = new Prog(ValueStack[ValueStack.Depth-1].stmts);}
+{Prog = new FunctionDecl(); Prog.Name = "$Main"; Prog.ReturnTypeName = "void"; Prog.Body = new Block(ValueStack[ValueStack.Depth-1].stmts);}
         break;
       case 3: // stmts -> /* empty */
 #line 43 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"

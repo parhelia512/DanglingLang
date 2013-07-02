@@ -192,14 +192,17 @@
         {
             Indent();
             _sb.AppendFormat("{0} {1}(", funcDecl.ReturnType, funcDecl.Name);
-            var i = 0;
-            FunctionDecl.ParamInfo p;
-            for (; i < funcDecl.Params.Count - 1; ++i) {
+            if (funcDecl.Params.Count > 0) {
+                var i = 0;
+                FunctionDecl.ParamInfo p;
+                for (; i < funcDecl.Params.Count - 1; ++i) {
+                    p = funcDecl.Params[i];
+                    _sb.AppendFormat("{0} {1},", p.Type, p.Name);
+                }
                 p = funcDecl.Params[i];
-                _sb.AppendFormat("{0} {1},", p.Type, p.Name);
-            }
-            p = funcDecl.Params[i];
-            _sb.AppendFormat("{0} {1}) {{\n", p.Type, p.Name);
+                _sb.AppendFormat("{0} {1}", p.Type, p.Name);
+            } 
+            _sb.Append(")\n");   
             funcDecl.Body.Accept(this);
             _sb.Append("}\n");
         }
@@ -246,13 +249,6 @@
             --_level;
             Indent();
             _sb.Append("}\n");
-        }
-
-        public void Visit(Prog prog)
-        {
-            foreach (var stmt in prog.Statements) {
-                stmt.Accept(this);
-            }
         }
 
         void Indent()

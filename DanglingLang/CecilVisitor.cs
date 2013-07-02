@@ -1,6 +1,5 @@
 ﻿namespace DanglingLang
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -9,7 +8,6 @@
 
     sealed class CecilVisitor : ITreeNodeVisitor
     {
-        readonly IDictionary<string, VariableDefinition> _varDefs = new Dictionary<string, VariableDefinition>(); 
         readonly AssemblyDefinition _assembly;
         readonly ModuleDefinition _module;
         readonly MethodReference _objCtor;
@@ -20,6 +18,7 @@
         readonly MethodReference _pause;
         readonly MethodReference _printBool;
         readonly MethodReference _printInt;
+        readonly MethodDefinition _main;
         MethodBody _body;
         ICollection<Instruction> _instructions;
 
@@ -29,9 +28,9 @@
             _module = module;
 
             var program = _module.Types.First(t => t.Name == "Program");
-            var main = program.Methods.First(m => m.Name == "Main");
+            _main = program.Methods.First(m => m.Name == "Main");
 
-            _body = main.Body;
+            _body = _main.Body;
             _instructions = _body.Instructions;
             _instructions.Clear();
 
@@ -185,7 +184,7 @@
             var st = sv.Type as StructType;
             Debug.Assert(st != null);
             _instructions.Add(Instruction.Create(OpCodes.Newobj, st.Ctor));
-            var tempVar = _varDefs[sv.Temp.Name];
+            var tempVar = sv.Temp.Reference;
             _instructions.Add(Instruction.Create(OpCodes.Stloc, tempVar));
             for (var i = 0; i < st.Fields.Count; ++i) {
                 _instructions.Add(Instruction.Create(OpCodes.Ldloc, tempVar));
@@ -197,7 +196,15 @@
 
         public void Visit(Id id)
         {
-            _instructions.Add(Instruction.Create(OpCodes.Ldloc, _varDefs[id.Name]));
+            if (id.Var.IsParam) {
+                var paramInfo = id.Var.Info as FunctionDecl.ParamInfo;
+                Debug.Assert(paramInfo != null);
+                _instructions.Add(Instruction.Create(OpCodes.Ldarg, paramInfo.Reference));
+            } else {
+                var varInfo = id.Var.Info as FunctionDecl.VarInfo;
+                Debug.Assert(varInfo != null);
+                _instructions.Add(Instruction.Create(OpCodes.Ldloc, varInfo.Reference));
+            }
         }
 
         public void Visit(Print print)
@@ -237,11 +244,14 @@
         public void Visit(FunctionDecl funcDecl)
         {
             const MethodAttributes funcAttr = MethodAttributes.Public | MethodAttributes.Static;
-            var func = new MethodDefinition(funcDecl.Name, funcAttr, funcDecl.ReturnType.Reference);
+
+            var func = (funcDecl.Name == "$Main") ? _main : new MethodDefinition(funcDecl.Name, funcAttr, funcDecl.ReturnType.Reference);
             
             foreach (var p in funcDecl.Params) {
                 const ParameterAttributes paramAttr = ParameterAttributes.None;
-                func.Parameters.Add(new ParameterDefinition(p.Name, paramAttr, p.Type.Reference));
+                var paramDef = new ParameterDefinition(p.Name, paramAttr, p.Type.Reference);
+                func.Parameters.Add(paramDef);
+                p.Reference = paramDef;
             }
 
             var oldBody = _body;
@@ -249,6 +259,14 @@
 
             _body = func.Body;
             _instructions = _body.Instructions;
+         
+            foreach (var @var in funcDecl.Variables) {
+                var varDef = new VariableDefinition(@var.Name, @var.Type.Reference);
+                _body.Variables.Add(varDef);
+                @var.Reference = varDef;
+            }
+
+            funcDecl.Body.Accept(this);
 
             _body = oldBody;
             _instructions = oldInstructions;
@@ -257,7 +275,15 @@
         public void Visit(Assignment asg)
         {
             asg.Exp.Accept(this);
-            _instructions.Add(Instruction.Create(OpCodes.Stloc, _varDefs[asg.VarName]));
+            if (asg.Var.IsParam) {
+                var paramInfo = asg.Var.Info as FunctionDecl.ParamInfo;
+                Debug.Assert(paramInfo != null);
+                _instructions.Add(Instruction.Create(OpCodes.Starg, paramInfo.Reference));
+            } else {
+                var varInfo = asg.Var.Info as FunctionDecl.VarInfo;
+                Debug.Assert(varInfo != null);
+                _instructions.Add(Instruction.Create(OpCodes.Stloc, varInfo.Reference));
+            }
         }
 
         public void Visit(If @if)
@@ -284,18 +310,6 @@
         public void Visit(Block block)
         {
             foreach (var stmt in block.Statements) {
-                stmt.Accept(this);
-            }
-        }
-
-        public void Visit(Prog prog)
-        {
-            foreach (var @var in prog.Variables) {
-                var varDef = new VariableDefinition(@var.Name, @var.Type.Reference);
-                _varDefs.Add(@var.Name, varDef);
-                _body.Variables.Add(varDef);
-            }
-            foreach (var stmt in prog.Statements) {
                 stmt.Accept(this);
             }
         }

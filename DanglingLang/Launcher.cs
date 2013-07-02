@@ -18,7 +18,7 @@
         public static string Compile(string input)
         {         
             Console.Write("# Parsing file {0}: ", input);
-            Prog prog;
+            FunctionDecl main;
             using (var file = new FileStream(input, FileMode.Open)) {
                 var scanner = new Scanner(file);
                 var parser = new Parser(scanner);
@@ -27,23 +27,23 @@
                     throw new ArgumentException("Input is not valid...");
                 }
                 Console.WriteLine("OK");
-                prog = parser.Prog;
+                main = parser.Prog;
             }         
 
             Console.Write("# Type checking file {0}: ", input);
             var tcv = new TypecheckVisitor();
-            prog.Accept(tcv);
+            main.Accept(tcv);
             Console.WriteLine("OK");
 
             Console.WriteLine("# Contents of file {0}:", input);
             var toStringVisitor = new ToStringVisitor();
-            prog.Accept(toStringVisitor);
+            main.Accept(toStringVisitor);
             Console.Write(toStringVisitor.Result);
 
             var output = input.Substring(0, input.LastIndexOf('.')) + ".exe";
             Console.Write("# Compiling file {0} into {1}: ", input, output);
             var cecilVisitor = new CecilVisitor(tcv.Assembly, tcv.Module);
-            prog.Accept(cecilVisitor);
+            main.Accept(cecilVisitor);
             cecilVisitor.Write(output);
             Console.WriteLine("OK");
 

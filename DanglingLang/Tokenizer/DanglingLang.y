@@ -33,11 +33,11 @@
 %type <void> prog
 %type <identifier> type
 %{
-	internal Prog Prog;
+	internal FunctionDecl Prog;
 %}
 
 %%
-prog: stmts {Prog = new Prog($1);}
+prog: stmts {Prog = new FunctionDecl(); Prog.Name = "$Main"; Prog.ReturnTypeName = "void"; Prog.Body = new Block($1);}
 	;
 
 stmts: /* empty */ {$$ = new List<Stmt>();}
