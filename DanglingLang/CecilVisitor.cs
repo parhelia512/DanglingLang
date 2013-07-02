@@ -19,6 +19,7 @@
         readonly MethodReference _printBool;
         readonly MethodReference _printInt;
         readonly MethodDefinition _main;
+        readonly TypeDefinition _userFunctions;
         MethodBody _body;
         ICollection<Instruction> _instructions;
 
@@ -45,7 +46,9 @@
             // Console methods
             _pause = systemFunctions.Methods.First(m => m.Name == "Pause");
             _printBool = systemFunctions.Methods.First(m => m.Name == "PrintBool");
-            _printInt = systemFunctions.Methods.First(m => m.Name == "PrintInt");     
+            _printInt = systemFunctions.Methods.First(m => m.Name == "PrintInt");
+            
+            _userFunctions = _module.Types.First(t => t.Name == "UserFunctions");
         }
 
         public void Write(string outputName)
@@ -194,6 +197,14 @@
             _instructions.Add(Instruction.Create(OpCodes.Ldloc, tempVar));
         }
 
+        public void Visit(FunctionCall fc)
+        {
+            foreach (var a in fc.Arguments) {
+                a.Accept(this);
+            }
+            _instructions.Add(Instruction.Create(OpCodes.Call, fc.Function.Definition));
+        }
+
         public void Visit(Id id)
         {
             if (id.Var.IsParam) {
@@ -245,8 +256,15 @@
         {
             const MethodAttributes funcAttr = MethodAttributes.Public | MethodAttributes.Static;
 
-            var func = (funcDecl.Name == "$Main") ? _main : new MethodDefinition(funcDecl.Name, funcAttr, funcDecl.ReturnType.Reference);
-            
+            MethodDefinition func;
+            if (funcDecl.Name == "$Main") {
+                func = _main;
+            } else {
+                func = new MethodDefinition(funcDecl.Name, funcAttr, funcDecl.ReturnType.Reference);
+                _userFunctions.Methods.Add(func);
+                funcDecl.Definition = func;
+            }
+
             foreach (var p in funcDecl.Params) {
                 const ParameterAttributes paramAttr = ParameterAttributes.None;
                 var paramDef = new ParameterDefinition(p.Name, paramAttr, p.Type.Reference);
@@ -312,6 +330,11 @@
             foreach (var stmt in block.Statements) {
                 stmt.Accept(this);
             }
+        }
+
+        public void Visit(EvalExp eval)
+        {
+            eval.Exp.Accept(this);
         }
 
         void Visit(BinaryOp binaryOp, OpCode opCode)

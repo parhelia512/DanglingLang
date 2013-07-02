@@ -6,6 +6,7 @@
 	internal StructValue structValue;
 	internal StructDecl structDecl;
 	internal FunctionDecl functionDecl;
+	internal FunctionCall functionCall;
 	internal Stmt stmt;
 	internal List<Stmt> stmts;
 }
@@ -28,7 +29,8 @@
 %type <exp> exp
 %type <structValue> structFieldValues
 %type <structDecl> structFieldDecl
-%type <functionDecl> funcArgs
+%type <functionDecl> funcParams
+%type <functionCall> funcArgs
 %type <stmt> stmt
 %type <stmts> stmts 
 %type <void> prog
@@ -47,12 +49,13 @@ stmts: /* empty */ {$$ = new List<Stmt>();}
 
 stmt: NEWLINE {$$ = null;}
 	| ID '=' exp NEWLINE { $$ = new Assignment($1, $3); }
+	| exp {$$ = new EvalExp($1);}
 	| '{' stmts '}' { $$ = new Block($2); }
 	| IF '(' exp ')' stmt { $$ = new If($3, $5 ?? new Block(new List<Stmt>())); }
 	| WHILE '(' exp ')' stmt { $$ = new While($3, $5 ?? new Block(new List<Stmt>())); }
 	| PRINT '(' exp ')' NEWLINE {$$ = new Print($3);}
 	| STRUCT ID '{' structFieldDecl '}' {$4.Name = $2; $$ = $4;}
-	| type ID '(' funcArgs ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = $1; $4.Body = new Block($7); $$ = $4;}
+	| type ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = $1; $4.Body = new Block($7); $$ = $4;}
 	;
 
 exp: NUM  { $$ = new IntLiteral($1); }
@@ -78,7 +81,8 @@ exp: NUM  { $$ = new IntLiteral($1); }
    | exp EQUAL exp { $$ = new Equal($1, $3); }
    | exp LEQ exp { $$ = new LessEqual($1, $3); }
    | exp LESS_THAN exp { $$ = new LessThan($1, $3); }
-   | exp DOT ID { $$ = new Dot($1, $3); }
+   | exp DOT ID {$$ = new Dot($1, $3);}
+   | ID '(' funcArgs ')' {$3.FunctionName = $1; $$ = $3;}
    ;
 
 structFieldDecl: /* Empty */ {$$ = new StructDecl();}
@@ -89,9 +93,14 @@ structFieldValues: /* Empty */ {$$ = new StructValue();}
                  | structFieldValues exp ',' {$1.AddValue($2); $$ = $1;}
                  ;
 
-funcArgs: /* Empty */ {$$ = new FunctionDecl();}
-		| type ID {$$ = new FunctionDecl(); $$.AddParam($2, $1);}
-        | funcArgs ',' type ID {$1.AddParam($4, $3); $$ = $1;}
+funcParams: /* Empty */ {$$ = new FunctionDecl();}
+		  | type ID {$$ = new FunctionDecl(); $$.AddParam($2, $1);}
+          | funcParams ',' type ID {$1.AddParam($4, $3); $$ = $1;}
+          ;
+
+funcArgs: /* Empty */ {$$ = new FunctionCall();}
+		| exp {$$ = new FunctionCall(); $$.AddArgument($1);}
+        | funcArgs ',' exp {$1.AddArgument($3); $$ = $1;}
         ;
 
 type: BOOL {$$ = "bool";}

@@ -155,6 +155,20 @@
             _sb.Append("}");
         }
 
+        public void Visit(FunctionCall fc)
+        {
+            _sb.AppendFormat("{0}(", fc.FunctionName);
+            if (fc.Arguments.Count > 0) {
+                var i = 0;
+                for (; i < fc.Arguments.Count - 1; ++i) {
+                    fc.Arguments[i].Accept(this);
+                    _sb.Append(", ");
+                }
+                fc.Arguments[i].Accept(this);
+            }
+            _sb.Append(")");
+        }
+
         public void Visit(Id id)
         {
             _sb.Append(id.Var == null ? id.Name : id.Var.Name);
@@ -248,6 +262,12 @@
             --_level;
             Indent();
             _sb.Append("}\n");
+        }
+
+        public void Visit(EvalExp eval)
+        {
+            Indent();
+            eval.Exp.Accept(this);
         }
 
         void Indent()

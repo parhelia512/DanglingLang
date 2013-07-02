@@ -161,6 +161,7 @@
         public readonly ModuleDefinition Module;
         readonly Type _boolType;
         readonly Type _intType;
+        readonly Type _voidType;
         int _tempCounter;
             
         FunctionDecl _main;
@@ -174,7 +175,7 @@
             
             _boolType = AddType("bool", Module.TypeSystem.Boolean);
             _intType = AddType("int", Module.TypeSystem.Int32);
-            AddType("void", Module.TypeSystem.Void);
+            _voidType = AddType("void", Module.TypeSystem.Void);
         }
 
         public void Visit(Sum sum)
@@ -296,6 +297,18 @@
             sv.Temp = _main.AddVariable("$" + _tempCounter++, st);
         }
 
+        public void Visit(FunctionCall fc)
+        {
+            Raise<TypeCheckingException>.If(!_funcDecls.ContainsKey(fc.FunctionName));
+            var fd = _funcDecls[fc.FunctionName];
+            for (var i = 0; i < fd.Params.Count; ++i) {
+                fc.Arguments[i].Accept(this);
+                Raise<TypeCheckingException>.IfAreNotSame(fc.Arguments[i].Type, fd.Params[i].Type);
+            }
+            fc.Function = fd;
+            fc.Type = fd.ReturnType;
+        }
+
         public void Visit(Id id)
         {
             var v = _staticEnv.GetVariable(id.Name);
@@ -322,6 +335,7 @@
             _staticEnv = new OutmostStaticEnv();
             foreach (var p in funcDecl.Params) {
                 p.Type = GetType(p.TypeName);
+                Raise<TypeCheckingException>.IfAreSame(p.Type, _voidType);
                 var vInfo = new StaticEnvBase.VarInfo(p.Name, p.Type, true, p);
                 _staticEnv.SetVariable(p.Name, vInfo);
             }
@@ -374,6 +388,11 @@
             } finally {
                 _staticEnv = previousStaticEnv;
             }
+        }
+
+        public void Visit(EvalExp eval)
+        {
+            eval.Exp.Accept(this);
         }
 
         Type AddType(string name, TypeReference reference)

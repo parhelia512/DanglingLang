@@ -10,7 +10,7 @@
             AddLine("void printFive() {");
             AddLine("    print(5)      ");
             AddLine("}                 ");
-            AddLine("print(5)          ");
+            AddLine("printFive()      ");
             Execute(new[] {"5"});
         }
     }

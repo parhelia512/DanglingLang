@@ -42,6 +42,7 @@
         void Visit(BoolLiteral bl);
         void Visit(IntLiteral il);
         void Visit(StructValue sv);
+        void Visit(FunctionCall fc);
         void Visit(Id id);
         void Visit(Print print);
         void Visit(StructDecl structDecl);
@@ -50,6 +51,7 @@
         void Visit(If ifs);
         void Visit(While whiles);
         void Visit(Block block);
+        void Visit(EvalExp eval);
     }
 
     abstract class Exp : TreeNode
@@ -346,7 +348,29 @@
         }
     }
 
-    class Print : Stmt
+    sealed class FunctionCall : Exp
+    {
+        readonly IList<Exp> _args = new List<Exp>(); 
+        public string FunctionName;
+        public FunctionDecl Function;
+
+        public override void Accept(ITreeNodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+
+        public ReadOnlyCollection<Exp> Arguments
+        {
+            get { return new ReadOnlyCollection<Exp>(_args); }
+        }
+
+        public void AddArgument(Exp arg)
+        {
+            _args.Add(arg);
+        }
+    }
+
+    sealed class Print : Stmt
     {
         readonly Exp _exp;
 
@@ -398,6 +422,7 @@
         public string ReturnTypeName;
         public Type ReturnType;
         public Block Body;
+        public MethodDefinition Definition;
 
         public override void Accept(ITreeNodeVisitor visitor)
         {
@@ -456,7 +481,7 @@
         }
     }
 
-    class Block : Stmt
+    sealed class Block : Stmt
     {
         readonly List<Stmt> _statements;
 
@@ -468,6 +493,21 @@
         public IEnumerable<Stmt> Statements
         {
             get { return _statements; }
+        }
+
+        public override void Accept(ITreeNodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
+    sealed class EvalExp : Stmt
+    {
+        public readonly Exp Exp;
+
+        public EvalExp(Exp exp)
+        {
+            Exp = exp;
         }
 
         public override void Accept(ITreeNodeVisitor visitor)
