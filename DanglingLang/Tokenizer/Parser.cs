@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.0
 // Machine:  CELESTINO
-// DateTime: 02/07/2013 14.26.46
+// DateTime: 02/07/2013 14.42.53
 // UserName: Alessio
-// Input file <D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.18.39>
+// Input file <D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.42.49>
 
 // options: lines report gplex
 
@@ -22,7 +22,7 @@ public enum Tokens {
     error=127,EOF=128,NUM=129,ID=130,MAX=131,MIN=132,
     NEWLINE=133,IF=134,WHILE=135,STRUCT=136,PRINT=137,TRUE=138,
     FALSE=139,AND=140,OR=141,EQUAL=142,LESS_THAN=143,LEQ=144,
-    DOT=145,BOOL=146,INT=147,VOID=148,UMINUS=149};
+    DOT=145,BOOL=146,INT=147,VOID=148,RETURN=149,UMINUS=150};
 
 public struct ValueType
 #line 2 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
@@ -64,10 +64,10 @@ public class ScanObj {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.18.39
-#line 36 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+  // Verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.42.49
+#line 37 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 	internal FunctionDecl Prog;
-  // End verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.18.39
+  // End verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 02/07/2013 14.42.49
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
@@ -255,187 +255,187 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
     switch (action)
     {
       case 2: // prog -> stmts
-#line 40 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 41 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {Prog = new FunctionDecl(); Prog.Name = "$Main"; Prog.ReturnTypeName = "void"; Prog.Body = new Block(ValueStack[ValueStack.Depth-1].stmts);}
         break;
       case 3: // stmts -> /* empty */
-#line 43 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 44 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.stmts = new List<Stmt>();}
         break;
       case 4: // stmts -> stmts, stmt
-#line 44 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 45 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { if ((ValueStack[ValueStack.Depth-1].stmt) != null) ValueStack[ValueStack.Depth-2].stmts.Add(ValueStack[ValueStack.Depth-1].stmt); CurrentSemanticValue.stmts = ValueStack[ValueStack.Depth-2].stmts; }
         break;
       case 5: // stmt -> NEWLINE
-#line 47 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 48 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.stmt = null;}
         break;
       case 6: // stmt -> ID, '=', exp, NEWLINE
-#line 48 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 49 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.stmt = new Assignment(ValueStack[ValueStack.Depth-4].identifier, ValueStack[ValueStack.Depth-2].exp); }
         break;
       case 7: // stmt -> '{', stmts, '}'
-#line 49 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 50 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.stmt = new Block(ValueStack[ValueStack.Depth-2].stmts); }
         break;
       case 8: // stmt -> IF, '(', exp, ')', stmt
-#line 50 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 51 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.stmt = new If(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].stmt ?? new Block(new List<Stmt>())); }
         break;
       case 9: // stmt -> WHILE, '(', exp, ')', stmt
-#line 51 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 52 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.stmt = new While(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].stmt ?? new Block(new List<Stmt>())); }
         break;
       case 10: // stmt -> PRINT, '(', exp, ')', NEWLINE
-#line 52 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 53 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.stmt = new Print(ValueStack[ValueStack.Depth-3].exp);}
         break;
       case 11: // stmt -> STRUCT, ID, '{', structFieldDecl, '}'
-#line 53 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 54 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {ValueStack[ValueStack.Depth-2].structDecl.Name = ValueStack[ValueStack.Depth-4].identifier; CurrentSemanticValue.stmt = ValueStack[ValueStack.Depth-2].structDecl;}
         break;
       case 12: // stmt -> type, ID, '(', funcArgs, ')', '{', stmts, '}'
-#line 54 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 55 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {ValueStack[ValueStack.Depth-5].functionDecl.Name = ValueStack[ValueStack.Depth-7].identifier; ValueStack[ValueStack.Depth-5].functionDecl.ReturnTypeName = ValueStack[ValueStack.Depth-8].identifier; ValueStack[ValueStack.Depth-5].functionDecl.Body = new Block(ValueStack[ValueStack.Depth-2].stmts); CurrentSemanticValue.stmt = ValueStack[ValueStack.Depth-5].functionDecl;}
         break;
       case 13: // exp -> NUM
-#line 57 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 58 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new IntLiteral(ValueStack[ValueStack.Depth-1].intValue); }
         break;
       case 14: // exp -> TRUE
-#line 58 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 59 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new BoolLiteral(true); }
         break;
       case 15: // exp -> FALSE
-#line 59 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 60 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new BoolLiteral(false); }
         break;
       case 16: // exp -> STRUCT, ID, '{', structFieldValues, exp, '}'
-#line 60 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 61 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {ValueStack[ValueStack.Depth-3].structValue.AddValue(ValueStack[ValueStack.Depth-2].exp); ValueStack[ValueStack.Depth-3].structValue.Name = ValueStack[ValueStack.Depth-5].identifier; CurrentSemanticValue.exp = ValueStack[ValueStack.Depth-3].structValue;}
         break;
       case 17: // exp -> exp, '+', exp
-#line 61 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 62 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Sum(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 18: // exp -> exp, '-', exp
-#line 62 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 63 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Subtraction(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 19: // exp -> exp, '*', exp
-#line 63 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 64 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Product(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 20: // exp -> exp, '/', exp
-#line 64 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 65 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Division(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 21: // exp -> exp, '%', exp
-#line 65 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 66 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Remainder(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 22: // exp -> '+', exp
-#line 66 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 67 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp= ValueStack[ValueStack.Depth-1].exp; }
         break;
       case 23: // exp -> '-', exp
-#line 67 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 68 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp= new Minus(ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 24: // exp -> exp, '!'
-#line 68 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 69 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp= new Factorial(ValueStack[ValueStack.Depth-2].exp); }
         break;
       case 25: // exp -> exp, '^', exp
-#line 69 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 70 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Power(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 26: // exp -> MAX, '(', exp, ',', exp, ')'
-#line 70 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 71 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Max(ValueStack[ValueStack.Depth-4].exp, ValueStack[ValueStack.Depth-2].exp); }
         break;
       case 27: // exp -> MIN, '(', exp, ',', exp, ')'
-#line 71 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 72 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Min(ValueStack[ValueStack.Depth-4].exp, ValueStack[ValueStack.Depth-2].exp); }
         break;
       case 28: // exp -> '(', exp, ')'
-#line 72 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 73 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.exp = ValueStack[ValueStack.Depth-2].exp;}
         break;
       case 29: // exp -> ID
-#line 73 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 74 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Id(ValueStack[ValueStack.Depth-1].identifier); }
         break;
       case 30: // exp -> '~', exp
-#line 74 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 75 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Not(ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 31: // exp -> exp, AND, exp
-#line 75 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 76 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new And(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 32: // exp -> exp, OR, exp
-#line 76 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 77 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Or(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 33: // exp -> exp, EQUAL, exp
-#line 77 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 78 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Equal(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 34: // exp -> exp, LEQ, exp
-#line 78 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 79 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new LessEqual(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 35: // exp -> exp, LESS_THAN, exp
-#line 79 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 80 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new LessThan(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].exp); }
         break;
       case 36: // exp -> exp, DOT, ID
-#line 80 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 81 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 { CurrentSemanticValue.exp = new Dot(ValueStack[ValueStack.Depth-3].exp, ValueStack[ValueStack.Depth-1].identifier); }
         break;
       case 37: // structFieldDecl -> /* empty */
-#line 83 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 84 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.structDecl = new StructDecl();}
         break;
       case 38: // structFieldDecl -> structFieldDecl, type, ID, ';'
-#line 84 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 85 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {ValueStack[ValueStack.Depth-4].structDecl.AddField(ValueStack[ValueStack.Depth-2].identifier, ValueStack[ValueStack.Depth-3].identifier); CurrentSemanticValue.structDecl = ValueStack[ValueStack.Depth-4].structDecl;}
         break;
       case 39: // structFieldValues -> /* empty */
-#line 87 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 88 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.structValue = new StructValue();}
         break;
       case 40: // structFieldValues -> structFieldValues, exp, ','
-#line 88 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 89 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {ValueStack[ValueStack.Depth-3].structValue.AddValue(ValueStack[ValueStack.Depth-2].exp); CurrentSemanticValue.structValue = ValueStack[ValueStack.Depth-3].structValue;}
         break;
       case 41: // funcArgs -> /* empty */
-#line 91 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 92 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.functionDecl = new FunctionDecl();}
         break;
       case 42: // funcArgs -> type, ID
-#line 92 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 93 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.functionDecl = new FunctionDecl(); CurrentSemanticValue.functionDecl.AddParam(ValueStack[ValueStack.Depth-1].identifier, ValueStack[ValueStack.Depth-2].identifier);}
         break;
       case 43: // funcArgs -> funcArgs, ',', type, ID
-#line 93 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 94 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {ValueStack[ValueStack.Depth-4].functionDecl.AddParam(ValueStack[ValueStack.Depth-1].identifier, ValueStack[ValueStack.Depth-2].identifier); CurrentSemanticValue.functionDecl = ValueStack[ValueStack.Depth-4].functionDecl;}
         break;
       case 44: // type -> BOOL
-#line 96 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 97 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.identifier = "bool";}
         break;
       case 45: // type -> INT
-#line 97 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 98 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.identifier = "int";}
         break;
       case 46: // type -> VOID
-#line 98 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 99 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.identifier = "void";}
         break;
       case 47: // type -> STRUCT, ID
-#line 99 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 100 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 {CurrentSemanticValue.identifier = ValueStack[ValueStack.Depth-1].identifier;}
         break;
     }
@@ -452,7 +452,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
         return CharToString((char)terminal);
   }
 
-#line 103 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
+#line 104 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 	public Parser(Scanner s) : base(s) {}
 }
 }

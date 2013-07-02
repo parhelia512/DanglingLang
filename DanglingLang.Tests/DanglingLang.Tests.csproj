@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoolTests.cs" />
+    <Compile Include="FunctionTests.cs" />
     <Compile Include="IfTests.cs" />
     <Compile Include="MathTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

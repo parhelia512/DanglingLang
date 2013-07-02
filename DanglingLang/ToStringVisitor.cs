@@ -204,7 +204,6 @@
             } 
             _sb.Append(")\n");   
             funcDecl.Body.Accept(this);
-            _sb.Append("}\n");
         }
 
         public void Visit(Assignment asg)
