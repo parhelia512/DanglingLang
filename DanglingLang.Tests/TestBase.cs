@@ -55,6 +55,12 @@
             process.WaitForExit();          
         }
 
+        protected void TypeCheck()
+        {
+            CloseInput();
+            Launcher.TypeCheck(Input);
+        }
+
         static void LineAssert(string line, string readLine, Process process)
         {
             if (line != readLine) {

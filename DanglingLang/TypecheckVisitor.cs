@@ -157,14 +157,14 @@
         readonly IDictionary<string, Type> _types = new Dictionary<string, Type>();
         readonly IDictionary<string, StructType> _structTypes = new Dictionary<string, StructType>();
         readonly IDictionary<string, FunctionDecl> _funcDecls = new Dictionary<string, FunctionDecl>();
-        public readonly AssemblyDefinition Assembly;
-        public readonly ModuleDefinition Module;
         readonly Type _boolType;
         readonly Type _intType;
         readonly Type _voidType;
         int _tempCounter;
+        public readonly AssemblyDefinition Assembly;
+        public readonly ModuleDefinition Module;
             
-        FunctionDecl _main;
+        FunctionDecl _currFunc;
         Type _result;
         StaticEnvBase _staticEnv = new StaticEnv(new OutmostStaticEnv());
 
@@ -294,7 +294,7 @@
                 Raise<TypeCheckingException>.IfAreNotSame(st.Fields[i].Type, sv.Values[i].Type);
             }  
             sv.Type = _result = st;
-            sv.Temp = _main.AddVariable("$" + _tempCounter++, st);
+            sv.Temp = _currFunc.AddVariable("$" + _tempCounter++, st);
         }
 
         public void Visit(FunctionCall fc)
@@ -339,8 +339,10 @@
                 var vInfo = new StaticEnvBase.VarInfo(p.Name, p.Type, true, p);
                 _staticEnv.SetVariable(p.Name, vInfo);
             }
-            _main = funcDecl;
+            var prevFunc = _currFunc;
+            _currFunc = funcDecl;
             funcDecl.Body.Accept(this);
+            _currFunc = prevFunc;
             _staticEnv = previousStaticEnv;
             _funcDecls.Add(funcDecl.Name, funcDecl);
         }
@@ -356,7 +358,7 @@
                         "Cannot re-assign {0} with a value of different type", varName));
                 }
             } else {
-                var info = _main.AddVariable(varName, asg.Exp.Type);
+                var info = _currFunc.AddVariable(varName, asg.Exp.Type);
                 varInfo = new StaticEnvBase.VarInfo(varName, asg.Exp.Type, false, info);
                 _staticEnv.SetVariable(varName, varInfo);
             }
@@ -393,6 +395,16 @@
         public void Visit(EvalExp eval)
         {
             eval.Exp.Accept(this);
+        }
+
+        public void Visit(Return ret)
+        {
+            if (ret.ReturnExp != null) {
+                ret.ReturnExp.Accept(this);
+                Raise<TypeCheckingException>.IfAreNotSame(ret.ReturnExp.Type, _currFunc.ReturnType);
+            } else {
+                Raise<TypeCheckingException>.IfAreNotSame(_voidType, _currFunc.ReturnType);
+            }
         }
 
         Type AddType(string name, TypeReference reference)

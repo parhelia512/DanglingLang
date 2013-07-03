@@ -56,6 +56,9 @@ stmt: NEWLINE {$$ = null;}
 	| PRINT '(' exp ')' NEWLINE {$$ = new Print($3);}
 	| STRUCT ID '{' structFieldDecl '}' {$4.Name = $2; $$ = $4;}
 	| type ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = $1; $4.Body = new Block($7); $$ = $4;}
+	| VOID ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = "void"; $4.Body = new Block($7); $$ = $4;}
+	| RETURN {$$ = new Return();}
+	| RETURN exp {$$ = new Return($2);}
 	;
 
 exp: NUM  { $$ = new IntLiteral($1); }
@@ -105,7 +108,6 @@ funcArgs: /* Empty */ {$$ = new FunctionCall();}
 
 type: BOOL {$$ = "bool";}
     | INT {$$ = "int";}
-	| VOID {$$ = "void";}
 	| STRUCT ID {$$ = $2;}
 	;
 

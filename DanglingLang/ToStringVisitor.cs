@@ -270,6 +270,16 @@
             eval.Exp.Accept(this);
         }
 
+        public void Visit(Return ret)
+        {
+            Indent();
+            _sb.Append("return ");
+            if (ret.ReturnExp != null) {
+                ret.ReturnExp.Accept(this);
+            }
+            _sb.Append("\n");
+        }
+
         void Indent()
         {
             const int nspaces = 4;

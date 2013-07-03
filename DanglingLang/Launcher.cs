@@ -50,6 +50,18 @@
             return output;
         }
 
+        public static void TypeCheck(string input)
+        {
+            FunctionDecl main;
+            using (var file = new FileStream(input, FileMode.Open)) {
+                var scanner = new Scanner(file);
+                var parser = new Parser(scanner);
+                parser.Parse();
+                main = parser.Prog;
+            }
+            main.Accept(new TypecheckVisitor());
+        }
+
         static void Execute(string output)
         {
             Console.WriteLine("# Running file {0}...", output);

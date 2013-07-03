@@ -52,6 +52,7 @@
         void Visit(While whiles);
         void Visit(Block block);
         void Visit(EvalExp eval);
+        void Visit(Return ret);
     }
 
     abstract class Exp : TreeNode
@@ -570,6 +571,21 @@
         {
             Guard = guard;
             Body = body;
+        }
+
+        public override void Accept(ITreeNodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
+    sealed class Return : Stmt
+    {
+        public readonly Exp ReturnExp;
+
+        public Return(Exp retExp = null)
+        {
+            ReturnExp = retExp;
         }
 
         public override void Accept(ITreeNodeVisitor visitor)

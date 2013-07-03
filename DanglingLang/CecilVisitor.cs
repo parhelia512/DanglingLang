@@ -337,6 +337,14 @@
             eval.Exp.Accept(this);
         }
 
+        public void Visit(Return ret)
+        {
+            if (ret.ReturnExp != null) {
+                ret.ReturnExp.Accept(this);
+            }
+            _instructions.Add(Instruction.Create(OpCodes.Ret));
+        }
+
         void Visit(BinaryOp binaryOp, OpCode opCode)
         {
             binaryOp.Left.Accept(this);
