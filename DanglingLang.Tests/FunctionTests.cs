@@ -50,6 +50,22 @@
             TypeCheck();
         }
 
+        
+
+        [Test]
+        [ExpectedException(typeof(ParsingException))]
+        public void NestedFunctions()
+        {
+            AddLine("int returnFive() {");
+            AddLine("    int wrong() { ");
+            AddLine("        return 1  ");
+            AddLine("    }             ");
+            AddLine("    return wrong()");
+            AddLine("}                 ");
+            AddLine("x = returnFive()  ");
+            TypeCheck();
+        }
+
         void main()
         {
             var x = printFive();

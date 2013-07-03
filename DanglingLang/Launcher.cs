@@ -56,7 +56,7 @@
             using (var file = new FileStream(input, FileMode.Open)) {
                 var scanner = new Scanner(file);
                 var parser = new Parser(scanner);
-                parser.Parse();
+                Raise<ParsingException>.IfNot(parser.Parse());
                 main = parser.Prog;
             }
             main.Accept(new TypecheckVisitor());
@@ -69,5 +69,13 @@
             Debug.Assert(process != null); // To keep ReSharper quiet :)
             process.WaitForExit();
         }
+    }
+
+    [Serializable]
+    public sealed class ParsingException : Exception
+    {
+        public ParsingException() {}
+        public ParsingException(string message) : base(message) {}
+        public ParsingException(string message, Exception inner) : base(message, inner) {}
     }
 }

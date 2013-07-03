@@ -32,7 +32,9 @@
 %type <functionDecl> funcParams
 %type <functionCall> funcArgs
 %type <stmt> stmt
+%type <stmt> topstmt
 %type <stmts> stmts 
+%type <stmts> topstmts 
 %type <void> prog
 %type <identifier> type
 %{
@@ -40,23 +42,30 @@
 %}
 
 %%
-prog: stmts {Prog = new FunctionDecl(); Prog.Name = "$Main"; Prog.ReturnTypeName = "void"; Prog.Body = new Block($1);}
+prog: topstmts {Prog = new FunctionDecl(); Prog.Name = "$Main"; Prog.ReturnTypeName = "void"; Prog.Body = new Block($1);}
 	;
 
-stmts: /* empty */ {$$ = new List<Stmt>();}
-	 | stmts stmt { if (($2) != null) $1.Add($2); $$ = $1; }
+topstmts: /* empty */ {$$ = new List<Stmt>();}
+        | topstmts topstmt {if ($2 != null) $1.Add($2); $$ = $1;}
+		;
+
+topstmt: stmt {$$ = $1;}
+	   | STRUCT ID '{' structFieldDecl '}' {$4.Name = $2; $$ = $4;}
+	   | type ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = $1; $4.Body = new Block($7); $$ = $4;}
+	   | VOID ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = "void"; $4.Body = new Block($7); $$ = $4;}
+	   ;
+
+stmts: /* Empty */ {$$ = new List<Stmt>();}
+	 | stmts stmt {if ($2 != null) $1.Add($2); $$ = $1;}
 	 ;
 
 stmt: NEWLINE {$$ = null;}
-	| ID '=' exp NEWLINE { $$ = new Assignment($1, $3); }
+	| ID '=' exp NEWLINE {$$ = new Assignment($1, $3);}
 	| exp {$$ = new EvalExp($1);}
-	| '{' stmts '}' { $$ = new Block($2); }
-	| IF '(' exp ')' stmt { $$ = new If($3, $5 ?? new Block(new List<Stmt>())); }
-	| WHILE '(' exp ')' stmt { $$ = new While($3, $5 ?? new Block(new List<Stmt>())); }
+	| '{' stmts '}' {$$ = new Block($2);}
+	| IF '(' exp ')' stmt {$$ = new If($3, $5 ?? new Block(new List<Stmt>()));}
+	| WHILE '(' exp ')' stmt {$$ = new While($3, $5 ?? new Block(new List<Stmt>()));}
 	| PRINT '(' exp ')' NEWLINE {$$ = new Print($3);}
-	| STRUCT ID '{' structFieldDecl '}' {$4.Name = $2; $$ = $4;}
-	| type ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = $1; $4.Body = new Block($7); $$ = $4;}
-	| VOID ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = "void"; $4.Body = new Block($7); $$ = $4;}
 	| RETURN {$$ = new Return();}
 	| RETURN exp {$$ = new Return($2);}
 	;
