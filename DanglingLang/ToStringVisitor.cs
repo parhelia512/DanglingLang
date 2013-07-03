@@ -268,6 +268,7 @@
         {
             Indent();
             eval.Exp.Accept(this);
+            _sb.Append("\n");
         }
 
         public void Visit(Return ret)

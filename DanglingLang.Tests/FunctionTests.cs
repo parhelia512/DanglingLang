@@ -5,13 +5,25 @@
     public sealed class FunctionTests : TestBase
     {
         [Test]
-        public void SimpleProcedure()
+        public void SimpleProcedure1()
         {
             AddLine("void printFive() {");
             AddLine("    print(5)      ");
             AddLine("}                 ");
             AddLine("printFive()      ");
             Execute(new[] {"5"});
+        }
+
+        [Test]
+        public void SimpleProcedure2()
+        {
+            AddLine("void myPrint(int x) {");
+            AddLine("    print(x)        ");
+            AddLine("}                   ");
+            AddLine("myPrint(5)          ");
+            AddLine("x = 10              ");
+            AddLine("myPrint(x)          ");
+            Execute(new[] {"5", "10"});
         }
         
         [Test]
@@ -40,6 +52,20 @@
         }
 
         [Test]
+        public void RecursiveFunction()
+        {
+            AddLine("int recSum(int x) {       ");
+            AddLine("    if (x == 0) return 0  ");
+            AddLine("    return x + recSum(x-1)");
+            AddLine("}                         ");
+            AddLine("x = recSum(3)             ");
+            AddLine("print(recSum(0))          ");
+            AddLine("print(x)                  ");
+            AddLine("print(x+recSum(1))        ");
+            Execute(new[] {"0", "6", "7"});
+        }
+
+        [Test]
         [ExpectedException(typeof(TypeCheckingException))]
         public void SimpleFunction_WrongReturnType()
         {
@@ -49,8 +75,6 @@
             AddLine("x = returnFive()  ");
             TypeCheck();
         }
-
-        
 
         [Test]
         [ExpectedException(typeof(ParsingException))]
@@ -66,15 +90,18 @@
             TypeCheck();
         }
 
-        void main()
+        [Test]
+        [ExpectedException(typeof(ParsingException))]
+        public void NestedProcedures()
         {
-            var x = printFive();
-            System.Console.Write(x);
-        }
-
-        int printFive()
-        {
-            return 5;
+            AddLine("void printFive() {");
+            AddLine("    void wrong() {");
+            AddLine("        print(1)  ");
+            AddLine("    }             ");
+            AddLine("    wrong()       ");
+            AddLine("}                 ");
+            AddLine("printFive()       ");
+            TypeCheck();
         }
     }
 }

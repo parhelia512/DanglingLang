@@ -332,19 +332,19 @@
             Raise<TypeCheckingException>.If(_funcDecls.ContainsKey(funcDecl.Name));
             funcDecl.ReturnType = GetType(funcDecl.ReturnTypeName);
             var previousStaticEnv = _staticEnv;
-            _staticEnv = new OutmostStaticEnv();
+            _staticEnv = new StaticEnv(new OutmostStaticEnv());
             foreach (var p in funcDecl.Params) {
                 p.Type = GetType(p.TypeName);
                 Raise<TypeCheckingException>.IfAreSame(p.Type, _voidType);
                 var vInfo = new StaticEnvBase.VarInfo(p.Name, p.Type, true, p);
                 _staticEnv.SetVariable(p.Name, vInfo);
             }
+            _funcDecls.Add(funcDecl.Name, funcDecl); // Must be put here to allow recursion...
             var prevFunc = _currFunc;
             _currFunc = funcDecl;
             funcDecl.Body.Accept(this);
             _currFunc = prevFunc;
             _staticEnv = previousStaticEnv;
-            _funcDecls.Add(funcDecl.Name, funcDecl);
         }
 
         public void Visit(Assignment asg)
