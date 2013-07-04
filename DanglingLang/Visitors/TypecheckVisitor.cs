@@ -40,10 +40,12 @@
             get { return new ReadOnlyCollection<FieldInfo>(_fields); }
         }
 
-        public void AddField(string name, Type type)
+        public FieldInfo AddField(string name, Type type)
         {
             Raise<TypeCheckException>.If(_fields.Any(f => f.Name == name));
-            _fields.Add(new FieldInfo(name, type));
+            var fieldInfo = new FieldInfo(name, type);
+            _fields.Add(fieldInfo);
+            return fieldInfo;
         }
 
         public FieldInfo GetField(string name)
@@ -168,6 +170,10 @@
             _boolType = AddType("bool", Module.TypeSystem.Boolean);
             _intType = AddType("int", Module.TypeSystem.Int32);
             _voidType = AddType("void", Module.TypeSystem.Void);
+
+            // To allow "load" functionality...
+            _types.Add("boolean", _boolType);
+            _types.Add("int32", _intType);
         }
 
         public void Visit(Sum sum)
@@ -399,6 +405,56 @@
             }
         }
 
+        public void Visit(LoadStmt load)
+        {
+            const string module = "<Module>";
+            const string program = "Program";
+            const string sysFuncs = "SystemFunctions";
+            const string userFuncs = "UserFunctions";
+            var foundProgram = false;
+            var foundSysFuncs = false;
+            var foundUserFuncs = false;
+            TypeDefinition userFuncsType = null;
+
+            var asmDef = AssemblyDefinition.ReadAssembly(load.Assembly);
+            var modDef = asmDef.MainModule;
+
+            // Type loading; in the first pass, we load all types. After that,
+            // all field types are loaded: we have to do at least two passes
+            // since field types may rely on types declared in the assembly we have to load.
+            var loadedTypes = new LinkedList<TypeDefinition>();
+            foreach (var typeDef in modDef.Types) {
+                switch (typeDef.Name) {
+                    case module:
+                        continue;
+                    case program:
+                        foundProgram = true;
+                        continue;
+                    case sysFuncs:
+                        foundSysFuncs = true;
+                        continue;
+                    case userFuncs:
+                        foundUserFuncs = true;
+                        userFuncsType = typeDef;
+                        continue;
+                    default:
+                        LoadType(typeDef);
+                        loadedTypes.AddLast(typeDef);
+                        break;
+                }
+            }
+            Raise<TypeCheckException>.IfNot(foundProgram && foundSysFuncs && foundUserFuncs, "Invalid assembly");
+            foreach (var typeDef in loadedTypes) {
+                LoadTypeFields(typeDef);
+            }
+
+            // Function loading...
+            Debug.Assert(userFuncsType != null);
+            foreach (var funcDef in userFuncsType.Methods) {
+                LoadFunc(funcDef);
+            }
+        }
+
         Type AddType(string name, TypeReference reference)
         {
             name = name.ToLower();
@@ -484,6 +540,44 @@
             binaryOp.Right.Accept(this);
             MustBeInt("The type of the right operand of " + binaryOp + " must be integer");
             binaryOp.Type = _result = _boolType;
+        }
+
+        void LoadType(TypeDefinition typeDef)
+        {
+            Raise<TypeCheckException>.If(_structTypes.ContainsKey(typeDef.Name));
+            var typeRef = Module.Import(typeDef);
+            var structType = new StructType(typeRef.Name, typeRef);
+            structType.Ctor = Module.Import(typeDef.Methods.First(m => m.Name == ".ctor"));
+            _types.Add(typeRef.Name, structType);
+            _structTypes.Add(typeRef.Name, structType);
+        }
+
+        void LoadTypeFields(TypeDefinition typeDef)
+        {
+            var structType = _structTypes[typeDef.Name];
+            foreach (var f in typeDef.Fields) {
+                var fieldRef = Module.Import(f);
+                var fieldInfo = structType.AddField(fieldRef.Name, GetType(fieldRef.FieldType.Name));
+                fieldInfo.Reference = fieldRef;
+            }
+        }
+
+        void LoadFunc(MethodReference funcDef)
+        {
+            Raise<TypeCheckException>.If(_funcDecls.ContainsKey(funcDef.Name));
+            var funcRef = Module.Import(funcDef);
+            var funcDecl = new FunctionDecl();
+            funcDecl.Name = funcRef.Name;
+            funcDecl.ReturnType = GetType(funcRef.ReturnType.Name);
+            funcDecl.ReturnTypeName = funcDecl.ReturnType.Name;
+            funcDecl.Reference = funcRef;
+            foreach (var p in funcDef.Parameters) {
+                var paramType = GetType(p.ParameterType.Name);
+                var paramInfo = funcDecl.AddParam(p.Name, paramType.Name);
+                paramInfo.Type = paramType;
+                paramInfo.Reference = p;
+            }
+            _funcDecls.Add(funcDef.Name, funcDecl);
         }
     }
 }

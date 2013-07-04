@@ -13,6 +13,7 @@
 [fF][aA][lL][sS][eE]		{ return (int) Tokens.FALSE; }
 [sS][tT][rR][uU][cC][tT]	{ return (int) Tokens.STRUCT; }
 [rR][eE][tT][uU][rR][nN]	{ return (int) Tokens.RETURN; }
+[lL][oO][aA][dD]        	{ return (int) Tokens.LOAD; }
 
 [bB][oO][oO][lL]			{ return (int) Tokens.BOOL; }
 [iI][nN][tT]				{ return (int) Tokens.INT; }

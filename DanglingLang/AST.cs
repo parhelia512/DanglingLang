@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Linq;
     using Mono.Cecil;
     using Mono.Cecil.Cil;
@@ -14,11 +15,11 @@
     {
         public abstract void Accept(ITreeNodeVisitor visitor);
 
-        public override string ToString()
+        public override sealed string ToString()
         {
-            var pv = new ToStringVisitor();
-            Accept(pv);
-            return pv.Result;
+            var tsv = new ToStringVisitor();
+            Accept(tsv);
+            return tsv.Result;
         }
     }
 
@@ -55,6 +56,7 @@
         void Visit(Block block);
         void Visit(EvalExp eval);
         void Visit(Return ret);
+        void Visit(LoadStmt load);
     }
 
     abstract class Exp : TreeNode
@@ -425,7 +427,7 @@
         public string ReturnTypeName;
         public Type ReturnType;
         public Block Body;
-        public MethodDefinition Definition;
+        public MethodReference Reference;
 
         public override void Accept(ITreeNodeVisitor visitor)
         {
@@ -442,10 +444,12 @@
             get { return new ReadOnlyCollection<VarInfo>(_variables); }
         }
 
-        public void AddParam(string name, string typeName)
+        public ParamInfo AddParam(string name, string typeName)
         {
             Raise<ArgumentException>.If(_params.Any(p => p.Name == name));
-            _params.Add(new ParamInfo(name, typeName));
+            var paramInfo = new ParamInfo(name, typeName);
+            _params.Add(paramInfo);
+            return paramInfo;
         }
 
         public VarInfo AddVariable(string name, Type type)
@@ -588,6 +592,22 @@
         public Return(Exp retExp = null)
         {
             ReturnExp = retExp;
+        }
+
+        public override void Accept(ITreeNodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
+    }
+
+    sealed class LoadStmt : Stmt
+    {
+        public readonly string Assembly;
+
+        public LoadStmt(string assembly)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(assembly));
+            Assembly = assembly + ".exe";
         }
 
         public override void Accept(ITreeNodeVisitor visitor)

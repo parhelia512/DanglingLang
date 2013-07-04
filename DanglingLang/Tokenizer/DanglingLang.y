@@ -14,7 +14,7 @@
 %token <identifier> ID
 %token MAX MIN NEWLINE IF WHILE STRUCT PRINT TRUE FALSE AND OR EQUAL LESS_THAN LEQ DOT
 %token BOOL INT VOID /* Types */
-%token RETURN /* Keywords */
+%token LOAD RETURN /* Keywords */
 %left OR
 %left AND
 %left EQUAL 
@@ -53,6 +53,7 @@ topstmt: stmt {$$ = $1;}
 	   | STRUCT ID '{' structFieldDecl '}' {$4.Name = $2; $$ = $4;}
 	   | type ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = $1; $4.Body = new Block($7); $$ = $4;}
 	   | VOID ID '(' funcParams ')' '{' stmts '}' {$4.Name = $2; $4.ReturnTypeName = "void"; $4.Body = new Block($7); $$ = $4;}
+	   | LOAD '(' ID ')' {$$ = new LoadStmt($3);}
 	   ;
 
 stmts: /* Empty */ {$$ = new List<Stmt>();}

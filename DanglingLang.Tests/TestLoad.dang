@@ -1,0 +1,19 @@
+struct time {int h; int m; int s;}
+struct datum {struct time t; bool relevant;}
+
+void printTime(struct time t) {
+  print(t.h)
+  print(t.m)
+  print(t.s)
+}
+
+bool isRelevant(struct datum d) {
+  return d.relevant
+}
+
+struct time createTime(int h, int m, int s) {
+  return struct time {h, m, s}
+}
+
+t = struct time {12, 28, 34}
+printTime(t)

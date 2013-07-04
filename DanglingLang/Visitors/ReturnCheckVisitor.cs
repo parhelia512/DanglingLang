@@ -174,5 +174,10 @@ namespace DanglingLang.Visitors
             Raise<ReturnCheckException>.If(_foundReturn, "Two or more returns in same block");
             _foundReturn = true;
         }
+
+        public void Visit(LoadStmt load)
+        {
+            // Nothing to do here...
+        }
     }
 }

@@ -281,6 +281,12 @@
             _sb.Append("\n");
         }
 
+        public void Visit(LoadStmt load)
+        {
+            Indent();
+            _sb.AppendFormat("load({0})\n", load.Assembly);
+        }
+
         void Indent()
         {
             const int nspaces = 4;

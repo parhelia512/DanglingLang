@@ -202,7 +202,7 @@
             foreach (var a in fc.Arguments) {
                 a.Accept(this);
             }
-            _instructions.Add(Instruction.Create(OpCodes.Call, fc.Function.Definition));
+            _instructions.Add(Instruction.Create(OpCodes.Call, fc.Function.Reference));
         }
 
         public void Visit(Id id)
@@ -262,7 +262,7 @@
             } else {
                 func = new MethodDefinition(funcDecl.Name, funcAttr, funcDecl.ReturnType.Reference);
                 _userFunctions.Methods.Add(func);
-                funcDecl.Definition = func;
+                funcDecl.Reference = func;
             }
 
             foreach (var p in funcDecl.Params) {
@@ -343,6 +343,11 @@
                 ret.ReturnExp.Accept(this);
             }
             _instructions.Add(Instruction.Create(OpCodes.Ret));
+        }
+
+        public void Visit(LoadStmt load)
+        {
+            // Nothing to do here...
         }
 
         void Visit(BinaryOp binaryOp, OpCode opCode)
