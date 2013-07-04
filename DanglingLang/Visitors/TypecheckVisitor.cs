@@ -1,4 +1,4 @@
-﻿namespace DanglingLang
+﻿namespace DanglingLang.Visitors
 {
     using System;
     using System.Collections.Generic;
@@ -7,14 +7,6 @@
     using System.Linq;
     using Mono.Cecil;
     using Thrower;
-
-    [Serializable]
-    public sealed class TypeCheckingException : Exception
-    {
-        public TypeCheckingException() {}
-        public TypeCheckingException(string message) : base(message) {}
-        public TypeCheckingException(string message, Exception inner) : base(message, inner) {}
-    }
 
     class Type
     {

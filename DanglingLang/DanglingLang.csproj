@@ -66,13 +66,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST.cs" />
-    <Compile Include="CecilVisitor.cs" />
+    <Compile Include="Visitors\CecilVisitor.cs" />
     <Compile Include="Tokenizer\Parser.cs" />
     <Compile Include="Tokenizer\Scanner.cs" />
     <Compile Include="Launcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToStringVisitor.cs" />
-    <Compile Include="TypecheckVisitor.cs" />
+    <Compile Include="Visitors\ToStringVisitor.cs" />
+    <Compile Include="Visitors\TypecheckVisitor.cs" />
+    <Compile Include="Visitors\ReturnCheckVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

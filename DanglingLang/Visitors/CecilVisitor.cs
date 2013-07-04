@@ -1,4 +1,4 @@
-﻿namespace DanglingLang
+﻿namespace DanglingLang.Visitors
 {
     using System.Collections.Generic;
     using System.Diagnostics;

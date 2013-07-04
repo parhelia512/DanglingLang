@@ -5,6 +5,7 @@
     using System.IO;
     using Thrower;
     using Tokenizer;
+    using Visitors;
 
     public static class Launcher
     {
@@ -77,5 +78,13 @@
         public ParsingException() {}
         public ParsingException(string message) : base(message) {}
         public ParsingException(string message, Exception inner) : base(message, inner) {}
+    }
+
+    [Serializable]
+    public sealed class TypeCheckingException : Exception
+    {
+        public TypeCheckingException() {}
+        public TypeCheckingException(string message) : base(message) {}
+        public TypeCheckingException(string message, Exception inner) : base(message, inner) {}
     }
 }

@@ -7,6 +7,8 @@
     using Mono.Cecil;
     using Mono.Cecil.Cil;
     using Thrower;
+    using Visitors;
+    using Type = Visitors.Type;
 
     abstract class TreeNode
     {
