@@ -42,14 +42,14 @@
 
         public void AddField(string name, Type type)
         {
-            Raise<TypeCheckingException>.If(_fields.Any(f => f.Name == name));
+            Raise<TypeCheckException>.If(_fields.Any(f => f.Name == name));
             _fields.Add(new FieldInfo(name, type));
         }
 
         public FieldInfo GetField(string name)
         {
             var field = _fields.FirstOrDefault(f => f.Name == name);
-            Raise<TypeCheckingException>.IfIsNull(field);
+            Raise<TypeCheckException>.IfIsNull(field);
             return field;
         }
 
@@ -129,7 +129,7 @@
     {
         public override VarInfo GetVariable(string name)
         {
-            throw new TypeCheckingException(string.Format("Undefined variable {0}", name));
+            throw new TypeCheckException(string.Format("Undefined variable {0}", name));
         }
 
         public override bool TryGetVariable(string name, out VarInfo v)
@@ -140,7 +140,7 @@
 
         public override void SetVariable(string name, VarInfo v)
         {
-            throw new TypeCheckingException("Internal compiler error");
+            throw new TypeCheckException("Internal compiler error");
         }
     }
 
@@ -228,7 +228,7 @@
             eq.Left.Accept(this);
             eq.Right.Accept(this);
             if (!eq.Left.Type.Equals(eq.Right.Type)) {
-                throw new TypeCheckingException("Both operands of == must have the same type");
+                throw new TypeCheckException("Both operands of == must have the same type");
             }
             eq.Type = _result = _boolType;
         }
@@ -247,7 +247,7 @@
         {
             dot.Left.Accept(this);
             var st = dot.Left.Type as StructType;
-            Raise<TypeCheckingException>.IfIsNull(st);
+            Raise<TypeCheckException>.IfIsNull(st);
             Debug.Assert(st != null); // To keep ReSharper quiet :)
             dot.Type = _result = st.GetField(dot.Right).Type;
         }
@@ -280,10 +280,10 @@
         public void Visit(StructValue sv)
         {
             var st = GetStructType(sv.Name);
-            Raise<TypeCheckingException>.IfAreNotEqual(st.Fields.Count, sv.Values.Count);
+            Raise<TypeCheckException>.IfAreNotEqual(st.Fields.Count, sv.Values.Count);
             for (var i = 0; i < st.Fields.Count; ++i) {
                 sv.Values[i].Accept(this);
-                Raise<TypeCheckingException>.IfAreNotSame(st.Fields[i].Type, sv.Values[i].Type);
+                Raise<TypeCheckException>.IfAreNotSame(st.Fields[i].Type, sv.Values[i].Type);
             }  
             sv.Type = _result = st;
             sv.Temp = _currFunc.AddVariable("$" + _tempCounter++, st);
@@ -291,14 +291,14 @@
 
         public void Visit(FunctionCall fc)
         {
-            Raise<TypeCheckingException>.If(!_funcDecls.ContainsKey(fc.FunctionName));
+            Raise<TypeCheckException>.If(!_funcDecls.ContainsKey(fc.FunctionName));
             var fd = _funcDecls[fc.FunctionName];
             for (var i = 0; i < fd.Params.Count; ++i) {
                 fc.Arguments[i].Accept(this);
-                Raise<TypeCheckingException>.IfAreNotSame(fc.Arguments[i].Type, fd.Params[i].Type);
+                Raise<TypeCheckException>.IfAreNotSame(fc.Arguments[i].Type, fd.Params[i].Type);
             }
             fc.Function = fd;
-            fc.Type = fd.ReturnType;
+            fc.Type = _result = fd.ReturnType;
         }
 
         public void Visit(Id id)
@@ -311,7 +311,7 @@
         public void Visit(Print print)
         {
             print.Exp.Accept(this);
-            Raise<TypeCheckingException>.If(print.Exp.Type != _intType && print.Exp.Type != _boolType);
+            Raise<TypeCheckException>.If(print.Exp.Type != _intType && print.Exp.Type != _boolType);
         }
 
         public void Visit(StructDecl structDecl)
@@ -321,13 +321,13 @@
 
         public void Visit(FunctionDecl funcDecl)
         {
-            Raise<TypeCheckingException>.If(_funcDecls.ContainsKey(funcDecl.Name));
+            Raise<TypeCheckException>.If(_funcDecls.ContainsKey(funcDecl.Name));
             funcDecl.ReturnType = GetType(funcDecl.ReturnTypeName);
             var previousStaticEnv = _staticEnv;
             _staticEnv = new StaticEnv(new OutmostStaticEnv());
             foreach (var p in funcDecl.Params) {
                 p.Type = GetType(p.TypeName);
-                Raise<TypeCheckingException>.IfAreSame(p.Type, _voidType);
+                Raise<TypeCheckException>.IfAreSame(p.Type, _voidType);
                 var vInfo = new StaticEnvBase.VarInfo(p.Name, p.Type, true, p);
                 _staticEnv.SetVariable(p.Name, vInfo);
             }
@@ -346,7 +346,7 @@
             StaticEnvBase.VarInfo varInfo;
             if (_staticEnv.TryGetVariable(varName, out varInfo)) {
                 if (!varInfo.Type.Equals(_result)) {
-                    throw new TypeCheckingException(string.Format(
+                    throw new TypeCheckException(string.Format(
                         "Cannot re-assign {0} with a value of different type", varName));
                 }
             } else {
@@ -393,16 +393,16 @@
         {
             if (ret.ReturnExp != null) {
                 ret.ReturnExp.Accept(this);
-                Raise<TypeCheckingException>.IfAreNotSame(ret.ReturnExp.Type, _currFunc.ReturnType);
+                Raise<TypeCheckException>.IfAreNotSame(ret.ReturnExp.Type, _currFunc.ReturnType);
             } else {
-                Raise<TypeCheckingException>.IfAreNotSame(_voidType, _currFunc.ReturnType);
+                Raise<TypeCheckException>.IfAreNotSame(_voidType, _currFunc.ReturnType);
             }
         }
 
         Type AddType(string name, TypeReference reference)
         {
             name = name.ToLower();
-            Raise<TypeCheckingException>.If(_types.ContainsKey(name), "Type already existing.");
+            Raise<TypeCheckException>.If(_types.ContainsKey(name), "Type already existing.");
             var type = new Type(name, reference);
             _types.Add(name, type);
             return type;
@@ -420,7 +420,7 @@
             var type = new StructType(name, typeDef);
             foreach (var f in decl.Fields) {
                 var fieldType = GetType(f.Item2);
-                Raise<TypeCheckingException>.IfAreEqual("void", fieldType.Name);
+                Raise<TypeCheckException>.IfAreEqual("void", fieldType.Name);
                 type.AddField(f.Item1, fieldType);
             }
             
@@ -445,7 +445,7 @@
 
         Type MustBe(Type t, string msg)
         {
-            Raise<TypeCheckingException>.IfAreNotSame(_result, t, msg);
+            Raise<TypeCheckException>.IfAreNotSame(_result, t, msg);
             return t;
         }
 

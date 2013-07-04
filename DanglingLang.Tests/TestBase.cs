@@ -55,7 +55,7 @@
             process.WaitForExit();          
         }
 
-        protected void TypeCheck()
+        protected void CheckCode()
         {
             CloseInput();
             Launcher.TypeCheck(Input);

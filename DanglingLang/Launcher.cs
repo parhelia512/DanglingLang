@@ -17,7 +17,7 @@
         }
 
         public static string Compile(string input)
-        {         
+        {
             Console.Write("# Parsing file {0}: ", input);
             FunctionDecl main;
             using (var file = new FileStream(input, FileMode.Open)) {
@@ -29,11 +29,16 @@
                 }
                 Console.WriteLine("OK");
                 main = parser.Prog;
-            }         
+            }
 
             Console.Write("# Type checking file {0}: ", input);
             var tcv = new TypecheckVisitor();
             main.Accept(tcv);
+            Console.WriteLine("OK");
+
+            Console.Write("# Return checking file {0}: ", input);
+            var rcv = new ReturnCheckVisitor();
+            main.Accept(rcv);
             Console.WriteLine("OK");
 
             Console.WriteLine("# Contents of file {0}:", input);
@@ -57,10 +62,11 @@
             using (var file = new FileStream(input, FileMode.Open)) {
                 var scanner = new Scanner(file);
                 var parser = new Parser(scanner);
-                Raise<ParsingException>.IfNot(parser.Parse());
+                Raise<ParseException>.IfNot(parser.Parse());
                 main = parser.Prog;
             }
             main.Accept(new TypecheckVisitor());
+            main.Accept(new ReturnCheckVisitor());
         }
 
         static void Execute(string output)
@@ -72,19 +78,31 @@
         }
     }
 
+// ReSharper disable UnusedMember.Global
+
     [Serializable]
-    public sealed class ParsingException : Exception
+    public sealed class ParseException : Exception
     {
-        public ParsingException() {}
-        public ParsingException(string message) : base(message) {}
-        public ParsingException(string message, Exception inner) : base(message, inner) {}
+        public ParseException() {}
+        public ParseException(string message) : base(message) {}
+        public ParseException(string message, Exception inner) : base(message, inner) {}
     }
 
     [Serializable]
-    public sealed class TypeCheckingException : Exception
+    public sealed class ReturnCheckException : Exception
     {
-        public TypeCheckingException() {}
-        public TypeCheckingException(string message) : base(message) {}
-        public TypeCheckingException(string message, Exception inner) : base(message, inner) {}
+        public ReturnCheckException() {}
+        public ReturnCheckException(string message) : base(message) {}
+        public ReturnCheckException(string message, Exception inner) : base(message, inner) {}
     }
+
+    [Serializable]
+    public sealed class TypeCheckException : Exception
+    {
+        public TypeCheckException() {}
+        public TypeCheckException(string message) : base(message) {}
+        public TypeCheckException(string message, Exception inner) : base(message, inner) {}
+    }
+
+// ReSharper restore UnusedMember.Global
 }
