@@ -51,10 +51,19 @@
             _userFunctions = _module.Types.First(t => t.Name == "UserFunctions");
         }
 
-        public void Write(string outputName)
+        public void Write(string outputPrefix, string outputName)
         {
+            // Adds an automatic pause to programs.
             _instructions.Add(Instruction.Create(OpCodes.Call, _pause));
             _instructions.Add(Instruction.Create(OpCodes.Ret));
+
+            _assembly.Name.Name = outputPrefix;
+            _module.Name = _module.Name.Replace("DanglingLang.Runner", outputPrefix);
+            // Changes the namespace root of all the main module types.
+            foreach(var typeDef in _module.Types) {
+                typeDef.Namespace = typeDef.Namespace.Replace("DanglingLang.Runner", outputPrefix);
+            }
+
             _assembly.Write(outputName);
         }
 

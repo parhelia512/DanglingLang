@@ -48,14 +48,13 @@
             Console.Write(toStringVisitor.Result);
             
             var prefix = input.Substring(0, input.LastIndexOf('.'));
-            tcv.Assembly.Name = new AssemblyNameDefinition(prefix, new Version(1, 0));
-            tcv.Module.Name = prefix;
+
          
             var output = prefix + ".exe";
             Console.Write("# Compiling file {0} into {1}: ", input, output);
             var cecilVisitor = new CecilVisitor(tcv.Assembly, tcv.Module);
             main.Accept(cecilVisitor);
-            cecilVisitor.Write(output);
+            cecilVisitor.Write(prefix, output);
             Console.WriteLine("OK");
 
             return output;

@@ -470,7 +470,7 @@
             Raise<ArgumentException>.If(_types.ContainsKey(name));
             
             const string nmsp = "DanglingLang.Runner";
-            const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed;
+            const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public;
             var typeDef = new TypeDefinition(nmsp, name, typeAttr) {BaseType = Module.Import(typeof(object))};
 
             var type = new StructType(name, typeDef);
