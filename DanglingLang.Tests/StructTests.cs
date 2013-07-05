@@ -47,7 +47,7 @@ namespace DanglingLang.Tests
         }
 
         [Test]
-        public void NestedStruct()
+        public void NestedStructs()
         {
             AddLine("struct time {int h; int m; int s;}");
             AddLine("struct twoTime {struct time t1; struct time t2;}");
@@ -71,6 +71,30 @@ namespace DanglingLang.Tests
         }
 
         [Test]
+        public void NestedStructs_WithExps()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("struct twoTime {struct time t1; struct time t2;}");
+            AddLine("t1 = struct time {12*2, 3!, 4!}");
+            AddLine("t2 = struct time {16^2, min(3,5), max(4,5!)}");
+            AddLine("t3 = struct twoTime {t1, t2}");
+            AddLine("print(t3.t1.h)");
+            AddLine("print(t3.t1.m)");
+            AddLine("print(t3.t1.s)");
+            AddLine("print(t3.t2.h)");
+            AddLine("print(t3.t2.m)");
+            AddLine("print(t3.t2.s)");
+            AddLine("t3 = struct twoTime {struct time {16^2, 22/2, 35-5}, struct time {12^2, 10^3, 15^2}}");
+            AddLine("print(t3.t1.h)");
+            AddLine("print(t3.t1.m)");
+            AddLine("print(t3.t1.s)");
+            AddLine("print(t3.t2.h)");
+            AddLine("print(t3.t2.m)");
+            AddLine("print(t3.t2.s)");
+            Execute(new[] {"24", "6", "24", "256", "3", "120", "256", "11", "30", "144", "1000", "225"});
+        }
+
+        [Test]
         public void SlidesExample()
         {
             AddLine("struct time {int h; int m; int s;}");
@@ -85,6 +109,34 @@ namespace DanglingLang.Tests
             AddLine("t1 = struct time {12, 59, 59}");
             AddLine("print(t1.h)");
             Execute(new[] {"15", "3", "False", "3", "12"});
+        }
+
+        [Test]
+        public void Equality()
+        {
+            AddLine("load(TestLoad)");
+            AddLine("t1 = struct time {1, 2, 3}");
+            AddLine("t2 = struct time {1, 2, 3}");
+            AddLine("print(t1 == t2)");
+            AddLine("t2 = struct time {1, 2, 4}");
+            AddLine("print(t1 == t2)");
+            AddLine("print(t1 == struct time {1,2,3})");
+            AddLine("print(t1 == struct time {1,2,4})");
+            Execute(new[] {"True", "False", "True", "False"});
+        }
+
+        [Test]
+        public void BooleanFields()
+        {
+            AddLine("struct flags {bool f1; bool f2; bool f3;}");
+            AddLine("f = struct flags {true, ~true, false || true}");
+            AddLine("print(f.f1 || f.f2 || f.f3)");
+            AddLine("print(f.f1 && f.f2 && f.f3)");
+            AddLine("f = struct flags {~f.f1, ~f.f2, f.f1 || f.f2 || f.f3}");
+            AddLine("print(f.f1)");
+            AddLine("print(f.f2)");
+            AddLine("print(f.f3)");
+            Execute(new[] {"True", "False", "False", "True", "True"});
         }
     }
 }
