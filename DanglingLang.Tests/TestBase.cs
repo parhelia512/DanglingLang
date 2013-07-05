@@ -37,7 +37,6 @@
             var process = new Process {
                 StartInfo = {
                     UseShellExecute = false,
-                    RedirectStandardInput = true,
                     RedirectStandardOutput = true,
                     FileName = Output
                 }
@@ -46,10 +45,7 @@
             var output = process.StandardOutput;
             foreach (var line in lines) {
                 LineAssert(line, output.ReadLine(), process);
-            }
-            LineAssert("", output.ReadLine(), process);
-            LineAssert("Press any key to exit...", output.ReadLine(), process);
-            process.StandardInput.Write('Q');       
+            }      
             // To avoid locked files...
             Thread.Sleep(750);
             process.WaitForExit();          

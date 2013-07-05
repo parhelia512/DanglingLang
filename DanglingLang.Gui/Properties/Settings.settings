@@ -6,7 +6,7 @@
       <Value Profile="(Default)">DanglingLang.exe</Value>
     </Setting>
     <Setting Name="ExecutablePath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">GuiSourcFile.exe</Value>
+      <Value Profile="(Default)">GuiSourceFile.exe</Value>
     </Setting>
     <Setting Name="CompilerArgs" Type="System.String" Scope="Application">
       <Value Profile="(Default)">GuiSourceFile.txt</Value>

@@ -34,7 +34,7 @@ namespace DanglingLang.Gui.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("GuiSourcFile.exe")]
+        [global::System.Configuration.DefaultSettingValueAttribute("GuiSourceFile.exe")]
         public string ExecutablePath {
             get {
                 return ((string)(this["ExecutablePath"]));

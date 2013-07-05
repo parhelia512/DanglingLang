@@ -224,7 +224,7 @@
             this.CompileBtn.Name = "CompileBtn";
             this.CompileBtn.Size = new System.Drawing.Size(240, 86);
             this.CompileBtn.TabIndex = 0;
-            this.CompileBtn.Text = "Compile";
+            this.CompileBtn.Text = "Compile && Run";
             this.CompileBtn.UseVisualStyleBackColor = true;
             this.CompileBtn.Click += new System.EventHandler(this.CompileBtn_Click);
             // 
@@ -237,6 +237,7 @@
             this.ClearBtn.TabIndex = 0;
             this.ClearBtn.Text = "Clear";
             this.ClearBtn.UseVisualStyleBackColor = true;
+            this.ClearBtn.Click += new System.EventHandler(this.ClearBtn_Click);
             // 
             // DanglingForm
             // 

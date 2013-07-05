@@ -15,7 +15,6 @@
         readonly MethodReference _max;
         readonly MethodReference _min;
         readonly MethodReference _pow;
-        readonly MethodReference _pause;
         readonly MethodReference _printBool;
         readonly MethodReference _printInt;
         readonly MethodDefinition _main;
@@ -44,7 +43,6 @@
             _min = systemFunctions.Methods.First(m => m.Name == "Min");
             _pow = systemFunctions.Methods.First(m => m.Name == "Pow");
             // Console methods
-            _pause = systemFunctions.Methods.First(m => m.Name == "Pause");
             _printBool = systemFunctions.Methods.First(m => m.Name == "PrintBool");
             _printInt = systemFunctions.Methods.First(m => m.Name == "PrintInt");
             
@@ -53,10 +51,6 @@
 
         public void Write(string outputPrefix)
         {
-            // Adds an automatic pause to programs.
-            _instructions.Add(Instruction.Create(OpCodes.Call, _pause));
-            _instructions.Add(Instruction.Create(OpCodes.Ret));
-
             _assembly.Name.Name = outputPrefix;
             _module.Name = _module.Name.Replace("DanglingLang.Runner", outputPrefix);
             // Changes the namespace root of all the main module types.

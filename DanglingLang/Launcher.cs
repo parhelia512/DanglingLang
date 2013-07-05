@@ -9,16 +9,23 @@
 
     public static class Launcher
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Raise<InvalidOperationException>.If(args.Length == 0 || args.Length > 2,  "Wrong argument count!");
             Raise<InvalidOperationException>.If(args.Length == 2 && args[0] != "-e",  "Wrong flag!");
-            if (args.Length == 2) {
-                var output = Compile(args[1]);
-                Execute(output);
-            } else {
-                Compile(args[0]);
+            try {
+                if (args.Length == 2) {
+                    var output = Compile(args[1]);
+                    Execute(output);
+                } else {
+                    Compile(args[0]);
+                }
+            } catch (Exception ex) {
+                Console.WriteLine();
+                Console.WriteLine("ERROR: {0}", ex.Message);
+                return 1;
             }
+            return 0;
         }
 
         public static string Compile(string input)

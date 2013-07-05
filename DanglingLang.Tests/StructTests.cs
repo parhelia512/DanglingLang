@@ -148,11 +148,11 @@ namespace DanglingLang.Tests
         [Test]
         public void BooleanFields()
         {
-            AddLine("struct flags {bool f1; bool f2; bool f3;}");
-            AddLine("f = struct flags {true, ~true, false || true}");
+            AddLine("struct bools {bool f1; bool f2; bool f3;}");
+            AddLine("f = struct bools {true, ~true, false || true}");
             AddLine("print(f.f1 || f.f2 || f.f3)");
             AddLine("print(f.f1 && f.f2 && f.f3)");
-            AddLine("f = struct flags {~f.f1, ~f.f2, f.f1 || f.f2 || f.f3}");
+            AddLine("f = struct bools {~f.f1, ~f.f2, f.f1 || f.f2 || f.f3}");
             AddLine("print(f.f1)");
             AddLine("print(f.f2)");
             AddLine("print(f.f3)");
