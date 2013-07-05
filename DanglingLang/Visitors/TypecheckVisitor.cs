@@ -467,7 +467,7 @@
         StructType AddStructType(StructDecl decl)
         {
             var name = decl.Name.ToLower();
-            Raise<ArgumentException>.If(_types.ContainsKey(name));
+            Raise<TypeCheckException>.If(_types.ContainsKey(name));
             
             const string nmsp = "DanglingLang.Runner";
             const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public;
