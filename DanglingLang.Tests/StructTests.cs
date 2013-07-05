@@ -124,6 +124,26 @@ namespace DanglingLang.Tests
             AddLine("print(t1 == struct time {1,2,4})");
             Execute(new[] {"True", "False", "True", "False"});
         }
+        
+        [Test]
+        public void Equality_NestedStructs()
+        {
+            AddLine("load(TestLoad)");
+            AddLine("t1 = struct time {1, 2, 3}");
+            AddLine("t2 = struct time {1, 2, 3}");
+            AddLine("d1 = struct datum {t1, true}");
+            AddLine("d2 = struct datum {t2, true}");
+            AddLine("print(d1 == d2)");
+            AddLine("d2 = struct datum {t2, false}");
+            AddLine("print(d1 == d2)");
+            AddLine("t2 = struct time {1, 2, 4}");
+            AddLine("d2 = struct datum {t2, true}");
+            AddLine("print(d1 == d2)");
+            AddLine("print(d1 == struct datum {struct time {1,2,3}, true})");
+            AddLine("print(d1 == struct datum {struct time {1,2,3}, false})");
+            AddLine("print(d1 == struct datum {struct time {1,2,4}, true})");
+            Execute(new[] {"True", "False", "False", "True", "False", "False"});
+        }
 
         [Test]
         public void BooleanFields()

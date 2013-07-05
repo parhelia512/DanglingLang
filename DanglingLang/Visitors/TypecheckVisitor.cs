@@ -13,7 +13,6 @@
     {
         public readonly string Name;
         public readonly TypeReference Reference;
-        public MethodReference Ctor;
 
         public Type(string name, TypeReference reference)
         {
@@ -31,6 +30,8 @@
     sealed class StructType : Type
     {
         readonly IList<FieldInfo> _fields = new List<FieldInfo>();
+        public MethodReference Ctor;
+        public MethodReference TypeEquals;
 
         public StructType(string name, TypeReference reference) : base(name, reference)
         {
@@ -475,7 +476,9 @@
             Raise<TypeCheckException>.If(_types.ContainsKey(name));
             
             const string nmsp = "DanglingLang.Runner";
-            const TypeAttributes typeAttr = TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public;
+            const TypeAttributes typeAttr =
+                TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.AnsiClass |
+                TypeAttributes.AutoClass | TypeAttributes.BeforeFieldInit;
             var typeDef = new TypeDefinition(nmsp, name, typeAttr) {BaseType = Module.Import(typeof(object))};
 
             var type = new StructType(name, typeDef);
@@ -553,6 +556,7 @@
             var typeRef = Module.Import(typeDef);
             var structType = new StructType(typeRef.Name, typeRef);
             structType.Ctor = Module.Import(typeDef.Methods.First(m => m.Name == ".ctor"));
+            structType.TypeEquals = Module.Import(typeDef.Methods.First(m => m.Name == "MyEquals"));
             _types.Add(typeRef.Name, structType);
             _structTypes.Add(typeRef.Name, structType);
         }

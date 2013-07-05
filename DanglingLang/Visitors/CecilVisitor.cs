@@ -140,7 +140,14 @@
 
         public void Visit(Equal eq)
         {
-            Visit(eq, OpCodes.Ceq);
+            var leftType = eq.Left.Type as StructType;
+            if (leftType != null) {
+                eq.Left.Accept(this);
+                eq.Right.Accept(this);
+                _instructions.Add(Instruction.Create(OpCodes.Call, leftType.TypeEquals));
+            } else {
+                Visit(eq, OpCodes.Ceq);
+            }
         }
 
         public void Visit(LessEqual leq)
@@ -252,10 +259,10 @@
                 parameters[i] = new ParameterDefinition(pName, pAttr, pType);
             }
             // Then, we create the constructor itself...
-            const MethodAttributes methAttr =
+            const MethodAttributes ctorAttr =
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName |
                 MethodAttributes.RTSpecialName;
-            var ctor = new MethodDefinition(".ctor", methAttr, _module.TypeSystem.Void);
+            var ctor = new MethodDefinition(".ctor", ctorAttr, _module.TypeSystem.Void);
             // And we add the parameters we created before.
             foreach (var p in parameters) {
                 ctor.Parameters.Add(p);
@@ -270,17 +277,53 @@
                 ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Stfld, structFields[i].Reference));
             }
             ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
-
             // Constructor is added to the new type.
             typeDef.Methods.Add(ctor);
-            structDecl.Type.Ctor = ctor;        
+            structDecl.Type.Ctor = ctor;  
+
+            // After that, we have to follow a similar procedure
+            // to declare a proper "Equals" method for the new type.
+            // As before, we first create the parameter.
+            var eqParam = new ParameterDefinition("other", ParameterAttributes.None, typeDef);
+            // Then, we create the method itself...
+            const MethodAttributes eqAttr = MethodAttributes.Public | MethodAttributes.HideBySig;
+            var equals = new MethodDefinition("MyEquals", eqAttr, _module.TypeSystem.Boolean);
+            // And we add the parameters we created before.
+            equals.Parameters.Add(eqParam);
+            // Then, we build a method so that each field is compared
+            // against value from the corresponding other field.
+            var nop = Instruction.Create(OpCodes.Nop);
+            var ret = Instruction.Create(OpCodes.Ret);
+            foreach (var f in structFields) {
+                equals.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0)); // This
+                equals.Body.Instructions.Add(Instruction.Create(OpCodes.Ldfld, f.Reference));
+                equals.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_1)); // Other
+                equals.Body.Instructions.Add(Instruction.Create(OpCodes.Ldfld, f.Reference));
+                if (f.Type is StructType) {
+                    var fieldEq = (f.Type as StructType).TypeEquals;
+                    equals.Body.Instructions.Add(Instruction.Create(OpCodes.Call, fieldEq));
+                } else {
+                    equals.Body.Instructions.Add(Instruction.Create(OpCodes.Ceq));
+                }
+                equals.Body.Instructions.Add(Instruction.Create(OpCodes.Brfalse, nop));
+            }
+            equals.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4_1));
+            equals.Body.Instructions.Add(Instruction.Create(OpCodes.Br, ret));
+            equals.Body.Instructions.Add(nop);
+            equals.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4_0));
+            equals.Body.Instructions.Add(ret);
+            // Equals is added to the new type.
+            typeDef.Methods.Add(equals);
+            structDecl.Type.TypeEquals = equals; 
+       
             // New type is then added to the assembly.
             _module.Types.Add(typeDef);
         }
 
         public void Visit(FunctionDecl funcDecl)
         {
-            const MethodAttributes funcAttr = MethodAttributes.Public | MethodAttributes.Static;
+            const MethodAttributes funcAttr =
+                MethodAttributes.Public | MethodAttributes.Static | MethodAttributes.HideBySig;
 
             MethodDefinition func;
             if (funcDecl.Name == "$Main") {

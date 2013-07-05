@@ -223,5 +223,16 @@
             AddLine("printFive()      ");
             CheckCode();
         }
+
+        public sealed class time
+        {
+            public int x;
+            public bool y;
+
+            public bool Equals(time other)
+            {
+                return x == other.x && y == other.y;
+            }
+        }
     }
 }
