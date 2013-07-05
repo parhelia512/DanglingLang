@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6829D24F-4CB9-4093-BC23-8498496008D2}</ProjectGuid>
+    <ProjectGuid>{032BC377-4704-42C4-8067-EE45486D0B42}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DanglingLang.Gui</RootNamespace>
