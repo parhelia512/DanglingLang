@@ -233,6 +233,16 @@
             {
                 return x == other.x && y == other.y;
             }
+
+            public void test(bool x, bool y)
+            {
+                if (x && y) {
+                    System.Console.Write('b');
+                }
+                if (x || y) {
+                    System.Console.Write('c');
+                }
+            }
         }
     }
 }

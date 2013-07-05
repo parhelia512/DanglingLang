@@ -428,6 +428,7 @@
         public Type ReturnType;
         public Block Body;
         public MethodReference Reference;
+        public bool RequiresExplicitReturn;
 
         public override void Accept(ITreeNodeVisitor visitor)
         {

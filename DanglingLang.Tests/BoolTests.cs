@@ -21,7 +21,9 @@
             AddLine("print(true && true)");
             AddLine("print((~false) && false)");
             AddLine("print((~true) && true)");
-            Execute(new[] {"False", "True", "False", "False"});
+            AddLine("print(false && true)");
+            AddLine("print(true && false)");
+            Execute(new[] {"False", "True", "False", "False", "False", "False"});
         }
 
         [Test]
@@ -32,7 +34,9 @@
             AddLine("print((~false) || false)");
             AddLine("print((~true) || true)");
             AddLine("print((~true) || (~true))");
-            Execute(new[] {"False", "True", "True", "True", "False"});
+            AddLine("print(false || true)");
+            AddLine("print(true || false)");
+            Execute(new[] {"False", "True", "True", "True", "False", "True", "True"});
         }
 
         [Test]

@@ -132,6 +132,9 @@ namespace DanglingLang.Visitors
             _foundReturn = false;
             funcDecl.Body.Accept(this);
             Raise<ReturnCheckException>.If(!_foundReturn && funcDecl.ReturnTypeName != "void");
+            if (!_foundReturn && funcDecl.ReturnTypeName == "void") {
+                funcDecl.RequiresExplicitReturn = true;
+            }
             _foundReturn = oldRet;
         }
 

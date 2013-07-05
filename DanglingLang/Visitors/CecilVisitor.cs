@@ -104,7 +104,7 @@
             // "And" operator must be short circuited.
             and.Left.Accept(this);
             var br = Instruction.Create(OpCodes.Ldc_I4_0);
-            _instructions.Add(Instruction.Create(OpCodes.Brfalse, br));
+            _instructions.Add(Instruction.Create(OpCodes.Brfalse_S, br));
             and.Right.Accept(this);
             var end = Instruction.Create(OpCodes.Nop);
             _instructions.Add(Instruction.Create(OpCodes.Br, end));
@@ -117,7 +117,7 @@
             // "Or" operator must be short circuited.
             or.Left.Accept(this);
             var br = Instruction.Create(OpCodes.Ldc_I4_1);
-            _instructions.Add(Instruction.Create(OpCodes.Brtrue, br));
+            _instructions.Add(Instruction.Create(OpCodes.Brtrue_S, br));
             or.Right.Accept(this);
             var end = Instruction.Create(OpCodes.Nop);
             _instructions.Add(Instruction.Create(OpCodes.Br, end));
@@ -138,7 +138,7 @@
             if (leftType != null) {
                 eq.Left.Accept(this);
                 eq.Right.Accept(this);
-                _instructions.Add(Instruction.Create(OpCodes.Call, leftType.TypeEquals));
+                _instructions.Add(Instruction.Create(OpCodes.Callvirt, leftType.TypeEquals));
             } else {
                 Visit(eq, OpCodes.Ceq);
             }
@@ -348,6 +348,9 @@
             }
 
             funcDecl.Body.Accept(this);
+            if (funcDecl.RequiresExplicitReturn) {
+                _instructions.Add(Instruction.Create(OpCodes.Ret));
+            }
 
             _body = oldBody;
             _instructions = oldInstructions;
