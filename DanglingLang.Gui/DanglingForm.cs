@@ -9,6 +9,7 @@
 
     public partial class DanglingForm : Form
     {
+        const string NewLine = "\r\n";
         const string SourceFile = "GuiSourceFile.txt";
 
         public DanglingForm()
@@ -22,6 +23,8 @@
                 return; // Nothing to do...
             }
             try {
+                CompilerOutputTxt.Clear();
+                ScriptOutputTxt.Clear();
                 RunCompiler();
                 RunExecutable();
             } catch (Exception ex) {
@@ -49,7 +52,9 @@
             };
             compiler.Start();
             CompilerOutputTxt.ReadOnly = false;
-            CompilerOutputTxt.Text = compiler.StandardOutput.ReadToEnd();
+            while (!compiler.StandardOutput.EndOfStream) {
+                CompilerOutputTxt.Text += compiler.StandardOutput.ReadLine() + NewLine;
+            }      
             CompilerOutputTxt.ReadOnly = true;
             compiler.WaitForExit();
             Raise<Exception>.IfAreEqual(compiler.ExitCode, 1, "Compilation failed :(");
@@ -68,7 +73,9 @@
             };
             exec.Start();
             ScriptOutputTxt.ReadOnly = false;
-            ScriptOutputTxt.Text = exec.StandardOutput.ReadToEnd();
+            while (!exec.StandardOutput.EndOfStream) {
+                ScriptOutputTxt.Text += exec.StandardOutput.ReadLine() + NewLine;
+            } 
             ScriptOutputTxt.ReadOnly = true;
             exec.WaitForExit();
             Raise<Exception>.IfAreEqual(exec.ExitCode, 1, "Execution failed :(");
