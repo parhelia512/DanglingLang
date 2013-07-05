@@ -1,7 +1,18 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="DanglingLang.Gui.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CompilerPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">DanglingLang.exe</Value>
+    </Setting>
+    <Setting Name="ExecutablePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">GuiSourcFile.exe</Value>
+    </Setting>
+    <Setting Name="CompilerArgs" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">GuiSourceFile.txt</Value>
+    </Setting>
+    <Setting Name="ExecutableArgs" Type="System.String" Scope="Application">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
 </SettingsFile>

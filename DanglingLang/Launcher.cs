@@ -11,9 +11,14 @@
     {
         static void Main(string[] args)
         {
-            Raise<InvalidOperationException>.IfAreNotEqual(args.Length, 1, "There should be only one argument.");
-            var output = Compile(args[0]);
-            Execute(output);
+            Raise<InvalidOperationException>.If(args.Length == 0 || args.Length > 2,  "Wrong argument count!");
+            Raise<InvalidOperationException>.If(args.Length == 2 && args[0] != "-e",  "Wrong flag!");
+            if (args.Length == 2) {
+                var output = Compile(args[1]);
+                Execute(output);
+            } else {
+                Compile(args[0]);
+            }
         }
 
         public static string Compile(string input)
@@ -53,6 +58,7 @@
             cecilVisitor.Write(prefix);
             Console.WriteLine("OK");
 
+            Console.Out.Flush();
             return prefix + ".exe";
         }
 

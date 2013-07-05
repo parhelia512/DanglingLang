@@ -22,5 +22,41 @@ namespace DanglingLang.Gui.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DanglingLang.exe")]
+        public string CompilerPath {
+            get {
+                return ((string)(this["CompilerPath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("GuiSourcFile.exe")]
+        public string ExecutablePath {
+            get {
+                return ((string)(this["ExecutablePath"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("GuiSourceFile.txt")]
+        public string CompilerArgs {
+            get {
+                return ((string)(this["CompilerArgs"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExecutableArgs {
+            get {
+                return ((string)(this["ExecutableArgs"]));
+            }
+        }
     }
 }

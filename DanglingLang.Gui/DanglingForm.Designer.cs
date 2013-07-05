@@ -76,8 +76,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(784, 601);
-            this.splitContainer1.SplitterDistance = 400;
+            this.splitContainer1.Size = new System.Drawing.Size(944, 681);
+            this.splitContainer1.SplitterDistance = 481;
             this.splitContainer1.TabIndex = 1;
             // 
             // splitContainer3
@@ -94,8 +94,8 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
-            this.splitContainer3.Size = new System.Drawing.Size(400, 601);
-            this.splitContainer3.SplitterDistance = 521;
+            this.splitContainer3.Size = new System.Drawing.Size(481, 681);
+            this.splitContainer3.SplitterDistance = 591;
             this.splitContainer3.TabIndex = 0;
             // 
             // groupBox1
@@ -104,13 +104,15 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(400, 521);
+            this.groupBox1.Size = new System.Drawing.Size(481, 591);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Script code";
             // 
             // ScriptCodeTxt
             // 
+            this.ScriptCodeTxt.AcceptsReturn = true;
+            this.ScriptCodeTxt.AcceptsTab = true;
             this.ScriptCodeTxt.BackColor = System.Drawing.Color.DimGray;
             this.ScriptCodeTxt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ScriptCodeTxt.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -118,8 +120,10 @@
             this.ScriptCodeTxt.Location = new System.Drawing.Point(3, 16);
             this.ScriptCodeTxt.Multiline = true;
             this.ScriptCodeTxt.Name = "ScriptCodeTxt";
-            this.ScriptCodeTxt.Size = new System.Drawing.Size(394, 502);
+            this.ScriptCodeTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.ScriptCodeTxt.Size = new System.Drawing.Size(475, 572);
             this.ScriptCodeTxt.TabIndex = 0;
+            this.ScriptCodeTxt.WordWrap = false;
             // 
             // splitContainer2
             // 
@@ -136,8 +140,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox3);
-            this.splitContainer2.Size = new System.Drawing.Size(380, 601);
-            this.splitContainer2.SplitterDistance = 417;
+            this.splitContainer2.Size = new System.Drawing.Size(459, 681);
+            this.splitContainer2.SplitterDistance = 360;
             this.splitContainer2.TabIndex = 0;
             // 
             // groupBox2
@@ -146,13 +150,15 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(380, 417);
+            this.groupBox2.Size = new System.Drawing.Size(459, 360);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Script output";
             // 
             // ScriptOutputTxt
             // 
+            this.ScriptOutputTxt.AcceptsReturn = true;
+            this.ScriptOutputTxt.AcceptsTab = true;
             this.ScriptOutputTxt.BackColor = System.Drawing.Color.DimGray;
             this.ScriptOutputTxt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ScriptOutputTxt.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -161,8 +167,9 @@
             this.ScriptOutputTxt.Multiline = true;
             this.ScriptOutputTxt.Name = "ScriptOutputTxt";
             this.ScriptOutputTxt.ReadOnly = true;
-            this.ScriptOutputTxt.Size = new System.Drawing.Size(374, 398);
+            this.ScriptOutputTxt.Size = new System.Drawing.Size(453, 341);
             this.ScriptOutputTxt.TabIndex = 0;
+            this.ScriptOutputTxt.WordWrap = false;
             // 
             // groupBox3
             // 
@@ -170,13 +177,15 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(380, 180);
+            this.groupBox3.Size = new System.Drawing.Size(459, 317);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Compiler output";
             // 
             // CompilerOutputTxt
             // 
+            this.CompilerOutputTxt.AcceptsReturn = true;
+            this.CompilerOutputTxt.AcceptsTab = true;
             this.CompilerOutputTxt.BackColor = System.Drawing.Color.DimGray;
             this.CompilerOutputTxt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CompilerOutputTxt.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -185,8 +194,10 @@
             this.CompilerOutputTxt.Multiline = true;
             this.CompilerOutputTxt.Name = "CompilerOutputTxt";
             this.CompilerOutputTxt.ReadOnly = true;
-            this.CompilerOutputTxt.Size = new System.Drawing.Size(374, 161);
+            this.CompilerOutputTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.CompilerOutputTxt.Size = new System.Drawing.Size(453, 298);
             this.CompilerOutputTxt.TabIndex = 0;
+            this.CompilerOutputTxt.WordWrap = false;
             // 
             // splitContainer4
             // 
@@ -202,8 +213,8 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.ClearBtn);
-            this.splitContainer4.Size = new System.Drawing.Size(400, 76);
-            this.splitContainer4.SplitterDistance = 200;
+            this.splitContainer4.Size = new System.Drawing.Size(481, 86);
+            this.splitContainer4.SplitterDistance = 240;
             this.splitContainer4.TabIndex = 0;
             // 
             // CompileBtn
@@ -211,17 +222,18 @@
             this.CompileBtn.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CompileBtn.Location = new System.Drawing.Point(0, 0);
             this.CompileBtn.Name = "CompileBtn";
-            this.CompileBtn.Size = new System.Drawing.Size(200, 76);
+            this.CompileBtn.Size = new System.Drawing.Size(240, 86);
             this.CompileBtn.TabIndex = 0;
             this.CompileBtn.Text = "Compile";
             this.CompileBtn.UseVisualStyleBackColor = true;
+            this.CompileBtn.Click += new System.EventHandler(this.CompileBtn_Click);
             // 
             // ClearBtn
             // 
             this.ClearBtn.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ClearBtn.Location = new System.Drawing.Point(0, 0);
             this.ClearBtn.Name = "ClearBtn";
-            this.ClearBtn.Size = new System.Drawing.Size(196, 76);
+            this.ClearBtn.Size = new System.Drawing.Size(237, 86);
             this.ClearBtn.TabIndex = 0;
             this.ClearBtn.Text = "Clear";
             this.ClearBtn.UseVisualStyleBackColor = true;
@@ -230,7 +242,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 601);
+            this.ClientSize = new System.Drawing.Size(944, 681);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DanglingForm";

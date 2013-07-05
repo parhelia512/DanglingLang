@@ -38,14 +38,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DanglingForm.cs">
@@ -84,6 +80,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MisterDangling.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DanglingLang.Runner\DanglingLang.Runner.csproj">
+      <Project>{bb42df9f-9e40-469f-82b8-d98cb2d77ded}</Project>
+      <Name>DanglingLang.Runner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DanglingLang\DanglingLang.csproj">
+      <Project>{3d12fa5f-a5e3-40f9-91ed-59562d5b141a}</Project>
+      <Name>DanglingLang</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -179,7 +179,7 @@
             Indent();
             _sb.Append("print(");
             print.Exp.Accept(this);
-            _sb.Append(")\n");
+            _sb.Append(")\r\n");
         }
 
         public void Visit(StructDecl structDecl)
@@ -199,7 +199,7 @@
             _sb.Append(type.Fields[i].Type);
             _sb.Append(" ");
             _sb.Append(type.Fields[i].Name);
-            _sb.Append(";}\n");
+            _sb.Append(";}\r\n");
         }
 
         public void Visit(FunctionDecl funcDecl)
@@ -216,7 +216,7 @@
                 p = funcDecl.Params[i];
                 _sb.AppendFormat("{0} {1}", p.Type, p.Name);
             } 
-            _sb.Append(")\n");   
+            _sb.Append(")\r\n");   
             funcDecl.Body.Accept(this);
         }
 
@@ -226,7 +226,7 @@
             _sb.Append(asg.Var == null ? asg.VarName : asg.Var.Name);
             _sb.Append(" = ");
             asg.Exp.Accept(this);
-            _sb.Append("\n");
+            _sb.Append("\r\n");
         }
 
         public void Visit(If ifs)
@@ -234,7 +234,7 @@
             Indent();
             _sb.Append("if (");
             ifs.Guard.Accept(this);
-            _sb.Append(")\n");
+            _sb.Append(")\r\n");
             ++_level;
             ifs.Body.Accept(this);
             --_level;
@@ -245,7 +245,7 @@
             Indent();
             _sb.Append("while (");
             whiles.Guard.Accept(this);
-            _sb.Append(")\n");
+            _sb.Append(")\r\n");
             ++_level;
             whiles.Body.Accept(this);
             --_level;
@@ -254,21 +254,21 @@
         public void Visit(Block block)
         {
             Indent();
-            _sb.Append("{\n");
+            _sb.Append("{\r\n");
             ++_level;
             foreach (var stmt in block.Statements) {
                 stmt.Accept(this);
             }
             --_level;
             Indent();
-            _sb.Append("}\n");
+            _sb.Append("}\r\n");
         }
 
         public void Visit(EvalExp eval)
         {
             Indent();
             eval.Exp.Accept(this);
-            _sb.Append("\n");
+            _sb.Append("\r\n");
         }
 
         public void Visit(Return ret)
@@ -278,13 +278,13 @@
             if (ret.ReturnExp != null) {
                 ret.ReturnExp.Accept(this);
             }
-            _sb.Append("\n");
+            _sb.Append("\r\n");
         }
 
         public void Visit(LoadStmt load)
         {
             Indent();
-            _sb.AppendFormat("load({0})\n", load.Assembly);
+            _sb.AppendFormat("load({0})\r\n", load.Assembly);
         }
 
         void Indent()
