@@ -51,7 +51,7 @@
             _userFunctions = _module.Types.First(t => t.Name == "UserFunctions");
         }
 
-        public void Write(string outputPrefix, string outputName)
+        public void Write(string outputPrefix)
         {
             // Adds an automatic pause to programs.
             _instructions.Add(Instruction.Create(OpCodes.Call, _pause));
@@ -64,7 +64,7 @@
                 typeDef.Namespace = typeDef.Namespace.Replace("DanglingLang.Runner", outputPrefix);
             }
 
-            _assembly.Write(outputName);
+            _assembly.Write(outputPrefix + ".exe");
         }
 
         public void Visit(Sum sum)
@@ -195,15 +195,10 @@
         {
             var st = sv.Type as StructType;
             Debug.Assert(st != null);
-            _instructions.Add(Instruction.Create(OpCodes.Newobj, st.Ctor));
-            var tempVar = sv.Temp.Reference;
-            _instructions.Add(Instruction.Create(OpCodes.Stloc, tempVar));
-            for (var i = 0; i < st.Fields.Count; ++i) {
-                _instructions.Add(Instruction.Create(OpCodes.Ldloc, tempVar));
-                sv.Values[i].Accept(this);
-                _instructions.Add(Instruction.Create(OpCodes.Stfld, st.Fields[i].Reference));
+            foreach (var v in sv.Values) {
+                v.Accept(this);
             }
-            _instructions.Add(Instruction.Create(OpCodes.Ldloc, tempVar));
+            _instructions.Add(Instruction.Create(OpCodes.Newobj, st.Ctor));
         }
 
         public void Visit(FunctionCall fc)
@@ -236,7 +231,7 @@
 
         public void Visit(StructDecl structDecl)
         {
-            // Each field is added to struct type...
+            // Each field is added to the struct type...
             const FieldAttributes fieldAttr = FieldAttributes.Public;
             var typeDef = structDecl.Type.Reference as TypeDefinition;
             Debug.Assert(typeDef != null);
@@ -246,17 +241,39 @@
                 f.Reference = fieldDef;
             }
             
-            // We add an empty constructor to the new type...
+            // We add a proper constructor to the new type. We first create
+            // a parameter for each field in the struct.
+            var structFields = structDecl.Type.Fields;
+            var parameters = new ParameterDefinition[structFields.Count];
+            for (var i = 0; i < structFields.Count; ++i) {             
+                var pName = "_" + structFields[i].Name;
+                const ParameterAttributes pAttr = ParameterAttributes.None;
+                var pType = structFields[i].Type.Reference;
+                parameters[i] = new ParameterDefinition(pName, pAttr, pType);
+            }
+            // Then, we create the constructor itself...
             const MethodAttributes methAttr =
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName |
                 MethodAttributes.RTSpecialName;
             var ctor = new MethodDefinition(".ctor", methAttr, _module.TypeSystem.Void);
-            ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
+            // And we add the parameters we created before.
+            foreach (var p in parameters) {
+                ctor.Parameters.Add(p);
+            }
+            // Then, we build a constructor so that each field receives
+            // its new value from the corresponding parameter.
+            ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0)); // This
             ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, _objCtor));
+            for (var i = 0; i < parameters.Length; ++i) {
+                ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0)); // This
+                ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg, parameters[i]));
+                ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Stfld, structFields[i].Reference));
+            }
             ctor.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+
+            // Constructor is added to the new type.
             typeDef.Methods.Add(ctor);
-            structDecl.Type.Ctor = ctor;
-            
+            structDecl.Type.Ctor = ctor;        
             // New type is then added to the assembly.
             _module.Types.Add(typeDef);
         }

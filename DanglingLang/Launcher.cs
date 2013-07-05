@@ -3,7 +3,6 @@
     using System;
     using System.Diagnostics;
     using System.IO;
-    using Mono.Cecil;
     using Thrower;
     using Tokenizer;
     using Visitors;
@@ -46,18 +45,15 @@
             var toStringVisitor = new ToStringVisitor();
             main.Accept(toStringVisitor);
             Console.Write(toStringVisitor.Result);
-            
-            var prefix = input.Substring(0, input.LastIndexOf('.'));
 
-         
-            var output = prefix + ".exe";
-            Console.Write("# Compiling file {0} into {1}: ", input, output);
+            var prefix = input.Substring(0, input.LastIndexOf('.'));
+            Console.Write("# Compiling file {0} into {1}: ", input, prefix + ".exe");
             var cecilVisitor = new CecilVisitor(tcv.Assembly, tcv.Module);
             main.Accept(cecilVisitor);
-            cecilVisitor.Write(prefix, output);
+            cecilVisitor.Write(prefix);
             Console.WriteLine("OK");
 
-            return output;
+            return prefix + ".exe";
         }
 
         public static void TypeCheck(string input)

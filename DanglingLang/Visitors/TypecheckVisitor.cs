@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using Mono.Cecil;
     using Thrower;
@@ -415,10 +416,12 @@
             var foundSysFuncs = false;
             var foundUserFuncs = false;
             TypeDefinition userFuncsType = null;
-
+            
+            // We load the assembly given by the statement.
+            Raise<TypeCheckException>.IfNot(File.Exists(load.Assembly));
             var asmDef = AssemblyDefinition.ReadAssembly(load.Assembly);
             var modDef = asmDef.MainModule;
-
+            
             // Type loading; in the first pass, we load all types. After that,
             // all field types are loaded: we have to do at least two passes
             // since field types may rely on types declared in the assembly we have to load.
@@ -443,6 +446,8 @@
                         break;
                 }
             }
+            // An assembly produced by this language must have
+            // a set of predefined types.
             Raise<TypeCheckException>.IfNot(foundProgram && foundSysFuncs && foundUserFuncs, "Invalid assembly");
             foreach (var typeDef in loadedTypes) {
                 LoadTypeFields(typeDef);
