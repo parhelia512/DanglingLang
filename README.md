@@ -166,3 +166,39 @@ The following operations are sequentially run by the compiler in order to obtain
 1. Input is broken into tokens, using Gppg and specification contained in [DanglingLang.l](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Tokenizer/DanglingLang.l);
 2. Tokens are checked against the grammar (produced by Gplex following specification in [DanglingLang.y](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Tokenizer/DanglingLang.y);
 3. At the same time, the abstract syntax tree is built, using the object model contained in [AST.cs](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/AST.cs);
+4. 4. [Type checker](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/TypecheckVisitor.cs) and [function return statement checker](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/ReturnCheckVisitor.cs) are run on the AST;
+5. A visitors which transforms the AST into string ([ToStringVisitor.cs](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/ToStringVisitor.cs)) is run for debugging purposes;
+6. As a last step, the visitor which generates code ([CecilVisitor.cs](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/CecilVisitor.cs)) is run on the AST.
+
+### How to run the compiler
+
+The compiler, `DanglingLang.exe`, can be run in two ways. The first one is the following:
+
+```
+DanglingLang.exe mySourceFile.txt
+```
+
+Command above will compile given file into `mySourceFile.exe`, an executable for the .NET framework. If you want the compiler to launch the executable for you, you can just modify the command in this way:
+
+```
+DanglingLang.exe -e mySourceFile.txt
+```
+
+If you launch the compiler with the "-e" flag, in case of successful compilation the compiler itself will launch the executable.
+
+### Error handling
+
+If the code contains some mistakes, then the compiler should print some kind of error (more or less detailed...) and then exit with 1 as error code. That value is used by the GUI to understand whether something has gone wrong.
+
+Error messages could have been improved, indeed this is a weak point of the project.
+
+### Return statement checker
+
+That kind of visitor has been added in order to deal with wrongly declared functions. In particular, it is run to discover:
+* Procedures which do not have a return statement, so that a default one can be placed right at the bottom of the body;
+* Procedures and functions which have code after a return statement;
+* Functions which do not have a return statement in some execution path.
+
+Code generation
+---------------
+
