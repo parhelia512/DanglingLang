@@ -162,6 +162,7 @@ Compilation process
 The compiler is based on the structure proposed by Giovanni Lagorio for the laboratory about LLVM code generation. That structure has been properly modified, so that code is now generated for the Common Language Infrastructure.
 
 The following operations are sequentially run by the compiler in order to obtain working bytecode:
+
 1. Input is broken into tokens, using Gppg and specification contained in [DanglingLang.l](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Tokenizer/DanglingLang.l);
 2. Tokens are checked against the grammar (produced by Gplex following specification in [DanglingLang.y](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Tokenizer/DanglingLang.y);
 3. At the same time, the abstract syntax tree is built, using the object model contained in [AST.cs](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/AST.cs);
