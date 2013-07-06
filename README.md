@@ -202,3 +202,28 @@ That kind of visitor has been added in order to deal with wrongly declared funct
 Code generation
 ---------------
 
+To generate executable code from a checked AST using Mono.Cecil, we start from a "skeleton" assembly, whose code is contained in [DanglingLang.Runner](https://github.com/pomma89/DanglingLang/tree/master/DanglingLang.Runner). That assembly contains the following static classes:
+* Program: where the Main function is declared;
+* SystemFunctions: contains functions like Min, Max and Fact, which are used to provide default functionalities;
+* UserFunctions: where all functions declared in the script will be stored.
+
+The code generation process takes that assembly and shapes it according to what follows:
+* Program.Main is emptied and filled with the instructions contained in the script;
+* All struct types declared in the script become top level types in that assembly; this choice was made to simplify things, but it can create problems when a script declares a struct named, for example, "UserFunctions". That issue could be solved by storing structs as inner classes inside a special static class ("UserTypes", for example);
+* All functions become static methods of the "UserFunctions" static class;
+* All namespaces are fixed, so that they match the script file name.
+
+After having modified the assembly, it is written back to disk; if the script was called "PINO.txt", then the executable will be stored as "PINO.exe". As said before, all namespace of that file will be renamed to "PINO". Therefore, if the user declares a struct as "Gino", then the struct full name will be "PINO.Gino".
+
+### Mono.Cecil examples
+
+Conclusions
+-----------
+
+This is a "toy" compiler, whose code could be used as a starting point to build something more serious. As said at the beginning of the page, code is public domain, in order to let people do whatever they like with that.
+
+There is not much documentation on Mono.Cecil; in any case, the best resource to understand what CIL instructions op-codes mean is, as always, Wikipedia:
+
+http://en.wikipedia.org/wiki/List_of_CIL_instructions
+
+Hope you will find the contents of this repository useful :)
