@@ -116,7 +116,7 @@ print(p.x)
 print(p.y)
 ```
 
-### Loading external executable
+### Loading external executables
 
 As an extension to what was originally planned for the project, a "load" statement as been added to the language. With that statement it is possible to link an external executable, only if it was obtained by the "Dangling" compiler. Moreover, the name of the executable must follow IDs grammar and the executable itself must be placed in the same compiler directory.
 
@@ -158,3 +158,10 @@ print(isRelevant(d))
 
 Compilation process
 -------------------
+
+The compiler is based on the structure proposed by Giovanni Lagorio for the laboratory about LLVM code generation. That structure has been properly modified, so that code is now generated for the Common Language Infrastructure.
+
+The following operations are sequentially run by the compiler in order to obtain working bytecode:
+1. Input is broken into tokens, using Gppg and specification contained in [DanglingLang.l](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Tokenizer/DanglingLang.l);
+2. Tokens are checked against the grammar (produced by Gplex following specification in [DanglingLang.y](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Tokenizer/DanglingLang.y);
+3. At the same time, the abstract syntax tree is built, using the object model contained in [AST.cs](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/AST.cs);
