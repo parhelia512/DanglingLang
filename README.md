@@ -19,6 +19,7 @@ Language features
 
 The features that have been implemented during this project are:
 * Three data types: integers, booleans, records;
+* Equality operator on structs works comparing field by field;
 * Implicit variable typing;
 * Main arithmetic instructions, including power and factorial;
 * Main logic operators (and, or, not);
@@ -56,6 +57,19 @@ d2 = struct datum {struct point {4!, 3*2}, true && true}
 print(d2.p.x)
 print(d2.p.y)
 print(d2.rel)
+```
+
+Moreover, structs can be compared against each other. Comparison works by looking at each field:
+
+```
+struct point {int x; int y;}
+
+p1 = struct point {3, 4!}
+print(p1 == struct point {3, 4!})
+print(p1 == p1)
+
+p2 = struct point {5, 6^2}
+print(p1 == p2)
 ```
 
 ### Functions
@@ -166,7 +180,7 @@ The following operations are sequentially run by the compiler in order to obtain
 1. Input is broken into tokens, using Gppg and specification contained in [DanglingLang.l](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Tokenizer/DanglingLang.l);
 2. Tokens are checked against the grammar (produced by Gplex following specification in [DanglingLang.y](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Tokenizer/DanglingLang.y);
 3. At the same time, the abstract syntax tree is built, using the object model contained in [AST.cs](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/AST.cs);
-4. 4. [Type checker](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/TypecheckVisitor.cs) and [function return statement checker](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/ReturnCheckVisitor.cs) are run on the AST;
+4. [Type checker](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/TypecheckVisitor.cs) and [function return statement checker](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/ReturnCheckVisitor.cs) are run on the AST;
 5. A visitors which transforms the AST into string ([ToStringVisitor.cs](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/ToStringVisitor.cs)) is run for debugging purposes;
 6. As a last step, the visitor which generates code ([CecilVisitor.cs](https://github.com/pomma89/DanglingLang/blob/master/DanglingLang/Visitors/CecilVisitor.cs)) is run on the AST.
 
@@ -215,7 +229,87 @@ The code generation process takes that assembly and shapes it according to what 
 
 After having modified the assembly, it is written back to disk; if the script was called "PINO.txt", then the executable will be stored as "PINO.exe". As said before, all namespace of that file will be renamed to "PINO". Therefore, if the user declares a struct as "Gino", then the struct full name will be "PINO.Gino".
 
-### Mono.Cecil examples
+### Mono.Cecil example
+
+We will see a small example of how Mono.Cecil works. To achieve that, we will try to compile (by hand!) the following simple piece of code:
+
+```
+x = 10
+y = true
+if (y) {
+    print(x)
+}
+```
+
+Recalling the fact that CIL bytecode runs on a stack based machine, we have to create an instruction set similar to the following one:
+
+1. Push 10
+2. Pop and store into "x"
+3. Push "true"
+4. Pop and store into "y"
+5. Push "y" value
+6. Pop and go to [9] if value is "false"
+7. Push "x" value
+8. Pop and call "print"
+9. End
+
+Therefore, we can start translating that pseudo code into proper CIL instructions. By looking at the documentation, we obtain the following draft of translation:
+
+```
+0 ldc_i4 10      <-- Push 10
+1 stloc "x"      <-- Pop and store into "x"
+2 ldc_i4_0       <-- Push "true"
+3 stloc "y"      <-- Pop and store into "y"
+4 ldloc "y"      <-- Push "y" value
+5 brfalse 8      <-- Pop and go to [9] if value is "false"
+6 ldloc "x"      <-- Push "x" value
+7 call "print"   <-- Pop and call "print"
+8 nop            <-- End
+```
+
+That was not a precise translation, since it avoids many small details not useful for our goal. Now, what we would like to do is to inject that code into the skeleton assembly (DanglingLang.Runner); more precisely, we want that code to fill our Main method. It is at this stage that Mono.Cecil come into play; in fact, we use that to open the skeleton assembly:
+
+```
+var assembly = AssemblyDefinition.ReadAssembly("DanglingLang.Runner.exe");
+var module = Assembly.MainModule;
+```
+
+Then, from the module we can load the two static classes we need to compile our simple example, Program and SystemFunctions. We also extract two methods, Main (from Program) and PrintInt (from SystemFunctions):
+
+```
+var program = module.Types.First(t => t.Name == "Program");
+var systemFunctions = _module.Types.First(t => t.Name == "SystemFunctions");
+var main = program.Methods.First(m => m.Name == "Main");
+var printInt = systemFunctions.Methods.First(m => m.Name == "PrintInt");
+```
+
+As a last step, we clear Main body and we add the two variables we need, x and y:
+
+```
+main.Body.Instructions.Clear();
+var x = new VariableDefinition("x", module.Import(typeof(int)));
+var y = new VariableDefinition("y", module.Import(typeof(bool)));
+main.Body.Variables.Add(x);
+main.Body.Variables.Add(y);
+```
+
+Finally, by using all variables declared above, we inject the new code into the Main method and we write the assembly to disk:
+
+```
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4, 10));
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Stloc, x));
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4_1));
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Stloc, y));
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc, y));
+var nop = Instruction.Create(OpCodes.Nop);
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Brfalse, nop));
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc, x));
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Call, printInt));
+main.Body.Instructions.Add(nop);
+main.Body.Instructions.Add(Instruction.Create(OpCodes.Ret));
+
+assembly.Write(scriptName + ".exe");
+```
 
 Conclusions
 -----------
