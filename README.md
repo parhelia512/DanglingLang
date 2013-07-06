@@ -23,7 +23,8 @@ The features that have been implemented during this project are:
 * Main arithmetic instructions, including power and factorial;
 * Main logic operators (and, or, not);
 * Functions, with simple recursion (that is, not mutual);
-* Possibility to reference other "Dangling" executables.
+* Possibility to reference other "Dangling" executables;
+* A small GUI to quickly work with the compiler.
 
 ### Data types
 
@@ -38,7 +39,7 @@ print(x + y)
 print(b)
 ```
 
-While struct types must be properly declared before usage and they can be nested to allow more complex types:
+While, on the other hand, struct types must be properly declared before usage; however, they can be nested to allow more complex types:
 
 ```
 struct point {int x; int y;}
@@ -56,3 +57,104 @@ print(d2.p.x)
 print(d2.p.y)
 print(d2.rel)
 ```
+
+### Functions
+
+Function declaration (and usage) closely follows the C model. As said before, recursion is allowed, but mutual recursion is not possible. Let's see how functions work with a classical example, that is, Fibonacci numbers computation:
+
+```
+int recfib(int n) {
+    if (n <= 0) return 0
+    if (n == 1) return 1
+    return recfib(n-1) + recfib(n-2)
+}
+
+print(recfib(-1))
+print(recfib(0))
+print(recfib(1))
+print(recfib(3))
+print(recfib(5))
+
+int iterfib(int n) {
+    f0 = 0 
+    f1 = 1
+    i = 0
+    while (i < n) {  
+        tmp = f1 
+        f1 = f1 + f0 
+        f0 = tmp
+        i = i + 1 
+    }
+    return f0
+}
+
+print(iterfib(-1))
+print(iterfib(0))
+print(iterfib(1))
+print(iterfib(3))
+print(iterfib(5))
+```
+
+Functions can also work with struct types, as expected:
+
+```
+struct point {int x; int y;}
+
+struct point enlargeMyPoint(struct point p, int factor) {
+    return struct point {p.x*factor, p.y*factor}
+}
+
+int recfib(int n) {
+    if (n <= 0) return 0
+    if (n == 1) return 1
+    return recfib(n-1) + recfib(n-2)
+}
+
+p = struct point {recfib(5), recfib(6)}
+p = enlargeMyPoint(p, recfib(3))
+print(p.x)
+print(p.y)
+```
+
+### Loading external executable
+
+As an extension to what was originally planned for the project, a "load" statement as been added to the language. With that statement it is possible to link an external executable, only if it was obtained by the "Dangling" compiler. Moreover, the name of the executable must follow IDs grammar and the executable itself must be placed in the same compiler directory.
+
+Supposing the following script was compiled into "TestLoad.exe":
+
+```
+struct time {int h; int m; int s;}
+struct datum {struct time t; bool relevant;}
+
+void printTime(struct time t) {
+  print(t.h)
+  print(t.m)
+  print(t.s)
+}
+
+bool isRelevant(struct datum d) {
+  return d.relevant
+}
+
+struct time createTime(int h, int m, int s) {
+  return struct time {h, m, s}
+}
+
+t = struct time {12, 28, 34}
+printTime(t)
+```
+
+Then it can be loaded into new scripts, as in the following example:
+
+```
+load(TestLoad)
+
+t = createTime(12, 34, 27)
+printTime(t)
+
+d = struct datum {t, true}
+print(isRelevant(d))
+```
+
+Compilation process
+-------------------
