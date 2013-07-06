@@ -30,7 +30,7 @@
 
         public static string Compile(string input)
         {
-            Console.Write("# Parsing file {0}: ", input);
+            Console.Write("# Parsing {0}: ", input);
             FunctionDecl main;
             using (var file = new FileStream(input, FileMode.Open)) {
                 var scanner = new Scanner(file);
@@ -43,23 +43,23 @@
                 main = parser.Prog;
             }
 
-            Console.Write("# Type checking file {0}: ", input);
+            Console.Write("# Type checking {0}: ", input);
             var tcv = new TypecheckVisitor();
             main.Accept(tcv);
             Console.WriteLine("OK");
 
-            Console.Write("# Return checking file {0}: ", input);
+            Console.Write("# Return checking {0}: ", input);
             var rcv = new ReturnCheckVisitor();
             main.Accept(rcv);
             Console.WriteLine("OK");
 
-            Console.WriteLine("# Contents of file {0}:", input);
+            Console.WriteLine("# Contents of {0}:", input);
             var toStringVisitor = new ToStringVisitor();
             main.Accept(toStringVisitor);
             Console.Write(toStringVisitor.Result);
 
             var prefix = input.Substring(0, input.LastIndexOf('.'));
-            Console.Write("# Compiling file {0} into {1}: ", input, prefix + ".exe");
+            Console.Write("# Compiling {0} into {1}: ", input, prefix + ".exe");
             var cecilVisitor = new CecilVisitor(tcv.Assembly, tcv.Module);
             main.Accept(cecilVisitor);
             cecilVisitor.Write(prefix);
@@ -84,7 +84,7 @@
 
         static void Execute(string output)
         {
-            Console.WriteLine("# Running file {0}...", output);
+            Console.WriteLine("# Running {0}...", output);
             var process = Process.Start(output);
             Debug.Assert(process != null); // To keep ReSharper quiet :)
             process.WaitForExit();

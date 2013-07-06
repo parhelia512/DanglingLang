@@ -40,7 +40,7 @@
 
         void RunCompiler()
         {
-            File.WriteAllText(SourceFile, ScriptCodeTxt.Text);
+            File.WriteAllText(SourceFile, ScriptCodeTxt.Text + NewLine);
             var compiler = new Process {
                 StartInfo = {
                     UseShellExecute = false,
