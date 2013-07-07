@@ -10,10 +10,10 @@
     public static class Launcher
     {
         static int Main(string[] args)
-        {
-            Raise<InvalidOperationException>.If(args.Length == 0 || args.Length > 2,  "Wrong argument count!");
-            Raise<InvalidOperationException>.If(args.Length == 2 && args[0] != "-e",  "Wrong flag!");
+        {           
             try {
+                Raise<Exception>.If(args.Length == 0 || args.Length > 2,  "Wrong argument count!");
+                Raise<Exception>.If(args.Length == 2 && args[0] != "-e",  "Wrong flag!");
                 if (args.Length == 2) {
                     var output = Compile(args[1]);
                     Execute(output);
