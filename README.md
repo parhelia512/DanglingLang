@@ -229,6 +229,87 @@ The code generation process takes that assembly and shapes it according to what 
 
 After having modified the assembly, it is written back to disk; if the script was called "PINO.txt", then the executable will be stored as "PINO.exe". As said before, all namespace of that file will be renamed to "PINO". Therefore, if the user declares a struct as "Gino", then the struct full name will be "PINO.Gino".
 
+### Structs translation
+
+To understand how structs are translated, we can see how the following code (contained, for example, in "PINO.txt") would be changed. Remember that, of course, what we produce is CIL bytecode, not C# code: however, transformed code will be shown as C# code, to better understand what's going on. Therefore, the following example:
+
+```
+struct A {int x; bool y;}
+struct B {int x; bool y; struct A z;}
+
+a = struct A {3, true}
+b = struct B {5, false, struct A {7, true}}
+c = (a == b.z)
+```
+
+Gets translated into:
+
+```
+namespace PINO {
+	public sealed class A {
+		public int x;
+		public bool y;
+		
+		public A(int _x, bool _y) {
+			x = _x;
+			y = _y;
+		}
+		
+		public bool MyEquals(A other) {
+			return x == other.x && y == other.y;
+		}
+	}
+
+	public sealed class B {
+		public int x;
+		public bool y;
+		public A z;
+		
+		public B(int _x, bool _y, A _z) {
+			x = _x;
+			y = _y;
+			z = _z;
+		}
+		
+		public bool MyEquals(B other) {
+			return x == other.x && y == other.y && z.MyEquals(other.z);
+		}
+	}
+}
+
+var a = new A(3, true);
+var b = new B(5, false, new A(7, true));
+var c = a.MyEquals(b.z);
+```
+
+### Functions translation
+
+Functions are simply translated into static methods of the UserFunctions class. Therefore, following code:
+
+```
+void myPrint(int x) {
+	print(x)
+}
+
+bool isNeg(int x) {
+	return x < 0
+}
+```
+
+Gets translated into:
+
+```
+public static class UserFunctions {
+	public static void myPrint(int x) {
+		SystemFunctions.PrintInt(x);
+	}
+	
+	public static bool isNeg(int x) {
+		return x < 0;
+	}
+}
+```
+
 ### Mono.Cecil example
 
 We will see a small example of how Mono.Cecil works. To achieve that, we will try to compile (by hand!) the following simple piece of code:
