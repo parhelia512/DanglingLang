@@ -37,5 +37,56 @@
             AddLine("print(42)");
             Execute(new[] {"0", "1", "2", "3", "4", "42"});
         }
+
+        [Test]
+        public void StructEqualityCond()
+        {
+            AddLine("struct test {int x; bool y;}         ");
+            AddLine("i = 0                                ");
+            AddLine("t = struct test {0, false}           ");
+            AddLine("while (t == struct test {0, false}) {");
+            AddLine("    print(i)                         ");
+            AddLine("    i = i + 1                        ");
+            AddLine("    if (i == 5) {                    ");
+            AddLine("        t = struct test {1, true}    ");
+            AddLine("    }                                ");
+            AddLine("}                                    ");
+            AddLine("print(42)                            ");
+            Execute(new[] {"0", "1", "2", "3", "4", "42"});        
+        }
+
+        [Test]
+        public void StructMemberEqualityCond()
+        {
+            AddLine("struct test {int x; bool y;}         ");
+            AddLine("i = 0                                ");
+            AddLine("t = struct test {0, true}           ");
+            AddLine("while (t.x == 0 && t.y) {");
+            AddLine("    print(i)                         ");
+            AddLine("    i = i + 1                        ");
+            AddLine("    if (i == 5) {                    ");
+            AddLine("        t = struct test {0, false}   ");
+            AddLine("    }                                ");
+            AddLine("}                                    ");
+            AddLine("print(42)                            ");
+            Execute(new[] {"0", "1", "2", "3", "4", "42"});        
+        }
+
+        [Test]
+        public void FunctionCallEqualityCond()
+        {
+            AddLine("struct test {int x; bool y;}         ");
+            AddLine("i = 0                                ");
+            AddLine("t = struct test {0, true}           ");
+            AddLine("while (t.x == 0 && t.y) {");
+            AddLine("    print(i)                         ");
+            AddLine("    i = i + 1                        ");
+            AddLine("    if (i == 5) {                    ");
+            AddLine("        t = struct test {0, false}   ");
+            AddLine("    }                                ");
+            AddLine("}                                    ");
+            AddLine("print(42)                            ");
+            Execute(new[] {"0", "1", "2", "3", "4", "42"});        
+        }
     }
 }

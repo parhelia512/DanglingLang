@@ -34,12 +34,34 @@
 
         [Test]
         [ExpectedException(typeof(TypeCheckException))]
+        public void RedefineLoadedType_Before()
+        {      
+            AddLine("struct time {int i; bool b;}");
+            AddLine("load(TestLoad)");
+            AddLine("t = struct time {1, true}");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
         public void RedefineLoadedFunction()
         {
             AddLine("load(TestLoad)           ");
             AddLine("void printTime(int sec) {");
             AddLine("    print(sec)           ");
             AddLine("}                        ");
+            AddLine("printTime(3600)          ");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void RedefineLoadedFunction_Before()
+        {
+            AddLine("void printTime(int sec) {");
+            AddLine("    print(sec)           ");
+            AddLine("}                        ");
+            AddLine("load(TestLoad)           ");
             AddLine("printTime(3600)          ");
             CheckCode();
         }

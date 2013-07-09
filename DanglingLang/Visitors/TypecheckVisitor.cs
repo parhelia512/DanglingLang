@@ -496,14 +496,14 @@
         Type GetType(string name)
         {
             name = name.ToLower();
-            Raise<ArgumentException>.If(!_types.ContainsKey(name), "Type does not exist.");
+            Raise<TypeCheckException>.If(!_types.ContainsKey(name), "Type does not exist.");
             return _types[name];
         }
 
         StructType GetStructType(string name)
         {
             name = name.ToLower();
-            Raise<ArgumentException>.If(!_structTypes.ContainsKey(name), "Type does not exist.");
+            Raise<TypeCheckException>.If(!_structTypes.ContainsKey(name), "Type does not exist.");
             return _structTypes[name];
         }
 

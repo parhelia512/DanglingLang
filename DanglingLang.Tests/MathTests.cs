@@ -83,5 +83,15 @@
             AddLine("print(+x++7)");
             Execute(new[] {"10", "17", "14"});
         }
+
+        [Test]
+        public void Remainder()
+        {
+            AddLine("print(5%2)");
+            AddLine("print(5!%10^2)");
+            AddLine("x = 7%1");
+            AddLine("print(x)");
+            Execute(new[] {"1", "20", "0"});
+        }
     }
 }

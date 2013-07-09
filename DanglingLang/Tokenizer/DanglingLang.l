@@ -26,7 +26,7 @@
 \<=							{ return (int) Tokens.LEQ; }
 \<							{ return (int) Tokens.LESS_THAN; }
 \.							{ return (int) Tokens.DOT; }
-\+|\-|\*|\/|\^|n|\(|\)|,|!|\{|\}|\~|=|;	{ return yytext[0]; }
+\%|\+|\-|\*|\/|\^|n|\(|\)|,|!|\{|\}|\~|=|;	{ return yytext[0]; }
 .							{ Console.WriteLine("Invalid char: {0}", yytext[0]); }
 
 %%

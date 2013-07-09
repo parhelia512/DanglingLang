@@ -116,6 +116,25 @@
 
         [Test]
         [ExpectedException(typeof(ReturnCheckException))]
+        public void SimpleFunction_ReturnOnlyInsideIf()
+        {
+            AddLine("bool isFive(int x) { ");
+            AddLine("    if (x == 5) {    ");
+            AddLine("        return true  ");
+            AddLine("    }                ");
+            AddLine("    if (x == 5) {    ");
+            AddLine("        return false ");
+            AddLine("    }                ");
+            AddLine("}                    ");
+            AddLine("x = isFive(5)        ");
+            AddLine("print(isFive(7))     ");
+            AddLine("print(x)             ");
+            AddLine("print(x && isFive(1))");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(ReturnCheckException))]
         public void SimpleFunction_StatementsAfterReturn()
         {
             AddLine("int returnFive() {   ");
@@ -224,25 +243,17 @@
             CheckCode();
         }
 
-        public sealed class time
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void RedefineFunction()
         {
-            public int x;
-            public bool y;
-
-            public bool Equals(time other)
-            {
-                return x == other.x && y == other.y;
-            }
-
-            public void test(bool x, bool y)
-            {
-                if (x && y) {
-                    System.Console.Write('b');
-                }
-                if (x || y) {
-                    System.Console.Write('c');
-                }
-            }
+            AddLine("int returnFive() {     ");
+            AddLine("    return 5           ");
+            AddLine("}                      ");
+            AddLine("int returnFive(int x) {");
+            AddLine("    return x*5         ");
+            AddLine("}                      ");
+            CheckCode();
         }
     }
 }

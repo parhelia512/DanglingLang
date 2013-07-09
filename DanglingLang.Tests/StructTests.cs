@@ -158,5 +158,22 @@ namespace DanglingLang.Tests
             AddLine("print(f.f3)");
             Execute(new[] {"True", "False", "False", "True", "True"});
         }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void RedefineStruct()
+        {
+            AddLine("struct bools {bool f1; bool f2; bool f3;}");
+            AddLine("struct bools {int f1; bool f2; struct bools f3;}");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void RecursiveStruct()
+        {
+            AddLine("struct bools {bool f1; bool f2; struct bools f3;}");
+            CheckCode();
+        }
     }
 }
