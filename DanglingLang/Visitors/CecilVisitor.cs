@@ -233,7 +233,7 @@
         public void Visit(StructDecl structDecl)
         {
             // Each field is added to the struct type...
-            const FieldAttributes fieldAttr = FieldAttributes.Public;
+            const FieldAttributes fieldAttr = FieldAttributes.Public | FieldAttributes.InitOnly;
             var typeDef = structDecl.Type.Reference as TypeDefinition;
             Debug.Assert(typeDef != null);
             foreach (var f in structDecl.Type.Fields) {

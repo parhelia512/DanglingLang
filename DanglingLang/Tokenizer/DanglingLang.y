@@ -12,9 +12,11 @@
 }
 %token <intValue> NUM
 %token <identifier> ID
-%token MAX MIN NEWLINE IF WHILE STRUCT PRINT TRUE FALSE AND OR EQUAL LESS_THAN LEQ DOT
 %token BOOL INT VOID /* Types */
-%token LOAD RETURN /* Keywords */
+%token IF LOAD RETURN STRUCT WHILE /* Keywords */
+%token TRUE FALSE /* Literals */
+%token AND DOT EQUAL LEQ LESS_THAN MAX MIN OR PRINT /* Operators */
+%token NEWLINE
 %left OR
 %left AND
 %left EQUAL 

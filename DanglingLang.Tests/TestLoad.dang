@@ -1,4 +1,8 @@
+/* Structs representing clock time */
 struct time {int h; int m; int s;}
+
+/* A multiline comment,
+   just for testing purposes! */
 struct datum {struct time t; bool relevant;}
 
 void printTime(struct time t) {

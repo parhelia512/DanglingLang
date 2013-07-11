@@ -1,5 +1,13 @@
 %namespace DanglingLang.Tokenizer
+%x COMMENT
 %%
+
+"/*"                     BEGIN(COMMENT);
+<COMMENT>[^*\n]*         /* eat anything that’s not a ’*’ */
+<COMMENT>"*"+[^*/\n]*    /* eat up ’*’s not followed by ’/’s */
+<COMMENT>\n              /* ... */
+<COMMENT>"*"+"/"         BEGIN(INITIAL);
+
 \n|\r\n?					{ return (int) Tokens.NEWLINE; }
 [0-9]+						{ yylval.intValue = int.Parse(yytext); return (int) Tokens.NUM; }
 [ \t]						/* empty */

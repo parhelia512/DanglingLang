@@ -477,9 +477,9 @@
             
             const string nmsp = "DanglingLang.Runner";
             const TypeAttributes typeAttr =
-                TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.AnsiClass |
-                TypeAttributes.AutoClass | TypeAttributes.BeforeFieldInit;
-            var typeDef = new TypeDefinition(nmsp, name, typeAttr) {BaseType = Module.Import(typeof(object))};
+                TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.AnsiClass |
+                TypeAttributes.BeforeFieldInit | TypeAttributes.SequentialLayout;
+            var typeDef = new TypeDefinition(nmsp, name, typeAttr, Module.Import(typeof(object)));
 
             var type = new StructType(name, typeDef);
             foreach (var f in decl.Fields) {

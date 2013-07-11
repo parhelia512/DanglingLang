@@ -13,6 +13,7 @@ The tools that have been used to realize this project were:
 * Garden Points Parser Generator: http://gppg.codeplex.com/
 * Mono.Cecil: http://www.mono-project.com/Cecil
 * NUnit: http://en.wikipedia.org/wiki/NUnit
+* ScintillaNET: http://scintillanet.codeplex.com
 
 Language features
 -----------------
@@ -25,7 +26,8 @@ The features that have been implemented during this project are:
 * Main logic operators (and, or, not);
 * Functions, with simple recursion (that is, not mutual);
 * Possibility to reference other "Dangling" executables;
-* A small GUI to quickly work with the compiler.
+* A small GUI (based on ScintillaNET) to quickly work with the compiler;
+* C-like comments.
 
 ### Data types
 
