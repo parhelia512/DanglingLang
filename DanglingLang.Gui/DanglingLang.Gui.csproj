@@ -38,6 +38,10 @@
     <ApplicationIcon>MisterDangling.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ScintillaNET, Version=2.5.2.0, Culture=neutral, PublicKeyToken=948d6c9751444115, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ScintillaNET\ScintillaNET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
@@ -87,6 +91,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MisterDangling.ico" />
+    <Content Include="ScintillaNET\License.txt" />
+    <Content Include="ScintillaNET\ReadMe.htm" />
+    <Content Include="ScintillaNET\SciLexer.dll" />
+    <Content Include="ScintillaNET\SciLexer64.dll" />
+    <Content Include="ScintillaNET\ScintillaNET.dll" />
+    <Content Include="ScintillaNET\ScintillaNET.pdb" />
+    <Content Include="ScintillaNET\ScintillaNET.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DanglingLang.Runner\DanglingLang.Runner.csproj">
@@ -100,6 +111,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>echo F | xcopy "$(ProjectDir)ScintillaNET\SciLexer.dll" "$(TargetDir)SciLexer.dll" /C /D /Y
+echo F | xcopy "$(ProjectDir)ScintillaNET\SciLexer64.dll" "$(TargetDir)SciLexer64.dll" /C /D /Y</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

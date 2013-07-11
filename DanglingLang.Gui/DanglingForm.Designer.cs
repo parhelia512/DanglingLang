@@ -32,15 +32,14 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ScriptCodeTxt = new System.Windows.Forms.TextBox();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
+            this.CompileBtn = new System.Windows.Forms.Button();
+            this.ClearBtn = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ScriptOutputTxt = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.CompilerOutputTxt = new System.Windows.Forms.TextBox();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.CompileBtn = new System.Windows.Forms.Button();
-            this.ClearBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -49,17 +48,16 @@
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
-            this.splitContainer4.Panel1.SuspendLayout();
-            this.splitContainer4.Panel2.SuspendLayout();
-            this.splitContainer4.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -100,30 +98,59 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.ScriptCodeTxt);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox1.Size = new System.Drawing.Size(481, 591);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Script code";
             // 
-            // ScriptCodeTxt
+            // splitContainer4
             // 
-            this.ScriptCodeTxt.AcceptsReturn = true;
-            this.ScriptCodeTxt.AcceptsTab = true;
-            this.ScriptCodeTxt.BackColor = System.Drawing.Color.DimGray;
-            this.ScriptCodeTxt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ScriptCodeTxt.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ScriptCodeTxt.ForeColor = System.Drawing.Color.Honeydew;
-            this.ScriptCodeTxt.Location = new System.Drawing.Point(3, 16);
-            this.ScriptCodeTxt.Multiline = true;
-            this.ScriptCodeTxt.Name = "ScriptCodeTxt";
-            this.ScriptCodeTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.ScriptCodeTxt.Size = new System.Drawing.Size(475, 572);
-            this.ScriptCodeTxt.TabIndex = 0;
-            this.ScriptCodeTxt.WordWrap = false;
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.IsSplitterFixed = true;
+            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Name = "splitContainer4";
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.CompileBtn);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.ClearBtn);
+            this.splitContainer4.Size = new System.Drawing.Size(481, 86);
+            this.splitContainer4.SplitterDistance = 239;
+            this.splitContainer4.TabIndex = 0;
+            // 
+            // CompileBtn
+            // 
+            this.CompileBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CompileBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CompileBtn.Location = new System.Drawing.Point(0, 0);
+            this.CompileBtn.Name = "CompileBtn";
+            this.CompileBtn.Padding = new System.Windows.Forms.Padding(6);
+            this.CompileBtn.Size = new System.Drawing.Size(239, 86);
+            this.CompileBtn.TabIndex = 0;
+            this.CompileBtn.Text = "Compile && Run (F5)";
+            this.CompileBtn.UseVisualStyleBackColor = true;
+            this.CompileBtn.Click += new System.EventHandler(this.CompileBtn_Click);
+            // 
+            // ClearBtn
+            // 
+            this.ClearBtn.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ClearBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ClearBtn.Location = new System.Drawing.Point(0, 0);
+            this.ClearBtn.Name = "ClearBtn";
+            this.ClearBtn.Padding = new System.Windows.Forms.Padding(6);
+            this.ClearBtn.Size = new System.Drawing.Size(238, 86);
+            this.ClearBtn.TabIndex = 0;
+            this.ClearBtn.Text = "Clear (F6)";
+            this.ClearBtn.UseVisualStyleBackColor = true;
+            this.ClearBtn.Click += new System.EventHandler(this.ClearBtn_Click);
             // 
             // splitContainer2
             // 
@@ -148,8 +175,10 @@
             // 
             this.groupBox2.Controls.Add(this.ScriptOutputTxt);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox2.Size = new System.Drawing.Size(459, 360);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
@@ -159,15 +188,15 @@
             // 
             this.ScriptOutputTxt.AcceptsReturn = true;
             this.ScriptOutputTxt.AcceptsTab = true;
-            this.ScriptOutputTxt.BackColor = System.Drawing.Color.DimGray;
+            this.ScriptOutputTxt.BackColor = System.Drawing.Color.White;
             this.ScriptOutputTxt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ScriptOutputTxt.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ScriptOutputTxt.ForeColor = System.Drawing.Color.Honeydew;
-            this.ScriptOutputTxt.Location = new System.Drawing.Point(3, 16);
+            this.ScriptOutputTxt.ForeColor = System.Drawing.Color.Black;
+            this.ScriptOutputTxt.Location = new System.Drawing.Point(6, 23);
             this.ScriptOutputTxt.Multiline = true;
             this.ScriptOutputTxt.Name = "ScriptOutputTxt";
             this.ScriptOutputTxt.ReadOnly = true;
-            this.ScriptOutputTxt.Size = new System.Drawing.Size(453, 341);
+            this.ScriptOutputTxt.Size = new System.Drawing.Size(447, 331);
             this.ScriptOutputTxt.TabIndex = 0;
             this.ScriptOutputTxt.WordWrap = false;
             // 
@@ -175,8 +204,10 @@
             // 
             this.groupBox3.Controls.Add(this.CompilerOutputTxt);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
             this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox3.Size = new System.Drawing.Size(459, 317);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
@@ -186,58 +217,18 @@
             // 
             this.CompilerOutputTxt.AcceptsReturn = true;
             this.CompilerOutputTxt.AcceptsTab = true;
-            this.CompilerOutputTxt.BackColor = System.Drawing.Color.DimGray;
+            this.CompilerOutputTxt.BackColor = System.Drawing.Color.White;
             this.CompilerOutputTxt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CompilerOutputTxt.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CompilerOutputTxt.ForeColor = System.Drawing.Color.Honeydew;
-            this.CompilerOutputTxt.Location = new System.Drawing.Point(3, 16);
+            this.CompilerOutputTxt.ForeColor = System.Drawing.Color.Black;
+            this.CompilerOutputTxt.Location = new System.Drawing.Point(6, 23);
             this.CompilerOutputTxt.Multiline = true;
             this.CompilerOutputTxt.Name = "CompilerOutputTxt";
             this.CompilerOutputTxt.ReadOnly = true;
             this.CompilerOutputTxt.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.CompilerOutputTxt.Size = new System.Drawing.Size(453, 298);
+            this.CompilerOutputTxt.Size = new System.Drawing.Size(447, 288);
             this.CompilerOutputTxt.TabIndex = 0;
             this.CompilerOutputTxt.WordWrap = false;
-            // 
-            // splitContainer4
-            // 
-            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer4.IsSplitterFixed = true;
-            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer4.Name = "splitContainer4";
-            // 
-            // splitContainer4.Panel1
-            // 
-            this.splitContainer4.Panel1.Controls.Add(this.CompileBtn);
-            // 
-            // splitContainer4.Panel2
-            // 
-            this.splitContainer4.Panel2.Controls.Add(this.ClearBtn);
-            this.splitContainer4.Size = new System.Drawing.Size(481, 86);
-            this.splitContainer4.SplitterDistance = 240;
-            this.splitContainer4.TabIndex = 0;
-            // 
-            // CompileBtn
-            // 
-            this.CompileBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CompileBtn.Location = new System.Drawing.Point(0, 0);
-            this.CompileBtn.Name = "CompileBtn";
-            this.CompileBtn.Size = new System.Drawing.Size(240, 86);
-            this.CompileBtn.TabIndex = 0;
-            this.CompileBtn.Text = "Compile && Run";
-            this.CompileBtn.UseVisualStyleBackColor = true;
-            this.CompileBtn.Click += new System.EventHandler(this.CompileBtn_Click);
-            // 
-            // ClearBtn
-            // 
-            this.ClearBtn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ClearBtn.Location = new System.Drawing.Point(0, 0);
-            this.ClearBtn.Name = "ClearBtn";
-            this.ClearBtn.Size = new System.Drawing.Size(237, 86);
-            this.ClearBtn.TabIndex = 0;
-            this.ClearBtn.Text = "Clear";
-            this.ClearBtn.UseVisualStyleBackColor = true;
-            this.ClearBtn.Click += new System.EventHandler(this.ClearBtn_Click);
             // 
             // DanglingForm
             // 
@@ -246,6 +237,7 @@
             this.ClientSize = new System.Drawing.Size(944, 681);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "DanglingForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DanglingForm";
@@ -257,8 +249,10 @@
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+            this.splitContainer4.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -267,10 +261,6 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
-            this.splitContainer4.Panel1.ResumeLayout(false);
-            this.splitContainer4.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
-            this.splitContainer4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -279,7 +269,6 @@
 
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox ScriptCodeTxt;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox ScriptOutputTxt;
