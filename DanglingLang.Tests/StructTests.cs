@@ -5,6 +5,45 @@ namespace DanglingLang.Tests
     public sealed class StructTests : TestBase
     {
         [Test]
+        public void CopiesDoNotShareChanges()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("t1 = struct time {12, 10, 15}");
+            AddLine("t2 = t1");
+            AddLine("t1.h = 3!");
+            AddLine("t1.m = t1.h * t1.s");
+            AddLine("t1.s = 3");
+            AddLine("print(t1.h)");
+            AddLine("print(t1.m)");
+            AddLine("print(t1.s)");
+            AddLine("print(t2.h)");
+            AddLine("print(t2.m)");
+            AddLine("print(t2.s)");
+            Execute(new[] {"6", "90", "3", "12", "10", "15"});
+        }
+
+        [Test]
+        public void SimpleStruct_FieldAssignment()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("t1 = struct time {12, 10, 15}");
+            AddLine("t1.h = 3!");
+            AddLine("t1.m = t1.h * t1.s");
+            AddLine("t1.s = 3");
+            AddLine("print(t1.h)");
+            AddLine("print(t1.m)");
+            AddLine("print(t1.s)");
+            AddLine("x = 2");
+            AddLine("t1.h = 2*3!");
+            AddLine("t1.m = 2* t1.h * t1.s");
+            AddLine("t1.s = 2*3");
+            AddLine("print(t1.h)");
+            AddLine("print(t1.m)");
+            AddLine("print(t1.s)");
+            Execute(new[] {"6", "90", "3", "12", "72", "6"});
+        }
+
+        [Test]
         public void SimpleStruct()
         {
             AddLine("struct time {int h; int m; int s;}");
@@ -27,6 +66,15 @@ namespace DanglingLang.Tests
 
         [Test]
         [ExpectedException(typeof(TypeCheckException))]
+        public void WrongField()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("t1.no.no = 6");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
         public void WrongFieldCount()
         {
             AddLine("struct time {int h; int m; int s;}");
@@ -40,6 +88,16 @@ namespace DanglingLang.Tests
         {
             AddLine("struct time {int h; int m; int s;}");
             AddLine("t1 = struct time {12, 10, true}");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void WrongFieldType_Assignment()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("t1 = struct time {12, 10, 15}");
+            AddLine("t1.h = struct time {12, 10, 15}");
             CheckCode();
         }
 
@@ -86,6 +144,29 @@ namespace DanglingLang.Tests
             AddLine("print(t3.t2.m)");
             AddLine("print(t3.t2.s)");
             Execute(new[] {"12", "10", "15", "16", "22", "35", "16", "22", "35", "12", "10", "15"});
+        }
+
+        [Test]
+        public void NestedStructs_FieldAssignment()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("struct twoTime {struct time t1; struct time t2;}");
+            AddLine("t1 = struct time {12, 10, 15}");
+            AddLine("t2 = struct time {16, 22, 35}");
+            AddLine("t3 = struct twoTime {t1, t2}");
+            AddLine("t3.t1.m = t3.t2.h + t3.t2.s");
+            AddLine("t3.t2.m = t3.t1.h + t3.t1.s");
+            AddLine("print(t3.t1.h)");
+            AddLine("print(t3.t1.m)");
+            AddLine("print(t3.t1.s)");
+            AddLine("print(t3.t2.h)");
+            AddLine("print(t3.t2.m)");
+            AddLine("print(t3.t2.s)");
+            AddLine("t3.t1 = struct time {24, 21, 18}");
+            AddLine("print(t3.t1.h)");
+            AddLine("print(t3.t1.m)");
+            AddLine("print(t3.t1.s)");
+            Execute(new[] {"12", "51", "15", "16", "27", "35", "24", "21", "18"});
         }
 
         [Test]

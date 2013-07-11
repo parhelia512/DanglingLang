@@ -212,11 +212,12 @@
 
         public void Visit(Id id)
         {
-            if (id.Var.IsParam) {
+            if (id.Var.Kind == StaticEnvBase.Kind.Param) {
                 var paramInfo = id.Var.Info as FunctionDecl.ParamInfo;
                 Debug.Assert(paramInfo != null);
                 _instructions.Add(Instruction.Create(OpCodes.Ldarg, paramInfo.Reference));
             } else {
+                Debug.Assert(id.Var.Kind == StaticEnvBase.Kind.Var);
                 var varInfo = id.Var.Info as FunctionDecl.VarInfo;
                 Debug.Assert(varInfo != null);
                 _instructions.Add(Instruction.Create(OpCodes.Ldloc, varInfo.Reference));
@@ -233,7 +234,7 @@
         public void Visit(StructDecl structDecl)
         {
             // Each field is added to the struct type...
-            const FieldAttributes fieldAttr = FieldAttributes.Public | FieldAttributes.InitOnly;
+            const FieldAttributes fieldAttr = FieldAttributes.Public;
             var typeDef = structDecl.Type.Reference as TypeDefinition;
             Debug.Assert(typeDef != null);
             foreach (var f in structDecl.Type.Fields) {
@@ -358,15 +359,22 @@
 
         public void Visit(Assignment asg)
         {
+            if (asg.LoadExp != null) {
+                asg.LoadExp.Accept(this);
+            }
             asg.Exp.Accept(this);
-            if (asg.Var.IsParam) {
+            if (asg.Var.Kind == StaticEnvBase.Kind.Param) {
                 var paramInfo = asg.Var.Info as FunctionDecl.ParamInfo;
                 Debug.Assert(paramInfo != null);
                 _instructions.Add(Instruction.Create(OpCodes.Starg, paramInfo.Reference));
-            } else {
+            } else if (asg.Var.Kind == StaticEnvBase.Kind.Var) {
                 var varInfo = asg.Var.Info as FunctionDecl.VarInfo;
                 Debug.Assert(varInfo != null);
                 _instructions.Add(Instruction.Create(OpCodes.Stloc, varInfo.Reference));
+            } else {
+                var fieldInfo = asg.Var.Info as StructType.FieldInfo;
+                Debug.Assert(fieldInfo != null);
+                _instructions.Add(Instruction.Create(OpCodes.Stfld, fieldInfo.Reference));
             }
         }
 

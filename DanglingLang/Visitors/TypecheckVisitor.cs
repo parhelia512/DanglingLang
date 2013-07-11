@@ -85,17 +85,22 @@
         {
             public readonly string Name;
             public readonly Type Type;
-            public readonly bool IsParam;
+            public readonly Kind Kind;
             public readonly object Info;
 
-            public VarInfo(string name, Type type, bool isParam, object info)
+            public VarInfo(string name, Type type, Kind kind, object info)
             {
                 Name = name;
                 Type = type;
-                IsParam = isParam;
-                Debug.Assert(info is FunctionDecl.ParamInfo || info is FunctionDecl.VarInfo);
+                Kind = kind;
+                Debug.Assert(info is FunctionDecl.ParamInfo || info is FunctionDecl.VarInfo || info is StructType.FieldInfo);
                 Info = info;
             }
+        }
+
+        public enum Kind
+        {
+            Param, Var, Field
         }
     }
 
@@ -336,7 +341,7 @@
             foreach (var p in funcDecl.Params) {
                 p.Type = GetType(p.TypeName);
                 Raise<TypeCheckException>.IfAreSame(p.Type, _voidType, "Struct fields cannot be void");
-                var vInfo = new StaticEnvBase.VarInfo(p.Name, p.Type, true, p);
+                var vInfo = new StaticEnvBase.VarInfo(p.Name, p.Type, StaticEnvBase.Kind.Param, p);
                 _staticEnv.SetVariable(p.Name, vInfo);
             }
             _funcDecls.Add(funcDecl.Name, funcDecl); // Must be put here to allow recursion...
@@ -349,17 +354,27 @@
 
         public void Visit(Assignment asg)
         {
+            if (asg.LoadExp != null) {
+                asg.LoadExp.Accept(this);
+            }
             asg.Exp.Accept(this);
             var varName = asg.VarName;
             StaticEnvBase.VarInfo varInfo;
-            if (_staticEnv.TryGetVariable(varName, out varInfo)) {
+            if (asg.LoadExp != null) {
+                var structType = asg.LoadExp.Type as StructType;
+                Raise<TypeCheckException>.IfIsNull(structType, "Can apply dot only on structs");
+                var field = structType.Fields.FirstOrDefault(f => f.Name == varName);
+                Raise<TypeCheckException>.IfIsNull(field, "Given struct type has not given field");
+                Raise<TypeCheckException>.IfAreNotSame(field.Type, asg.Exp.Type, "Wrong type in assignment");
+                varInfo = new StaticEnvBase.VarInfo(varName, asg.Exp.Type, StaticEnvBase.Kind.Field, field);
+            } else if (_staticEnv.TryGetVariable(varName, out varInfo)) {
                 if (!varInfo.Type.Equals(_result)) {
                     throw new TypeCheckException(string.Format(
                         "Cannot re-assign {0} with a value of different type", varName));
                 }
             } else {
                 var info = _currFunc.AddVariable(varName, asg.Exp.Type);
-                varInfo = new StaticEnvBase.VarInfo(varName, asg.Exp.Type, false, info);
+                varInfo = new StaticEnvBase.VarInfo(varName, asg.Exp.Type, StaticEnvBase.Kind.Var, info);
                 _staticEnv.SetVariable(varName, varInfo);
             }
             asg.Var = varInfo;

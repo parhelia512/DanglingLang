@@ -527,23 +527,15 @@
     sealed class Assignment : Stmt
     {
         public StaticEnvBase.VarInfo Var;
-        readonly Exp _exp;
-        readonly string _varName;
+        public readonly Exp Exp;
+        public readonly string VarName;
+        public readonly Exp LoadExp;
 
-        public Assignment(string varName, Exp exp)
+        public Assignment(string varName, Exp exp, Exp loadExp)
         {
-            _varName = varName;
-            _exp = exp;
-        }
-
-        public string VarName
-        {
-            get { return _varName; }
-        }
-
-        public Exp Exp
-        {
-            get { return _exp; }
+            VarName = varName;
+            Exp = exp;
+            LoadExp = loadExp;
         }
 
         public override void Accept(ITreeNodeVisitor visitor)

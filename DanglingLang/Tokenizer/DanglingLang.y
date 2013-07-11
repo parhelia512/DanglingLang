@@ -63,7 +63,8 @@ stmts: /* Empty */ {$$ = new List<Stmt>();}
 	 ;
 
 stmt: NEWLINE {$$ = null;}
-	| ID '=' exp NEWLINE {$$ = new Assignment($1, $3);}
+	| exp DOT ID '=' exp NEWLINE {$$ = new Assignment($3, $5, loadExp: $1);}
+	| ID '=' exp NEWLINE {$$ = new Assignment($1, $3, loadExp: null);}
 	| exp {$$ = new EvalExp($1);}
 	| '{' stmts '}' {$$ = new Block($2);}
 	| IF '(' exp ')' stmt {$$ = new If($3, $5 ?? new Block(new List<Stmt>()));}

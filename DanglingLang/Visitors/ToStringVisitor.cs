@@ -223,6 +223,10 @@
         public void Visit(Assignment asg)
         {
             Indent();
+            if (asg.LoadExp != null) {
+                asg.LoadExp.Accept(this);
+                _sb.Append(".");
+            }
             _sb.Append(asg.Var == null ? asg.VarName : asg.Var.Name);
             _sb.Append(" = ");
             asg.Exp.Accept(this);
