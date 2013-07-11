@@ -132,6 +132,25 @@ print(p.x)
 print(p.y)
 ```
 
+However, there are no "global" variables, that is, variables declared at top level are not visible inside functions. For example, following code won't compile:
+
+```
+x = 10
+void wrong() {
+	print(x) /* x is not visible */
+}
+```
+
+While it is possible to use names of outer variables inside functions:
+
+```
+x = 10
+void ok(int x) {
+	print(x)
+}
+ok(x)
+```
+
 ### Loading external executables
 
 As an extension to what was originally planned for the project, a "load" statement as been added to the language. With that statement it is possible to link an external executable, only if it was obtained by the "Dangling" compiler. Moreover, the name of the executable must follow IDs grammar and the executable itself must be placed in the same compiler directory.

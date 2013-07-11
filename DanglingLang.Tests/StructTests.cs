@@ -26,6 +26,24 @@ namespace DanglingLang.Tests
         }
 
         [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void WrongFieldCount()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("t1 = struct time {12, 10, 15, 14}");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void WrongFieldType()
+        {
+            AddLine("struct time {int h; int m; int s;}");
+            AddLine("t1 = struct time {12, 10, true}");
+            CheckCode();
+        }
+
+        [Test]
         public void SimpleStruct_WithExps()
         {
             AddLine("struct time {int h; int m; int s;}");

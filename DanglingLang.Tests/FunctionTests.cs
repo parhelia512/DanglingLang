@@ -5,6 +5,50 @@
     public sealed class FunctionTests : TestBase
     {
         [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void GlobalVariable()
+        {
+            AddLine("x = 10                            ");
+            AddLine("void wrong() {                    ");
+            AddLine("	print(x) /* x is not visible */");
+            AddLine("}                                 ");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void WrongParameterCount()
+        {
+            AddLine("void wrong(int x) {");
+            AddLine("	print(x)        ");
+            AddLine("}                  ");
+            AddLine("wrong(5, 5)        ");
+            CheckCode();
+        }
+
+        [Test]
+        [ExpectedException(typeof(TypeCheckException))]
+        public void WrongParameterType()
+        {
+            AddLine("void wrong(int x) {");
+            AddLine("	print(x)        ");
+            AddLine("}                  ");
+            AddLine("wrong(true)        ");
+            CheckCode();
+        }
+
+        [Test]
+        public void SameNameOfGlobalVariable()
+        {
+            AddLine("x = 10          ");
+            AddLine("void ok(int x) {");
+            AddLine("	print(x)     ");
+            AddLine("}               ");
+            AddLine("ok(x)           ");
+            Execute(new[] {"10"});
+        }
+
+        [Test]
         [ExpectedException(typeof(ParseException))]
         public void NestedFunctions()
         {

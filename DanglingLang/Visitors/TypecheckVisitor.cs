@@ -1,6 +1,5 @@
 ﻿namespace DanglingLang.Visitors
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
@@ -44,7 +43,7 @@
 
         public FieldInfo AddField(string name, Type type)
         {
-            Raise<TypeCheckException>.If(_fields.Any(f => f.Name == name));
+            Raise<TypeCheckException>.If(_fields.Any(f => f.Name == name), "Field with existing name");
             var fieldInfo = new FieldInfo(name, type);
             _fields.Add(fieldInfo);
             return fieldInfo;
@@ -255,7 +254,7 @@
         {
             dot.Left.Accept(this);
             var st = dot.Left.Type as StructType;
-            Raise<TypeCheckException>.IfIsNull(st);
+            Raise<TypeCheckException>.IfIsNull(st, "Cannot call dot on struct types!");
             Debug.Assert(st != null); // To keep ReSharper quiet :)
             dot.Type = _result = st.GetField(dot.Right).Type;
         }
@@ -288,10 +287,10 @@
         public void Visit(StructValue sv)
         {
             var st = GetStructType(sv.Name);
-            Raise<TypeCheckException>.IfAreNotEqual(st.Fields.Count, sv.Values.Count);
+            Raise<TypeCheckException>.IfAreNotEqual(st.Fields.Count, sv.Values.Count, "Wrong field count");
             for (var i = 0; i < st.Fields.Count; ++i) {
                 sv.Values[i].Accept(this);
-                Raise<TypeCheckException>.IfAreNotSame(st.Fields[i].Type, sv.Values[i].Type);
+                Raise<TypeCheckException>.IfAreNotSame(st.Fields[i].Type, sv.Values[i].Type, "Wrong field type");
             }  
             sv.Type = _result = st;
             sv.Temp = _currFunc.AddVariable("$" + _tempCounter++, st);
@@ -299,11 +298,12 @@
 
         public void Visit(FunctionCall fc)
         {
-            Raise<TypeCheckException>.If(!_funcDecls.ContainsKey(fc.FunctionName));
+            Raise<TypeCheckException>.If(!_funcDecls.ContainsKey(fc.FunctionName), "Function not existing");
             var fd = _funcDecls[fc.FunctionName];
+                Raise<TypeCheckException>.IfAreNotEqual(fc.Arguments.Count, fd.Params.Count, "Wrong argument count!");
             for (var i = 0; i < fd.Params.Count; ++i) {
                 fc.Arguments[i].Accept(this);
-                Raise<TypeCheckException>.IfAreNotSame(fc.Arguments[i].Type, fd.Params[i].Type);
+                Raise<TypeCheckException>.IfAreNotSame(fc.Arguments[i].Type, fd.Params[i].Type, "Wrong parameter type");
             }
             fc.Function = fd;
             fc.Type = _result = fd.ReturnType;
@@ -329,13 +329,13 @@
 
         public void Visit(FunctionDecl funcDecl)
         {
-            Raise<TypeCheckException>.If(_funcDecls.ContainsKey(funcDecl.Name));
+            Raise<TypeCheckException>.If(_funcDecls.ContainsKey(funcDecl.Name), "Function with existing name!");
             funcDecl.ReturnType = GetType(funcDecl.ReturnTypeName);
             var previousStaticEnv = _staticEnv;
             _staticEnv = new StaticEnv(new OutmostStaticEnv());
             foreach (var p in funcDecl.Params) {
                 p.Type = GetType(p.TypeName);
-                Raise<TypeCheckException>.IfAreSame(p.Type, _voidType);
+                Raise<TypeCheckException>.IfAreSame(p.Type, _voidType, "Struct fields cannot be void");
                 var vInfo = new StaticEnvBase.VarInfo(p.Name, p.Type, true, p);
                 _staticEnv.SetVariable(p.Name, vInfo);
             }
@@ -401,9 +401,9 @@
         {
             if (ret.ReturnExp != null) {
                 ret.ReturnExp.Accept(this);
-                Raise<TypeCheckException>.IfAreNotSame(ret.ReturnExp.Type, _currFunc.ReturnType);
+                Raise<TypeCheckException>.IfAreNotSame(ret.ReturnExp.Type, _currFunc.ReturnType, "Wrong return type!");
             } else {
-                Raise<TypeCheckException>.IfAreNotSame(_voidType, _currFunc.ReturnType);
+                Raise<TypeCheckException>.IfAreNotSame(_voidType, _currFunc.ReturnType, "Wrong return type!");
             }
         }
 
@@ -484,7 +484,7 @@
             var type = new StructType(name, typeDef);
             foreach (var f in decl.Fields) {
                 var fieldType = GetType(f.Item2);
-                Raise<TypeCheckException>.IfAreEqual("void", fieldType.Name);
+                Raise<TypeCheckException>.IfAreEqual("void", fieldType.Name, "Field cannot be void");
                 type.AddField(f.Item1, fieldType);
             }
             
@@ -552,7 +552,7 @@
 
         void LoadType(TypeDefinition typeDef)
         {
-            Raise<TypeCheckException>.If(_structTypes.ContainsKey(typeDef.Name));
+            Raise<TypeCheckException>.If(_structTypes.ContainsKey(typeDef.Name), "There is a type with the same name!");
             var typeRef = Module.Import(typeDef);
             var structType = new StructType(typeRef.Name, typeRef);
             structType.Ctor = Module.Import(typeDef.Methods.First(m => m.Name == ".ctor"));
