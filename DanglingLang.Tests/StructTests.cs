@@ -5,24 +5,6 @@ namespace DanglingLang.Tests
     public sealed class StructTests : TestBase
     {
         [Test]
-        public void CopiesDoNotShareChanges()
-        {
-            AddLine("struct time {int h; int m; int s;}");
-            AddLine("t1 = struct time {12, 10, 15}");
-            AddLine("t2 = t1");
-            AddLine("t1.h = 3!");
-            AddLine("t1.m = t1.h * t1.s");
-            AddLine("t1.s = 3");
-            AddLine("print(t1.h)");
-            AddLine("print(t1.m)");
-            AddLine("print(t1.s)");
-            AddLine("print(t2.h)");
-            AddLine("print(t2.m)");
-            AddLine("print(t2.s)");
-            Execute(new[] {"6", "90", "3", "12", "10", "15"});
-        }
-
-        [Test]
         public void SimpleStruct_FieldAssignment()
         {
             AddLine("struct time {int h; int m; int s;}");
@@ -263,7 +245,7 @@ namespace DanglingLang.Tests
         public void RedefineStruct()
         {
             AddLine("struct bools {bool f1; bool f2; bool f3;}");
-            AddLine("struct bools {int f1; bool f2; struct bools f3;}");
+            AddLine("struct bools {int f1; bool f2; int f3;}");
             CheckCode();
         }
 

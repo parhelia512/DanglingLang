@@ -212,16 +212,24 @@
 
         public void Visit(Id id)
         {
-            if (id.Var.Kind == StaticEnvBase.Kind.Param) {
-                var paramInfo = id.Var.Info as FunctionDecl.ParamInfo;
-                Debug.Assert(paramInfo != null);
-                _instructions.Add(Instruction.Create(OpCodes.Ldarg, paramInfo.Reference));
-            } else {
-                Debug.Assert(id.Var.Kind == StaticEnvBase.Kind.Var);
-                var varInfo = id.Var.Info as FunctionDecl.VarInfo;
-                Debug.Assert(varInfo != null);
-                _instructions.Add(Instruction.Create(OpCodes.Ldloc, varInfo.Reference));
-            }
+            var isArg = id.Var.Kind == StaticEnvBase.Kind.Param;       
+            _instructions.Add(isArg ? LoadArgInstruction(id) : LoadLocInstruction(id));
+        }
+
+        static Instruction LoadArgInstruction(Id id)
+        {
+            Debug.Assert(id.Var.Kind == StaticEnvBase.Kind.Param);
+            var paramInfo = id.Var.Info as FunctionDecl.ParamInfo;
+            Debug.Assert(paramInfo != null);
+            return Instruction.Create(OpCodes.Ldarg, paramInfo.Reference);
+        }
+
+        static Instruction LoadLocInstruction(Id id)
+        {
+            Debug.Assert(id.Var.Kind == StaticEnvBase.Kind.Var);
+            var varInfo = id.Var.Info as FunctionDecl.VarInfo;
+            Debug.Assert(varInfo != null);
+            return Instruction.Create(OpCodes.Ldloc, varInfo.Reference);           
         }
 
         public void Visit(Print print)
@@ -363,18 +371,22 @@
                 asg.LoadExp.Accept(this);
             }
             asg.Exp.Accept(this);
-            if (asg.Var.Kind == StaticEnvBase.Kind.Param) {
-                var paramInfo = asg.Var.Info as FunctionDecl.ParamInfo;
-                Debug.Assert(paramInfo != null);
-                _instructions.Add(Instruction.Create(OpCodes.Starg, paramInfo.Reference));
-            } else if (asg.Var.Kind == StaticEnvBase.Kind.Var) {
-                var varInfo = asg.Var.Info as FunctionDecl.VarInfo;
-                Debug.Assert(varInfo != null);
-                _instructions.Add(Instruction.Create(OpCodes.Stloc, varInfo.Reference));
-            } else {
-                var fieldInfo = asg.Var.Info as StructType.FieldInfo;
-                Debug.Assert(fieldInfo != null);
-                _instructions.Add(Instruction.Create(OpCodes.Stfld, fieldInfo.Reference));
+            switch (asg.Var.Kind) {
+                case StaticEnvBase.Kind.Param:
+                    var paramInfo = asg.Var.Info as FunctionDecl.ParamInfo;
+                    Debug.Assert(paramInfo != null);
+                    _instructions.Add(Instruction.Create(OpCodes.Starg, paramInfo.Reference));
+                    break;
+                case StaticEnvBase.Kind.Var:
+                    var varInfo = asg.Var.Info as FunctionDecl.VarInfo;
+                    Debug.Assert(varInfo != null);
+                    _instructions.Add(Instruction.Create(OpCodes.Stloc, varInfo.Reference));
+                    break;
+                default:
+                    var fieldInfo = asg.Var.Info as StructType.FieldInfo;
+                    Debug.Assert(fieldInfo != null);
+                    _instructions.Add(Instruction.Create(OpCodes.Stfld, fieldInfo.Reference));
+                    break;
             }
         }
 

@@ -61,7 +61,7 @@
 
     abstract class Exp : TreeNode
     {
-        internal Type Type { get; set; } // Initialized by TypecheckVisitor (and used by CecilVisitor)
+        public Type Type; // Initialized by TypecheckVisitor (and used by CecilVisitor)
     }
 
     abstract class Stmt : TreeNode {}

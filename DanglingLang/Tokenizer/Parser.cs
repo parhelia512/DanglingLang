@@ -4,9 +4,9 @@
 
 // GPPG version 1.5.0
 // Machine:  CELESTINO
-// DateTime: 11/07/2013 15.59.02
+// DateTime: 12/07/2013 12.11.27
 // UserName: Alessio
-// Input file <D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 11/07/2013 15.35.37>
+// Input file <D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 12/07/2013 12.11.25>
 
 // options: lines report gplex
 
@@ -67,10 +67,10 @@ public class ScanObj {
 
 public class Parser: ShiftReduceParser<ValueType, LexLocation>
 {
-  // Verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 11/07/2013 15.35.37
+  // Verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 12/07/2013 12.11.25
 #line 43 "D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y"
 	internal FunctionDecl Prog;
-  // End verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 11/07/2013 15.35.37
+  // End verbatim content from D:\Dropbox\Progetti\C#\DanglingLang\DanglingLang\Tokenizer/DanglingLang.y - 12/07/2013 12.11.25
 
 #pragma warning disable 649
   private static Dictionary<int, string> aliasses;
